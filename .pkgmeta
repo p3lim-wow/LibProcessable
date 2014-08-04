@@ -1,0 +1,13 @@
+package-as: LibProcessable
+
+externals:
+    LibStub:
+        url: svn://svn.wowace.com/wow/libstub/mainline/trunk
+
+manual-changelog:
+    filename: CHANGELOG.txt
+    markup-type: bbcode
+
+ignore:
+    - embeds/LibStub/tests
+    - embeds/LibStub/.pkgmeta
