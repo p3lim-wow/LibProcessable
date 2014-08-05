@@ -42,17 +42,19 @@ local function GetSkillRequired(quality, level)
 			return 125
 		elseif(level <= 50) then
 			return 150
+		elseif(level <= 55) then
+			return 175
 		elseif(level <= 60) then
 			return 200
 		elseif(level <= 99) then
 			return 225
 		elseif(level <= 120) then
 			return 275
-		elseif(level <= 150) then
+		elseif(level <= 151) then
 			return 325
-		elseif(level <= 182) then
+		elseif(level <= 187) then
 			return 350
-		elseif(level <= 318) then
+		elseif(level <= 333) then
 			return 425
 		else
 			return 475
@@ -78,24 +80,36 @@ local function GetSkillRequired(quality, level)
 			return 225
 		elseif(level <= 115) then
 			return 275
-		elseif(level <= 346) then
+		elseif(level <= 200) then
+			return 325
+		elseif(level <= 377) then
 			return 450
 		elseif(level <= 424) then
 			return 525
-		elseif(level <= 463) then
-			return 550
 		else
 			return 550
 		end
 	elseif(quality == 4) then
-		if(level <= 95) then
+		if(level <= 20) then
+			return 25
+		elseif(level <= 40) then
+			return 100
+		elseif(level <= 45) then
+			return 125
+		elseif(level <= 50) then
+			return 150
+		elseif(level <= 55) then
+			return 175
+		elseif(level <= 60) then
+			return 200
+		elseif(level <= 95) then
 			return 225
-		elseif(level <= 164) then
+		elseif(level <= 190) then
 			return 300
+		elseif(level <= 284) then
+			return 375
 		elseif(level <= 416) then
 			return 475
-		elseif(level <= 575) then
-			return 575
 		else
 			return 575
 		end
