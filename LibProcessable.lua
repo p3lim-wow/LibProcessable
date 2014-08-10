@@ -12,6 +12,9 @@ local inscriptionSkill, jewelcraftingSkill, enchantingSkill, blacksmithingSkill
 
 local MILLING = 51005
 function lib:IsMillable(itemID)
+	assert(tonumber(itemID), 'itemID needs to be a number or convertable to a number')
+	itemID = tonumber(itemID)
+
 	if(IsSpellKnown(MILLING)) then
 		local skillRequired = data.herbs[itemID]
 		return skillRequired and skillRequired <= inscriptionSkill
@@ -20,6 +23,9 @@ end
 
 local PROSPECTING = 31252
 function lib:IsProspectable(itemID)
+	assert(tonumber(itemID), 'itemID needs to be a number or convertable to a number')
+	itemID = tonumber(itemID)
+
 	if(IsSpellKnown(PROSPECTING)) then
 		local skillRequired = data.ores[itemID]
 		return skillRequired and skillRequired <= jewelcraftingSkill
@@ -118,6 +124,9 @@ end
 
 local DISENCHANTING = 13262
 function lib:IsDisenchantable(itemID)
+	assert(tonumber(itemID), 'itemID needs to be a number or convertable to a number')
+	itemID = tonumber(itemID)
+
 	if(IsSpellKnown(DISENCHANTING)) then
 		local _, _, quality, level = GetItemInfo(itemID)
 		if(IsEquippableItem(itemID) and quality and level) then
@@ -130,6 +139,9 @@ end
 local LOCKPICKING = 1804
 local BLACKSMITH = 2018
 function lib:IsOpenable(itemID)
+	assert(tonumber(itemID), 'itemID needs to be a number or convertable to a number')
+	itemID = tonumber(itemID)
+
 	if(IsSpellKnown(LOCKPICKING)) then
 		local container = data.containers[itemID]
 		if(container and (container[1] / 5) <= UnitLevel('player')) then
