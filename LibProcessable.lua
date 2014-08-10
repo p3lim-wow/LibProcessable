@@ -149,8 +149,7 @@ function lib:IsOpenable(itemID)
 end
 
 local Handler = CreateFrame('Frame')
-Handler:RegisterEvent('TRADE_SKILL_UPDATE')
-Handler:RegisterEvent('SPELLS_CHANGED')
+Handler:RegisterEvent('SKILL_LINES_CHANGED')
 Handler:SetScript('OnEvent', function(s, event)
 	inscriptionSkill, jewelcraftingSkill, enchantingSkill, blacksmithingSkill = 0, 0, 0, 0
 
