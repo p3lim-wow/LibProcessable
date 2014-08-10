@@ -132,7 +132,7 @@ local BLACKSMITH = 2018
 function lib:IsOpenable(itemID)
 	if(IsSpellKnown(LOCKPICKING)) then
 		local container = data.containers[itemID]
-		if(container and (container[1] / 5) >= UnitLevel('player')) then
+		if(container and (container[1] / 5) <= UnitLevel('player')) then
 			return true
 		end
 	elseif(GetSpellBookItemInfo(GetSpellInfo(BLACKSMITH))) then
