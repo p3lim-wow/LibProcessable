@@ -135,26 +135,40 @@ function lib:IsDisenchantable(itemID)
 	end
 end
 
+-- http://www.wowhead.com/items?filter=na=key;cr=86;crs=2;crv=0
+local function GetSkeletonKey(pickLevel)
+	if(pickLevel <= 25) then
+		return 15869, 100 -- Silver Skeleton Key
+	elseif(pickLevel <= 125) then
+		return 15870, 150 -- Golden Skeleton Key
+	elseif(pickLevel <= 200) then
+		return 15871, 200 -- Truesilver Skeleton Key
+	elseif(pickLevel <= 300) then
+		return 15872, 275 -- Arcanite Skeleton Key
+	elseif(pickLevel <= 375) then
+		return 43854, 350 -- Cobalt Skeleton Key
+	elseif(pickLevel <= 400) then
+		return 43853, 430 -- Titanium Skeleton Key
+	elseif(pickLevel <= 425) then
+		return 55053, 475 -- Obsidium Skeleton Key
+	elseif(pickLevel <= 450) then
+		return 82960, 500 -- Ghostly Skeleton Key
+	end
+end
+
 local LOCKPICKING = 1804
 local BLACKSMITH = 2018
 function lib:IsOpenable(itemID)
 	assert(tonumber(itemID), 'itemID needs to be a number or convertable to a number')
 	itemID = tonumber(itemID)
 
+	local pickLevel = data.containers[itemID]
 	if(IsSpellKnown(LOCKPICKING)) then
-		local container = data.containers[itemID]
-		if(container and (container[1] / 5) <= UnitLevel('player')) then
-			return true
-		end
-	elseif(GetSpellBookItemInfo(GetSpellInfo(BLACKSMITH))) then
-		local container = data.containers[itemID]
-		if(container) then
-			for index = container[2], #data.keys do
-				local key = data.keys[index]
-				if(GetItemCount(key[1]) > 0 and key[2] <= blacksmithingSkill) then
-					return true, key[1]
-				end
-			end
+		return pickLevel and (pickLevel / 5) <= UnitLevel('player')
+	elseif(GetSpellBookItemInfo(GetSpellInfo(BLACKSMITH)) and pickLevel) then
+		local itemID, skillRequired = GetSkeletonKey(pickLevel)
+		if(GetItemCount(itemID) > 0 and skillRequired <= blacksmithingSkill) then
+			return true, itemID
 		end
 	end
 end
@@ -271,43 +285,33 @@ data = {
 		[72103] = 600, -- White Trillium Ore
 	},
 	containers = { -- http://www.wowhead.com/items?filter=cr=10:161:128;crs=1:1:1;crv=0:0:0
-		[4632] = {1, 1}, -- Ornate Bronze Lockbox
-		[6354] = {1, 1}, -- Small Locked Chest
-		[16882] = {1, 1}, -- Battered Junkbox
-		[4633] = {25, 1}, -- Heavy Bronze Lockbox
-		[4634] = {70, 2}, -- Iron Lockbox
-		[6355] = {70, 2}, -- Sturdy Locked Chest
-		[16883] = {70, 2}, -- Worn Junkbox
-		[4636] = {125, 2}, -- Strong Iron Lockbox
-		[4637] = {175, 3}, -- Steel Lockbox
-		[13875] = {175, 3}, -- Ironbound Locked Chest
-		[16884] = {175, 3}, -- Sturdy Junkbox
-		[4638] = {225, 4}, -- Reinforced Steel Lockbox
-		[5758] = {225, 4}, -- Mithril Lockbox
-		[5759] = {225, 4}, -- Thorium Lockbox
-		[5760] = {225, 4}, -- Eternium Lockbox
-		[13918] = {250, 4}, -- Reinforced Locked Chest
-		[16885] = {250, 4}, -- Heavy Junkbox
-		[12033] = {275, 4}, -- Thaurissan Family Jewels
-		[29569] = {300, 4}, -- Strong Junkbox
-		[31952] = {325, 5}, -- Khorium Lockbox
-		[43575] = {350, 5}, -- Reinforced Junkbox
-		[43622] = {375, 5}, -- Froststeel Lockbox
-		[43624] = {400, 6}, -- Titanium Lockbox
-		[45986] = {400, 6}, -- Tiny Titanium Lockbox
-		[63349] = {400, 6}, -- Flame-Scarred Junkbox
-		[68729] = {425, 7}, -- Elementium Lockbox
-		[88567] = {450, 8}, -- Ghost Iron Lockbox
-		[88165] = {450, 8}, -- Vine-Cracked Junkbox
-	},
-	keys = { -- http://www.wowhead.com/items?filter=na=key;cr=86;crs=2;crv=0
-		{15869, 100}, -- Silver Skeleton Key
-		{15870, 150}, -- Golden Skeleton Key
-		{15871, 200}, -- Truesilver Skeleton Key
-		{15872, 275}, -- Arcanite Skeleton Key
-		{43854, 350}, -- Colbat Skeleton Key
-		{43853, 430}, -- Titanium Skeleton Key
-		{55053, 475}, -- Obsidium Skeleton Key
-		{82960, 500}, -- Ghostly Skeleton Key
+		[4632] = 1, -- Ornate Bronze Lockbox
+		[6354] = 1, -- Small Locked Chest
+		[16882] = 1, -- Battered Junkbox
+		[4633] = 25, -- Heavy Bronze Lockbox
+		[4634] = 70, -- Iron Lockbox
+		[6355] = 70, -- Sturdy Locked Chest
+		[16883] = 70, -- Worn Junkbox
+		[4636] = 125, -- Strong Iron Lockbox
+		[4637] = 175, -- Steel Lockbox
+		[13875] = 175, -- Ironbound Locked Chest
+		[16884] = 175, -- Sturdy Junkbox
+		[4638] = 225, -- Reinforced Steel Lockbox
+		[5758] = 225, -- Mithril Lockbox
+		[5759] = 225, -- Thorium Lockbox
+		[5760] = 225, -- Eternium Lockbox
+		[13918] = 250, -- Reinforced Locked Chest
+		[16885] = 250, -- Heavy Junkbox
+		[12033] = 275, -- Thaurissan Family Jewels
+		[29569] = 300, -- Strong Junkbox
+		[31952] = 325, -- Khorium Lockbox
+		[43575] = 350, -- Reinforced Junkbox
+		[43622] = 375, -- Froststeel Lockbox
+		[43624] = 400, -- Titanium Lockbox
+		[45986] = 400, -- Tiny Titanium Lockbox
+		[63349] = 400, -- Flame-Scarred Junkbox
+		[68729] = 425, -- Elementium Lockbox
+		[88567] = 450, -- Ghost Iron Lockbox
+		[88165] = 450, -- Vine-Cracked Junkbox
 	}
 }
