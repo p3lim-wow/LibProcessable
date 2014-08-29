@@ -264,6 +264,13 @@ data = {
 		[79010] = 500, -- Snow Lily
 		[79011] = 500, -- Fool''s Cap
 		[89639] = 500, -- Desecrated Herb
+		[109124] = 1, -- Frostweed
+		[109125] = 1, -- Fireweed
+		[109126] = 1, -- Gorgrond Flytrap
+		[109127] = 1, -- Starflower
+		[109128] = 1, -- Nagrand Arrowbloom
+		[109129] = 1, -- Talador Orchid
+		[109130] = 1, -- Chameleon Lotus
 	},
 	ores = { -- http://www.wowhead.com/items?filter=cr=89:161:128;crs=1:1:1;crv=0:0:0
 		[2770] = 1, -- Copper Ore
@@ -283,6 +290,7 @@ data = {
 		[72093] = 550, -- Kyparite
 		[72094] = 600, -- Black Trillium Ore
 		[72103] = 600, -- White Trillium Ore
+		[109119] = 500, -- True Iron Ore
 	},
 	containers = { -- http://www.wowhead.com/items?filter=cr=10:161:128;crs=1:1:1;crv=0:0:0
 		[4632] = 1, -- Ornate Bronze Lockbox
@@ -313,5 +321,7 @@ data = {
 		[68729] = 425, -- Elementium Lockbox
 		[88567] = 450, -- Ghost Iron Lockbox
 		[88165] = 450, -- Vine-Cracked Junkbox
+		[106895] = 450, -- Iron-Bound Junkbox
+		[116920] = 450, -- True Steel Lockbox
 	}
 }
