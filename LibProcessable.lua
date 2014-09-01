@@ -130,7 +130,7 @@ function lib:IsDisenchantable(itemID)
 		local _, _, quality, level = GetItemInfo(itemID)
 		if(IsEquippableItem(itemID) and quality and level) then
 			local skillRequired = GetSkillRequired(quality, level)
-			return skillRequired <= enchantingSkill
+			return skillRequired and skillRequired <= enchantingSkill
 		end
 	end
 end
