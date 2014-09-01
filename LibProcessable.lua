@@ -207,7 +207,7 @@ Handler:SetScript('OnEvent', function(s, event)
 end)
 
 data = {
-	herbs = { -- http://www.wowhead.com/items?filter=cr=159:161:128;crs=1:1:1;crv=0:0:0
+	herbs = { -- http://www.wowhead.com/items?filter=cr=159:161:128;crs=1:1:1
 		[765] = 1, -- Silverleaf
 		[785] = 1, -- Mageroyal
 		[2447] = 1, -- Peacebloom
@@ -272,7 +272,7 @@ data = {
 		[109129] = 1, -- Talador Orchid
 		[109130] = 1, -- Chameleon Lotus
 	},
-	ores = { -- http://www.wowhead.com/items?filter=cr=89:161:128;crs=1:1:1;crv=0:0:0
+	ores = { -- http://www.wowhead.com/items?filter=cr=89:161:128;crs=1:1:1
 		[2770] = 1, -- Copper Ore
 		[2771] = 50, -- Tin Ore
 		[2772] = 125, -- Iron Ore
@@ -292,7 +292,7 @@ data = {
 		[72103] = 600, -- White Trillium Ore
 		[109119] = 500, -- True Iron Ore
 	},
-	containers = { -- http://www.wowhead.com/items?filter=cr=10:161:128;crs=1:1:1;crv=0:0:0
+	containers = { -- http://www.wowhead.com/items?filter=cr=10:161:128;crs=1:1:1
 		[4632] = 1, -- Ornate Bronze Lockbox
 		[6354] = 1, -- Small Locked Chest
 		[16882] = 1, -- Battered Junkbox
