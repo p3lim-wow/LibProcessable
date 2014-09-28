@@ -4,6 +4,10 @@
 ## Title: Lib: Processable
 ## Notes: Library that lets you easily check if you can process resources
 
+#@do-not-package@
+## DefaultState: disabled
+#@end-do-not-package@
+
 ## OptionalDeps: LibStub
 
 LibStub\LibStub.lua
