@@ -137,22 +137,22 @@ end
 
 -- http://www.wowhead.com/items?filter=na=key;cr=86;crs=2;crv=0
 local function GetSkeletonKey(pickLevel)
-	if(pickLevel <= 25) then
-		return 15869, 100 -- Silver Skeleton Key
-	elseif(pickLevel <= 125) then
-		return 15870, 150 -- Golden Skeleton Key
-	elseif(pickLevel <= 200) then
-		return 15871, 200 -- Truesilver Skeleton Key
-	elseif(pickLevel <= 300) then
-		return 15872, 275 -- Arcanite Skeleton Key
-	elseif(pickLevel <= 375) then
-		return 43854, 350 -- Cobalt Skeleton Key
-	elseif(pickLevel <= 400) then
-		return 43853, 430 -- Titanium Skeleton Key
-	elseif(pickLevel <= 425) then
-		return 55053, 475 -- Obsidium Skeleton Key
-	elseif(pickLevel <= 450) then
+	if(pickLevel > 425) then
 		return 82960, 500 -- Ghostly Skeleton Key
+	elseif(pickLevel > 400) then
+		return 55053, 475 -- Obsidium Skeleton Key
+	elseif(pickLevel > 375) then
+		return 43853, 430 -- Titanium Skeleton Key
+	elseif(pickLevel > 300) then
+		return 43854, 350 -- Cobalt Skeleton Key
+	elseif(pickLevel > 200) then
+		return 15872, 275 -- Arcanite Skeleton Key
+	elseif(pickLevel > 125) then
+		return 15871, 200 -- Truesilver Skeleton Key
+	elseif(pickLevel > 25) then
+		return 15870, 150 -- Golden Skeleton Key
+	else
+		return 15869, 100 -- Silver Skeleton Key
 	end
 end
 
