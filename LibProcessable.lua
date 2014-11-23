@@ -320,7 +320,7 @@ data = {
 		[68729] = 425, -- Elementium Lockbox
 		[88567] = 450, -- Ghost Iron Lockbox
 		[88165] = 450, -- Vine-Cracked Junkbox
-		[106895] = 450, -- Iron-Bound Junkbox
-		[116920] = 450, -- True Steel Lockbox
+		[106895] = 500, -- Iron-Bound Junkbox
+		[116920] = 500, -- True Steel Lockbox
 	}
 }
