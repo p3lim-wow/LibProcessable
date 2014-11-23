@@ -290,7 +290,6 @@ data = {
 		[72093] = 550, -- Kyparite
 		[72094] = 600, -- Black Trillium Ore
 		[72103] = 600, -- White Trillium Ore
-		[109119] = 500, -- True Iron Ore
 	},
 	containers = { -- http://www.wowhead.com/items?filter=cr=10:161:128;crs=1:1:1
 		[4632] = 1, -- Ornate Bronze Lockbox
