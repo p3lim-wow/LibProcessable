@@ -31,13 +31,16 @@ function lib:IsProspectable(itemID)
 	end
 end
 
+-- Data pulled from ItemDisenchantLoot.dbc
 local function GetSkillRequired(quality, level)
 	if(quality == 2) then
-		if(level > 333) then
+		if(level > 449) then
+			return 1
+		elseif(level > 363) then
 			return 475
-		elseif(level > 187) then
+		elseif(level > 200) then
 			return 425
-		elseif(level > 151) then
+		elseif(level > 153) then
 			return 350
 		elseif(level > 120) then
 			return 325
@@ -65,7 +68,9 @@ local function GetSkillRequired(quality, level)
 			return 1
 		end
 	elseif(quality == 3) then
-		if(level > 424) then
+		if(level > 499) then
+			return 1
+		elseif(level > 424) then
 			return 550
 		elseif(level > 377) then
 			return 525
@@ -73,7 +78,7 @@ local function GetSkillRequired(quality, level)
 			return 450
 		elseif(level > 115) then
 			return 325
-		elseif(level > 97) then
+		elseif(level > 99) then
 			return 275
 		elseif(level > 60) then
 			return 225
@@ -95,13 +100,15 @@ local function GetSkillRequired(quality, level)
 			return 25
 		end
 	elseif(quality == 4) then
-		if(level > 416) then
+		if(level > 599) then
+			return 1
+		elseif(level > 419) then
 			return 575
-		elseif(level > 284) then
+		elseif(level > 299) then
 			return 475
-		elseif(level > 190) then
+		elseif(level > 199) then
 			return 375
-		elseif(level > 95) then
+		elseif(level > 99) then
 			return 300
 		elseif(level > 60) then
 			return 225
@@ -113,8 +120,12 @@ local function GetSkillRequired(quality, level)
 			return 150
 		elseif(level > 40) then
 			return 125
-		elseif(level > 20) then
+		elseif(level > 35) then
 			return 100
+		elseif(level > 30) then
+			return 75
+		elseif(level > 25) then
+			return 50
 		else
 			return 25
 		end
