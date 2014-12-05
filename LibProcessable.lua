@@ -178,7 +178,7 @@ function lib:IsOpenable(itemID)
 		return pickLevel and (pickLevel / 5) <= UnitLevel('player')
 	elseif(GetSpellBookItemInfo(GetSpellInfo(BLACKSMITH)) and pickLevel) then
 		local itemID, skillRequired = GetSkeletonKey(pickLevel)
-		return GetItemCount(itemID) > 0 and skillRequired <= blacksmithingSkill, skillRequired, itemID
+		return skillRequired <= blacksmithingSkill, skillRequired, itemID
 	end
 end
 
