@@ -16,7 +16,7 @@ function lib:IsMillable(itemID)
 
 	if(IsSpellKnown(MILLING)) then
 		local skillRequired = data.herbs[itemID]
-		return skillRequired and skillRequired <= inscriptionSkill
+		return skillRequired and skillRequired <= inscriptionSkill, skillRequired
 	end
 end
 
@@ -27,7 +27,7 @@ function lib:IsProspectable(itemID)
 
 	if(IsSpellKnown(PROSPECTING)) then
 		local skillRequired = data.ores[itemID]
-		return skillRequired and skillRequired <= jewelcraftingSkill
+		return skillRequired and skillRequired <= jewelcraftingSkill, skillRequired
 	end
 end
 
@@ -141,7 +141,7 @@ function lib:IsDisenchantable(itemID)
 		local _, _, quality, level = GetItemInfo(itemID)
 		if(IsEquippableItem(itemID) and quality and level) then
 			local skillRequired = GetSkillRequired(quality, level)
-			return skillRequired and skillRequired <= enchantingSkill
+			return skillRequired and skillRequired <= enchantingSkill, skillRequired
 		end
 	end
 end
@@ -178,9 +178,7 @@ function lib:IsOpenable(itemID)
 		return pickLevel and (pickLevel / 5) <= UnitLevel('player')
 	elseif(GetSpellBookItemInfo(GetSpellInfo(BLACKSMITH)) and pickLevel) then
 		local itemID, skillRequired = GetSkeletonKey(pickLevel)
-		if(GetItemCount(itemID) > 0 and skillRequired <= blacksmithingSkill) then
-			return true, itemID
-		end
+		return GetItemCount(itemID) > 0 and skillRequired <= blacksmithingSkill, skillRequired, itemID
 	end
 end
 
