@@ -9,7 +9,7 @@ end
 local data
 local inscriptionSkill, jewelcraftingSkill, enchantingSkill, blacksmithingSkill
 
-local MILLING = 51005
+local MILLING, MORTAR = 51005, 114942
 function lib:IsMillable(itemID)
 	assert(tonumber(itemID), 'itemID needs to be a number or convertable to a number')
 	itemID = tonumber(itemID)
@@ -17,6 +17,8 @@ function lib:IsMillable(itemID)
 	if(IsSpellKnown(MILLING)) then
 		local skillRequired = data.herbs[itemID]
 		return skillRequired and skillRequired <= inscriptionSkill, skillRequired
+	elseif(GetItemCount(MORTAR) > 0) then
+		return itemID >= 109124 and itemID <= 109130, 1, MORTAR
 	end
 end
 
