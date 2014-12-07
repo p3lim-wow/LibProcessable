@@ -10,14 +10,14 @@ local data
 local inscriptionSkill, jewelcraftingSkill, enchantingSkill, blacksmithingSkill
 
 local MILLING, MORTAR = 51005, 114942
-function lib:IsMillable(itemID)
+function lib:IsMillable(itemID, ignoreMortar)
 	assert(tonumber(itemID), 'itemID needs to be a number or convertable to a number')
 	itemID = tonumber(itemID)
 
 	if(IsSpellKnown(MILLING)) then
 		local skillRequired = data.herbs[itemID]
 		return skillRequired and skillRequired <= inscriptionSkill, skillRequired
-	elseif(GetItemCount(MORTAR) > 0) then
+	elseif(not ignoreMortar and GetItemCount(MORTAR) > 0) then
 		return itemID >= 109124 and itemID <= 109130, 1, MORTAR
 	end
 end
@@ -171,14 +171,14 @@ end
 
 local LOCKPICKING = 1804
 local BLACKSMITH = 2018
-function lib:IsOpenable(itemID)
+function lib:IsOpenable(itemID, ignoreSkeletonKeys)
 	assert(tonumber(itemID), 'itemID needs to be a number or convertable to a number')
 	itemID = tonumber(itemID)
 
 	local pickLevel = data.containers[itemID]
 	if(IsSpellKnown(LOCKPICKING)) then
 		return pickLevel and (pickLevel / 5) <= UnitLevel('player'), pickLevel
-	elseif(GetSpellBookItemInfo(GetSpellInfo(BLACKSMITH)) and pickLevel) then
+	elseif(not ignoreSkeletonKeys and pickLevel and GetSpellBookItemInfo(GetSpellInfo(BLACKSMITH))) then
 		local skeletonKeyID, skillRequired = GetSkeletonKey(pickLevel)
 		return skillRequired <= blacksmithingSkill, skillRequired, skeletonKeyID
 	end
