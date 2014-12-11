@@ -6,7 +6,7 @@ if(not lib) then
 	return
 end
 
-local data
+local data, enchantingBuilding
 local inscriptionSkill, jewelcraftingSkill, enchantingSkill, blacksmithingSkill
 
 local MILLING, MORTAR = 51005, 114942
@@ -135,7 +135,7 @@ local function GetSkillRequired(quality, level)
 end
 
 local DISENCHANTING = 13262
-function lib:IsDisenchantable(itemID)
+function lib:IsDisenchantable(itemID, ignoreGarrison)
 	assert(tonumber(itemID), 'itemID needs to be a number or convertable to a number')
 	itemID = tonumber(itemID)
 
@@ -144,6 +144,12 @@ function lib:IsDisenchantable(itemID)
 		if(IsEquippableItem(itemID) and quality and level) then
 			local skillRequired = GetSkillRequired(quality, level)
 			return skillRequired and skillRequired <= enchantingSkill, skillRequired, enchantingSkill
+		end
+	elseif(not ignoreGarrison and enchantingBuilding) then
+		local _, _, quality, level = GetItemInfo(itemID)
+		if(IsEquippableItem(itemID) and quality and level) then
+			local skillRequired = GetSkillRequired(quality, level)
+			return skillRequired == 1, skillRequired
 		end
 	end
 end
@@ -187,33 +193,49 @@ end
 
 local Handler = CreateFrame('Frame')
 Handler:RegisterEvent('SKILL_LINES_CHANGED')
-Handler:SetScript('OnEvent', function(s, event)
-	inscriptionSkill, jewelcraftingSkill, enchantingSkill, blacksmithingSkill = 0, 0, 0, 0
+Handler:RegisterEvent('GARRISON_BUILDING_ACTIVATED')
+Handler:RegisterEvent('GARRISON_BUILDING_REMOVED')
+Handler:RegisterEvent('GARRISON_BUILDING_UPDATE')
+Handler:RegisterEvent('PLAYER_LOGIN')
+Handler:SetScript('OnEvent', function(self, event)
+	if(event == 'SKILL_LINES_CHANGED') then
+		inscriptionSkill, jewelcraftingSkill, enchantingSkill, blacksmithingSkill = 0, 0, 0, 0
 
-	local first, second = GetProfessions()
-	if(first) then
-		local _, _, skill, _, _, _, id = GetProfessionInfo(first)
-		if(id == 773) then
-			inscriptionSkill = skill
-		elseif(id == 755) then
-			jewelcraftingSkill = skill
-		elseif(id == 333) then
-			enchantingSkill = skill
-		elseif(id == 164) then
-			blacksmithingSkill = skill
+		local first, second = GetProfessions()
+		if(first) then
+			local _, _, skill, _, _, _, id = GetProfessionInfo(first)
+			if(id == 773) then
+				inscriptionSkill = skill
+			elseif(id == 755) then
+				jewelcraftingSkill = skill
+			elseif(id == 333) then
+				enchantingSkill = skill
+			elseif(id == 164) then
+				blacksmithingSkill = skill
+			end
 		end
-	end
 
-	if(second) then
-		local _, _, skill, _, _, _, id = GetProfessionInfo(second)
-		if(id == 773) then
-			inscriptionSkill = skill
-		elseif(id == 755) then
-			jewelcraftingSkill = skill
-		elseif(id == 333) then
-			enchantingSkill = skill
-		elseif(id == 164) then
-			blacksmithingSkill = skill
+		if(second) then
+			local _, _, skill, _, _, _, id = GetProfessionInfo(second)
+			if(id == 773) then
+				inscriptionSkill = skill
+			elseif(id == 755) then
+				jewelcraftingSkill = skill
+			elseif(id == 333) then
+				enchantingSkill = skill
+			elseif(id == 164) then
+				blacksmithingSkill = skill
+			end
+		end
+	else
+		enchantingBuilding = false
+
+		for _, building in next, C_Garrison.GetBuildings() do
+			local buildingID = building.buildingID
+			if(buildingID == 93 or buildingID == 125 or buildingID == 126) then
+				enchantingBuilding = true
+				return
+			end
 		end
 	end
 end)
