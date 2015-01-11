@@ -6,5 +6,6 @@ externals:
 
 ignore:
     - .gitmodules
+    - CONTRIBUTING.md
     - embeds/LibStub/tests
     - embeds/LibStub/.pkgmeta
