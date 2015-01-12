@@ -1,4 +1,4 @@
-local MAJOR, MINOR = 'LibProcessable', 5
+local MAJOR, MINOR = 'LibProcessable', 6
 assert(LibStub, MAJOR .. ' requires LibStub')
 
 local lib, oldMinor = LibStub:NewLibrary(MAJOR, MINOR)
