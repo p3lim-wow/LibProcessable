@@ -1,6 +1,6 @@
 ## Interface: 60000
 ## Author: p3lim
-## Version: 5
+## Version: @project-version@
 ## Title: Lib: Processable
 ## Notes: Library that lets you easily check if you can process resources
 
