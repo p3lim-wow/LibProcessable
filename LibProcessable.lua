@@ -204,6 +204,7 @@ local LOCKPICKING, BLACKSMITH = 1804, 2018
 -- @name LibProcessable:IsOpenable
 -- @usage LibStub('LibProcessable'):IsOpenable(itemID[, ignoreSkeletonKeys])
 -- @param itemID The itemID of the item to check against
+-- @param ignoreSkeletonKeys Ignore checking for Skeleton Keys
 -- @return isOpenable Boolean indicating if the player can process the item
 -- @return skillRequired Number representing the required skill in Lockpicking or Blacksmithing to process the item
 -- @return skillLevel Number representing the player's skill in Lockpicking or Blacksmithing
