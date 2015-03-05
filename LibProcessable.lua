@@ -225,10 +225,7 @@ end
 
 local Handler = CreateFrame('Frame')
 Handler:RegisterEvent('SKILL_LINES_CHANGED')
-Handler:RegisterEvent('GARRISON_BUILDING_ACTIVATED')
-Handler:RegisterEvent('GARRISON_BUILDING_REMOVED')
-Handler:RegisterEvent('GARRISON_BUILDING_UPDATE')
-Handler:RegisterEvent('PLAYER_LOGIN')
+Handler:RegisterEvent('GARRISON_BUILDING_LIST_UPDATE')
 Handler:SetScript('OnEvent', function(self, event)
 	if(event == 'SKILL_LINES_CHANGED') then
 		inscriptionSkill, jewelcraftingSkill, enchantingSkill, blacksmithingSkill = 0, 0, 0, 0
