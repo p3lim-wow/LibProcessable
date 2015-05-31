@@ -6,7 +6,7 @@ if(not lib) then
 	return
 end
 
-local itemClasses, enchantingBuilding = {}
+local itemClasses, hasEnchantingBuilding = {}
 local inscriptionSkill, jewelcraftingSkill, enchantingSkill, blacksmithingSkill
 
 local MILLING, MORTAR = 51005, 114942
@@ -329,11 +329,11 @@ function lib:IsDisenchantable(itemID, ignoreGarrison)
 			local skillRequired = GetSkillRequired(itemClasses[class], quality, level)
 			return skillRequired and skillRequired <= enchantingSkill, skillRequired, enchantingSkill
 		end
-	elseif(not ignoreGarrison and enchantingBuilding) then
+	elseif(not ignoreGarrison and hasEnchantingBuilding) then
 		local _, _, quality, level = GetItemInfo(itemID)
 		if(IsEquippableItem(itemID) and quality and level) then
 			local skillRequired = GetSkillRequired(quality, level)
-			return skillRequired == 1, skillRequired
+			return skillRequired <= 1, skillRequired, enchantingSkill
 		end
 	end
 end
@@ -386,8 +386,9 @@ end
 local Handler = CreateFrame('Frame')
 Handler:RegisterEvent('PLAYER_LOGIN')
 Handler:RegisterEvent('SKILL_LINES_CHANGED')
-Handler:RegisterEvent('GARRISON_BUILDING_LIST_UPDATE')
-Handler:SetScript('OnEvent', function(self, event)
+Handler:RegisterEvent('GARRISON_BUILDING_PLACED')
+Handler:RegisterEvent('GARRISON_BUILDING_REMOVED')
+Handler:SetScript('OnEvent', function(self, event, ...)
 	if(event == 'SKILL_LINES_CHANGED') then
 		inscriptionSkill, jewelcraftingSkill, enchantingSkill, blacksmithingSkill = 0, 0, 0, 0
 
@@ -417,15 +418,16 @@ Handler:SetScript('OnEvent', function(self, event)
 				blacksmithingSkill = skill
 			end
 		end
-	else
-		enchantingBuilding = false
-
-		for _, building in next, C_Garrison.GetBuildings() do
-			local buildingID = building.buildingID
-			if(buildingID == 93 or buildingID == 125 or buildingID == 126) then
-				enchantingBuilding = true
-				return
-			end
+	elseif(event == 'GARRISON_BUILDING_PLACED') then
+		local plotID = ...
+		local buildingID = C_Garrison.GetOwnedBuildingInfoAbbrev(plotID)
+		if(lib.enchantingBuildings[buildingID]) then
+			hasEnchantingBuilding = true
+		end
+	elseif(event == 'GARRISON_BUILDING_REMOVED') then
+		local _, buildingID = ...
+		if(lib.enchantingBuildings[buildingID]) then
+			hasEnchantingBuilding = false
 		end
 	elseif(event == 'PLAYER_LOGIN') then
 		local weapon, armor = GetAuctionItemClasses()
@@ -554,4 +556,10 @@ lib.containers = {
 	[88165] = 450, -- Vine-Cracked Junkbox
 	[106895] = 500, -- Iron-Bound Junkbox
 	[116920] = 500, -- True Steel Lockbox
+}
+
+lib.enchantingBuildings = {
+	[93] = true,
+	[125] = true,
+	[126] = true,
 }
