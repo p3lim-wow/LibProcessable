@@ -313,9 +313,10 @@ end
 local DISENCHANTING = 13262
 --- API to verify if an item can be processed through the Disenchanting skill or garrison buildings.
 -- @name LibProcessable:IsDisenchantable
--- @usage LibStub('LibProcessable'):IsDisenchantable(itemID[, ignoreGarrison])
+-- @usage LibStub('LibProcessable'):IsDisenchantable(itemID[, ignoreGarrison[, ignoreGarrisonBuildingRequirement]])
 -- @param itemID The itemID of the item to check against
 -- @param ignoreGarrison Ignore the garrison enchanting buildings
+-- @param ignoreGarrisonBuildingRequirement Ignore the garrison enchanting building requirement
 -- @return isDisenchantable Boolean indicating if the player can process the item
 -- @return skillRequired Number representing the required skill to process the item
 -- @return skillLevel Number representing the player's skill in Enchanting
