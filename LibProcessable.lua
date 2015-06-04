@@ -319,7 +319,7 @@ local DISENCHANTING = 13262
 -- @return isDisenchantable Boolean indicating if the player can process the item
 -- @return skillRequired Number representing the required skill to process the item
 -- @return skillLevel Number representing the player's skill in Enchanting
-function lib:IsDisenchantable(itemID, ignoreGarrison)
+function lib:IsDisenchantable(itemID, ignoreGarrison, ignoreGarrisonBuildingRequirement)
 	assert(tonumber(itemID), 'itemID needs to be a number or convertable to a number')
 	itemID = tonumber(itemID)
 
@@ -329,7 +329,7 @@ function lib:IsDisenchantable(itemID, ignoreGarrison)
 			local skillRequired = GetSkillRequired(itemClasses[class], quality, level)
 			return skillRequired and skillRequired <= enchantingSkill, skillRequired, enchantingSkill
 		end
-	elseif(not ignoreGarrison and hasEnchantingBuilding) then
+	elseif(not ignoreGarrison and (hasEnchantingBuilding or ignoreGarrisonBuildingRequirement)) then
 		local _, _, quality, level, _, class = GetItemInfo(itemID)
 		if(IsEquippableItem(itemID) and quality and level) then
 			local skillRequired = GetSkillRequired(itemClasses[class], quality, level)
