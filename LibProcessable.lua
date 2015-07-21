@@ -334,7 +334,7 @@ function lib:IsDisenchantable(itemID, ignoreGarrison, ignoreGarrisonBuildingRequ
 		local _, _, quality, level, _, class = GetItemInfo(itemID)
 		if(IsEquippableItem(itemID) and quality and level) then
 			local skillRequired = GetSkillRequired(itemClasses[class], quality, level)
-			return skillRequired <= 1, skillRequired, enchantingSkill
+			return skillRequired and skillRequired <= 1, skillRequired, enchantingSkill
 		end
 	end
 end
