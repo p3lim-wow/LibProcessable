@@ -504,6 +504,13 @@ lib.herbs = {
 	[109128] = 0, -- Nagrand Arrowbloom
 	[109129] = 0, -- Talador Orchid
 	[109130] = 0, -- Chameleon Lotus
+	[124101] = 0, -- Aethril
+	[124102] = 0, -- Dreamleaf
+	[124103] = 0, -- Foxflower
+	[124104] = 0, -- Fjarnskaggl
+	[124105] = 0, -- Starlight Rose
+	[124106] = 0, -- Felwort
+	[128304] = 0, -- Yseralline Seed (this might be an error in the data files)
 }
 
 -- https://gist.github.com/p3lim/5c0363251db4a110017b
@@ -525,6 +532,8 @@ lib.ores = {
 	[72093] = 550, -- Kyparite
 	[72094] = 600, -- Black Trillium Ore
 	[72103] = 600, -- White Trillium Ore
+	[123918] = 0, -- Leystone Ore
+	[123919] = 0, -- Felslate
 }
 
 -- http://www.wowhead.com/items?filter=cr=10:161:128;crs=1:1:1
