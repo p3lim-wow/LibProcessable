@@ -1,3 +1,0 @@
-[submodule "LibStub"]
-	path = LibStub
-	url = git://github.com/wowace-mirror/LibStub.git

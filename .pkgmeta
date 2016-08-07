@@ -1,15 +1,11 @@
 package-as: LibProcessable
 
 externals:
-    LibStub:
-        url: git://github.com/wowace-mirror/LibStub.git
+    LibStub: svn://svn.wowace.com/wow/libstub/mainline/tags/1.0
 
 optional-dependencies:
     - libstub
 
 ignore:
-    - .gitmodules
     - README.md
     - CONTRIBUTING.md
-    - embeds/LibStub/tests
-    - embeds/LibStub/.pkgmeta
