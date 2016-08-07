@@ -20,7 +20,7 @@ For details on how to implement this in your own addon, please see the wiki:
 ## Feedback
 
 If you have a question, please use the comments section on Curse/WoWInterface.  
-If you would like to report a bug or contribute to the project, please follow [this link](https://github.com/p3lim-wow/LibProcessable/blob/master/CONTRIBUTING.md) to get started.
+If you would like to report a bug or contribute to the project, please follow [this link](//github.com/p3lim-wow/LibProcessable/issues?q=) to get started.
 
 ## Legal
 

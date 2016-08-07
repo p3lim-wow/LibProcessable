@@ -8,4 +8,3 @@ optional-dependencies:
 
 ignore:
     - README.md
-    - CONTRIBUTING.md
