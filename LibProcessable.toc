@@ -5,6 +5,4 @@
 ## Notes: Library that lets you easily check if you can process resources
 ## OptionalDeps: LibStub
 
-LibStub\LibStub.lua
-
-LibProcessable.lua
+embed.xml
