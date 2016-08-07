@@ -4,7 +4,7 @@ externals:
     LibStub: svn://svn.wowace.com/wow/libstub/mainline/tags/1.0
 
 optional-dependencies:
-    - libstub
+  - libstub
 
 ignore:
-    - README.md
+  - README.md
