@@ -360,17 +360,24 @@ local function GetSkeletonKey(pickLevel)
 	end
 end
 
-local LOCKPICKING, BLACKSMITH = 1804, 2018
+-- http://www.wowhead.com/items/name:lock?filter=86;7;0
+local function GetJeweledLockpick(pickLevel)
+	if(pickLevel <= 750) then
+		return 130250, 1
+	end
+end
+
+local LOCKPICKING, BLACKSMITHING, JEWELCRAFTING = 1804, 2018, 25229
 --- API to verify if an item can be processed through the Lock Pick skill or with Blacksmithing skeleton keys.
 -- @name LibProcessable:IsOpenable
--- @usage LibStub('LibProcessable'):IsOpenable(itemID[, ignoreSkeletonKeys])
+-- @usage LibStub('LibProcessable'):IsOpenable(itemID[, ignoreProfessionKeys])
 -- @param itemID The itemID of the item to check against
--- @param ignoreSkeletonKeys Ignore checking for Skeleton Keys
+-- @param ignoreProfessionKeys Ignore checking for Skeleton Keys
 -- @return isOpenable Boolean indicating if the player can process the item
 -- @return skillRequired Number representing the required skill in Lockpicking or Blacksmithing to process the item
 -- @return skillLevel Number representing the player's skill in Lockpicking or Blacksmithing
 -- @return skeletonKeyItemID Number representing the Skeleton Key, if used
-function lib:IsOpenable(itemID, ignoreSkeletonKeys)
+function lib:IsOpenable(itemID, ignoreProfessionKeys)
 	assert(tonumber(itemID), 'itemID needs to be a number or convertable to a number')
 	itemID = tonumber(itemID)
 
@@ -378,9 +385,14 @@ function lib:IsOpenable(itemID, ignoreSkeletonKeys)
 	if(IsSpellKnown(LOCKPICKING)) then
 		local playerSkill = UnitLevel('player') * 5
 		return pickLevel and pickLevel <= playerSkill, pickLevel, playerSkill
-	elseif(not ignoreSkeletonKeys and pickLevel and GetSpellBookItemInfo(GetSpellInfo(BLACKSMITH))) then
-		local skeletonKeyID, skillRequired = GetSkeletonKey(pickLevel)
-		return skillRequired <= blacksmithingSkill, skillRequired, blacksmithingSkill, skeletonKeyID
+	elseif(not ignoreProfessionKeys and pickLevel) then
+		if(GetSpellBookItemInfo(GetSpellInfo(BLACKSMITHING))) then
+			local skeletonKeyID, skillRequired = GetSkeletonKey(pickLevel)
+			return skillRequired <= blacksmithingSkill, skillRequired, blacksmithingSkill, skeletonKeyID
+		elseif(GetSpellBookItemInfo(GetSpellInfo(JEWELCRAFTING))) then
+			local lockpickID, skillRequired = GetJeweledLockpick(pickLevel)
+			return skillRequired <= jewelcraftingSkill, skillRequired, jewelcraftingSkill, lockpickID
+		end
 	end
 end
 
