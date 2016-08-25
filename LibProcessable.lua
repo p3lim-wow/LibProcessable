@@ -339,7 +339,7 @@ function lib:IsDisenchantable(itemID, ignoreGarrison, ignoreGarrisonBuildingRequ
 	end
 end
 
--- http://www.wowhead.com/items?filter=na=key;cr=86;crs=2;crv=0
+-- http://www.wowhead.com/items/name:key?filter=86;2;0
 local function GetSkeletonKey(pickLevel)
 	if(pickLevel > 425) then
 		return 82960, 500 -- Ghostly Skeleton Key
@@ -548,7 +548,7 @@ lib.ores = {
 	[123919] = 0, -- Felslate
 }
 
--- http://www.wowhead.com/items?filter=cr=10:161:128;crs=1:1:1
+-- http://www.wowhead.com/items?filter=10:161:128;1:1:1;::
 lib.containers = {
 	[4632] = 1, -- Ornate Bronze Lockbox
 	[6354] = 1, -- Small Locked Chest
