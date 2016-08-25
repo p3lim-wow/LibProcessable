@@ -443,11 +443,9 @@ Handler:SetScript('OnEvent', function(self, event, ...)
 			hasEnchantingBuilding = false
 		end
 	elseif(event == 'PLAYER_LOGIN') then
-		if(select(4, GetBuildInfo()) < 70000) then
-			local weapon, armor = GetAuctionItemClasses()
-			itemClasses[weapon] = 2
-			itemClasses[armor] = 4
-		end
+		local weapon, armor = GetAuctionItemClasses()
+		itemClasses[weapon] = 2
+		itemClasses[armor] = 4
 	end
 end)
 
