@@ -6,7 +6,7 @@ if(not lib) then
 	return
 end
 
-local itemClasses, hasEnchantingBuilding = {}
+local hasEnchantingBuilding
 local inscriptionSkill, jewelcraftingSkill, enchantingSkill, blacksmithingSkill
 
 local MILLING, MORTAR = 51005, 114942
@@ -327,13 +327,13 @@ function lib:IsDisenchantable(itemID, ignoreGarrison, ignoreGarrisonBuildingRequ
 	if(IsSpellKnown(DISENCHANTING)) then
 		local _, _, quality, level, _, type, _, _, _, _, _, class = GetItemInfo(itemID)
 		if(IsEquippableItem(itemID) and quality and level) then
-			local skillRequired = GetSkillRequired(class or itemClasses[type], quality, level)
+			local skillRequired = GetSkillRequired(class, quality, level)
 			return skillRequired and skillRequired <= enchantingSkill, skillRequired, enchantingSkill
 		end
 	elseif(not ignoreGarrison and (hasEnchantingBuilding or ignoreGarrisonBuildingRequirement)) then
 		local _, _, quality, level, _, type, _, _, _, _, _, class = GetItemInfo(itemID)
 		if(IsEquippableItem(itemID) and quality and level) then
-			local skillRequired = GetSkillRequired(class or itemClasses[type], quality, level)
+			local skillRequired = GetSkillRequired(class, quality, level)
 			return skillRequired and skillRequired == 0, skillRequired, enchantingSkill
 		end
 	end
@@ -397,7 +397,6 @@ function lib:IsOpenable(itemID, ignoreProfessionKeys)
 end
 
 local Handler = CreateFrame('Frame')
-Handler:RegisterEvent('PLAYER_LOGIN')
 Handler:RegisterEvent('SKILL_LINES_CHANGED')
 Handler:RegisterEvent('GARRISON_BUILDING_PLACED')
 Handler:RegisterEvent('GARRISON_BUILDING_REMOVED')
@@ -442,10 +441,6 @@ Handler:SetScript('OnEvent', function(self, event, ...)
 		if(lib.enchantingBuildings[buildingID]) then
 			hasEnchantingBuilding = false
 		end
-	elseif(event == 'PLAYER_LOGIN') then
-		local weapon, armor = GetAuctionItemClasses()
-		itemClasses[weapon] = 2
-		itemClasses[armor] = 4
 	end
 end)
 
