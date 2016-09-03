@@ -52,6 +52,7 @@ end
 -- https://gist.github.com/p3lim/57acb053b3efccad0275
 local function GetSkillRequired(class, quality, level)
 	if(class == 2) then
+		-- Weapons
 		if(quality == 2) then
 			if(level > 449) then
 				return 0
@@ -180,6 +181,7 @@ local function GetSkillRequired(class, quality, level)
 			end
 		end
 	elseif(class == 4) then
+		-- Armor
 		if(quality == 2) then
 			if(level > 449) then
 				return 0
@@ -307,6 +309,10 @@ local function GetSkillRequired(class, quality, level)
 				return 25
 			end
 		end
+	elseif(class == 3) then
+		-- Artifact Relics
+		-- TODO: needs refining but is good for now
+		return 1
 	end
 end
 
@@ -326,7 +332,7 @@ function lib:IsDisenchantable(itemID, ignoreGarrison, ignoreGarrisonBuildingRequ
 
 	if(IsSpellKnown(DISENCHANTING)) then
 		local _, _, quality, level, _, type, _, _, _, _, _, class = GetItemInfo(itemID)
-		if(IsEquippableItem(itemID) and quality and level) then
+		if((IsEquippableItem(itemID) or class == 3) and quality and level) then
 			local skillRequired = GetSkillRequired(class, quality, level)
 			return skillRequired and skillRequired <= enchantingSkill, skillRequired, enchantingSkill
 		end
