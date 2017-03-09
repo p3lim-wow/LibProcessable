@@ -319,25 +319,33 @@ end
 local DISENCHANTING = 13262
 --- API to verify if an item can be processed through the Disenchanting skill or garrison buildings.
 -- @name LibProcessable:IsDisenchantable
--- @usage LibStub('LibProcessable'):IsDisenchantable(itemID[, ignoreGarrison[, ignoreGarrisonBuildingRequirement]])
+-- @usage LibStub('LibProcessable'):IsDisenchantable(itemID | itemLink[, ignoreGarrison[, ignoreGarrisonBuildingRequirement]])
 -- @param itemID The itemID of the item to check against
+-- @param itemLink The itemLink of the item to check against
 -- @param ignoreGarrison Ignore the garrison enchanting buildings
 -- @param ignoreGarrisonBuildingRequirement Ignore the garrison enchanting building requirement
 -- @return isDisenchantable Boolean indicating if the player can process the item
 -- @return skillRequired Number representing the required skill to process the item
 -- @return skillLevel Number representing the player's skill in Enchanting
-function lib:IsDisenchantable(itemID, ignoreGarrison, ignoreGarrisonBuildingRequirement)
-	assert(tonumber(itemID), 'itemID needs to be a number or convertable to a number')
-	itemID = tonumber(itemID)
+function lib:IsDisenchantable(item, ignoreGarrison, ignoreGarrisonBuildingRequirement)
+	if(type(item) == 'string') then
+		if(not string.match(item, 'item:(%d+):') and not tonumber(item)) then
+			assert(false, 'item must be an item ID or item Link')
+		end
+
+		if(tonumber(item)) then
+			item = tonumber(item)
+		end
+	end
 
 	if(IsSpellKnown(DISENCHANTING)) then
-		local _, _, quality, level, _, _, _, _, _, _, _, class, subClass = GetItemInfo(itemID)
+		local _, _, quality, level, _, _, _, _, _, _, _, class, subClass = GetItemInfo(item)
 		if(class == 2 or class == 4 or (class == 3 and subClass == 11)) then
 			local skillRequired = GetSkillRequired(class, quality, level)
 			return skillRequired and skillRequired <= enchantingSkill, skillRequired, enchantingSkill
 		end
 	elseif(not ignoreGarrison and (hasEnchantingBuilding or ignoreGarrisonBuildingRequirement)) then
-		local _, _, quality, level, _, _, _, _, _, _, _, class, subClass = GetItemInfo(itemID)
+		local _, _, quality, level, _, _, _, _, _, _, _, class, subClass = GetItemInfo(item)
 		if(class == 2 or class == 4 or (class == 3 and subClass == 11)) then
 			local skillRequired = GetSkillRequired(class, quality, level)
 			return skillRequired and skillRequired == 0, skillRequired, enchantingSkill
