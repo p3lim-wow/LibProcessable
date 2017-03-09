@@ -339,15 +339,15 @@ function lib:IsDisenchantable(item, ignoreGarrison, ignoreGarrisonBuildingRequir
 	end
 
 	if(IsSpellKnown(DISENCHANTING)) then
-		local _, _, quality, level, _, _, _, _, _, _, _, class, subClass = GetItemInfo(item)
+		local _, _, quality, _, _, _, _, _, _, _, _, class, subClass = GetItemInfo(item)
 		if(class == 2 or class == 4 or (class == 3 and subClass == 11)) then
-			local skillRequired = GetSkillRequired(class, quality, level)
+			local skillRequired = GetSkillRequired(class, quality, (GetDetailedItemLevelInfo(item)))
 			return skillRequired and skillRequired <= enchantingSkill, skillRequired, enchantingSkill
 		end
 	elseif(not ignoreGarrison and (hasEnchantingBuilding or ignoreGarrisonBuildingRequirement)) then
-		local _, _, quality, level, _, _, _, _, _, _, _, class, subClass = GetItemInfo(item)
+		local _, _, quality, _, _, _, _, _, _, _, _, class, subClass = GetItemInfo(item)
 		if(class == 2 or class == 4 or (class == 3 and subClass == 11)) then
-			local skillRequired = GetSkillRequired(class, quality, level)
+			local skillRequired = GetSkillRequired(class, quality, (GetDetailedItemLevelInfo(item)))
 			return skillRequired and skillRequired == 0, skillRequired, enchantingSkill
 		end
 	end
