@@ -591,6 +591,7 @@ lib.containers = {
 	[88165] = 450, -- Vine-Cracked Junkbox
 	[106895] = 500, -- Iron-Bound Junkbox
 	[116920] = 500, -- True Steel Lockbox
+	[121331] = 550, -- Leystone Lockbox
 }
 
 lib.enchantingBuildings = {
