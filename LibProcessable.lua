@@ -389,7 +389,7 @@ local LOCKPICKING = 1804
 -- @return	isOpenable	Boolean `true` if the player can open the item, `false` otherwise
 -- @return	pickLevel	Number	Represents the required lockpick level of the item
 -- @return	skillLevel	Number	Represents the player's lockpicking skill level
-function lib:IsOpenable(itemID, ignoreProfessionKeys)
+function lib:IsOpenable(itemID)
 	assert(tonumber(itemID), 'itemID needs to be a number or convertable to a number')
 	itemID = tonumber(itemID)
 
