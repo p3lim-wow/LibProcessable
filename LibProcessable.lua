@@ -423,7 +423,7 @@ function lib:IsOpenableProfession(itemID)
 			itemID = professionItemID,
 			skillRequired = skillRequired,
 			skillLevel = blacksmithingSkill,
-			opensLevel = skillRequired
+			opensLevel = skillLevel
 		}
 	end
 
@@ -436,7 +436,7 @@ function lib:IsOpenableProfession(itemID)
 			itemID = professionItemID,
 			skillRequired = skillRequired,
 			skillLevel = jewelcraftingSkill,
-			opensLevel = skillRequired
+			opensLevel = skillLevel
 		}
 	end
 
