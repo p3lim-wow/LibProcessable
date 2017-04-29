@@ -381,18 +381,14 @@ local function GetJeweledLockpick(pickLevel)
 	end
 end
 
-local LOCKPICKING, BLACKSMITHING, JEWELCRAFTING = 1804, 2018, 25229
---- API to verify if an item can be opened through the Lock Pick skill or with profession-crafted keys.
--- @name LibProcessable:IsOpenable
--- @usage LibStub('LibProcessable'):IsOpenable(itemID[, ignoreProfessionKeys])
--- @param itemID The itemID of the item to check against
--- @param ignoreProfessionKeys Ignore checking for profession-crafted keys
--- @return isOpenable Boolean indicating if the player can open the item
--- @return pickLevel Number representing the required lockpick level of the item
--- @return skillLevel Number representing the player/item lockpick level
--- @return professionSkillRequired Number representing the required skill in Lockpicking or Blacksmithing to process the item
--- @return professionSkillLevel Number representing the current profession skill level
--- @return itemID Number representing the itemID of the profession key required
+local LOCKPICKING = 1804
+--- API to verify if an item can be opened through Rogue's Lock Pick skill
+-- @name	LibProcessable:IsOpenable
+-- @usage	LibStub('LibProcessable'):IsOpenable(itemID)
+-- @param	itemID		Number	The itemID of the item to check against
+-- @return	isOpenable	Boolean `true` if the player can open the item, `false` otherwise
+-- @return	pickLevel	Number	Represents the required lockpick level of the item
+-- @return	skillLevel	Number	Represents the player's lockpicking skill level
 function lib:IsOpenable(itemID, ignoreProfessionKeys)
 	assert(tonumber(itemID), 'itemID needs to be a number or convertable to a number')
 	itemID = tonumber(itemID)
@@ -401,17 +397,50 @@ function lib:IsOpenable(itemID, ignoreProfessionKeys)
 	if(IsSpellKnown(LOCKPICKING)) then
 		local skillLevel = UnitLevel('player') * 5
 		return pickLevel and pickLevel <= skillLevel, pickLevel, skillLevel
-	elseif(not ignoreProfessionKeys and pickLevel) then
-		if(GetSpellBookItemInfo(GetSpellInfo(BLACKSMITHING))) then
-			local itemID, skillRequired, skillLevel = GetSkeletonKey(pickLevel)
-			local canOpen = skillRequired <= blacksmithingSkill and pickLevel <= skillLevel
-			return canOpen, pickLevel, skillLevel, skillRequired, blacksmithingSkill, itemID
-		elseif(GetSpellBookItemInfo(GetSpellInfo(JEWELCRAFTING))) then
-			local itemID, skillRequired, skillLevel = GetJeweledLockpick(pickLevel)
-			local canOpen = skillRequired <= jewelcraftingSkill and pickLevel <= skillLevel
-			return canOpen, pickLevel, skillLevel, skillRequired, jewelcraftingSkill, itemID
-		end
 	end
+end
+
+local BLACKSMITHING, JEWELCRAFTING = 2018, 25229
+--- API to verify if an item can be opened through the players' professions
+-- @name	LibProcessable:IsOpenableProfession
+-- @usage	LibStub('LibProcessable'):IsOpenableProfession(itemID)
+-- @param	itemID			Number	The itemID of the item to check against
+-- @return	isOpenable		Boolean `true` if the player can open the item, `false` otherwise
+-- @return	pickLevel		Number	Represents the required lockpick level of the item
+-- @return	professionData	Table	Containing data relavant to the profession(s) that can open the item with a key
+function lib:IsOpenableProfession(itemID)
+	assert(tonumber(itemID), 'itemID needs to be a number or convertable to a number')
+	itemID = tonumber(itemID)
+
+	local professionData, canOpen = {}
+	local pickLevel = lib.containers[itemID]
+	if(GetSpellBookItemInfo(GetSpellInfo(BLACKSMITHING))) then
+		local professionItemID, skillRequired, skillLevel = GetSkeletonKey(pickLevel)
+		canOpen = skillRequired <= blacksmithingSkill and pickLevel <= skillLevel
+
+		professionData['blacksmithing'] = {
+			skillID = BLACKSMITHING,
+			itemID = professionItemID,
+			skillRequired = skillRequired,
+			skillLevel = blacksmithingSkill,
+			opensLevel = skillRequired
+		}
+	end
+
+	if(GetSpellBookItemInfo(GetSpellInfo(JEWELCRAFTING))) then
+		local professionItemID, skillRequired, skillLevel = GetJeweledLockpick(pickLevel)
+		canOpen = skillRequired <= jewelcraftingSkill and pickLevel <= skillLevel
+
+		professionData['jewelcrafting'] = {
+			skillID = JEWELCRAFTING,
+			itemID = professionItemID,
+			skillRequired = skillRequired,
+			skillLevel = jewelcraftingSkill,
+			opensLevel = skillRequired
+		}
+	end
+
+	return canOpen, pickLevel, professionData
 end
 
 local Handler = CreateFrame('Frame')
