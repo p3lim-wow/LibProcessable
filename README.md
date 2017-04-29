@@ -9,10 +9,12 @@ LibProcessable is a database library that allows a developer to easily retrieve 
 
 The following spells/processes are supported:
 
-- [Milling](//wowhead.com/spell=51005) & [Draenic Mortar](//wowhead.com/item=114942)
-- [Prospecting](//wowhead.com/spell=31252)
-- [Disenchanting](//wowhead.com/spell=13262)
-- [Lockpicking](//wowhead.com/spell=1804) & [skeleton keys](//wowhead.com/items?filter=na=key;cr=86;crs=2)
+- [Milling](http://www.wowhead.com/spell=51005) & [Draenic Mortar](http://www.wowhead.com/item=114942)
+- [Prospecting](http://www.wowhead.com/spell=31252)
+- [Disenchanting](http://www.wowhead.com/spell=13262)
+- [Lockpicking](http://www.wowhead.com/spell=1804)
+- [Skeleton keys](http://www.wowhead.com/items/name:key?filter=86;2;0)
+- [Jeweled keys](http://www.wowhead.com/items/name:lock?filter=86;7;0)
 
 For details on how to implement this in your own addon, please see the wiki:  
 <https://github.com/p3lim-wow/LibProcessable/wiki>
