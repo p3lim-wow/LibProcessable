@@ -1,4 +1,4 @@
-local MAJOR, MINOR = 'LibProcessable', 18
+local MAJOR, MINOR = 'LibProcessable', 19
 assert(LibStub, MAJOR .. ' requires LibStub')
 
 local lib, oldMinor = LibStub:NewLibrary(MAJOR, MINOR)
@@ -412,8 +412,12 @@ function lib:IsOpenableProfession(itemID)
 	assert(tonumber(itemID), 'itemID needs to be a number or convertable to a number')
 	itemID = tonumber(itemID)
 
-	local professionData, canOpen = {}
 	local pickLevel = lib.containers[itemID]
+	if(not pickLevel) then
+		return false
+	end
+
+	local professionData, canOpen = {}
 	if(GetSpellBookItemInfo(GetSpellInfo(BLACKSMITHING))) then
 		local professionItemID, skillRequired, skillLevel = GetSkeletonKey(pickLevel)
 		canOpen = skillRequired <= blacksmithingSkill and pickLevel <= skillLevel
