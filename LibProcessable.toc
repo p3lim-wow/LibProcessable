@@ -5,4 +5,8 @@
 ## Notes: Library that lets you easily check if you can process resources
 ## OptionalDeps: LibStub
 
+#@do-not-package@
+..\LibStub\LibStub.lua
+#@end-do-not-package@
+
 embed.xml
