@@ -55,6 +55,7 @@ local function GetSkillRequired(class, quality, level)
 		-- Weapons
 		if(quality == 2) then
 			if(level > 449) then
+				-- Anything past this itemlevel can be disenchanted at 0 skill
 				return 0
 			elseif(level > 416) then
 				return 475
@@ -109,6 +110,7 @@ local function GetSkillRequired(class, quality, level)
 			end
 		elseif(quality == 3) then
 			if(level > 499) then
+				-- Anything past this itemlevel can be disenchanted at 0 skill
 				return 0
 			elseif(level > 424) then
 				return 550
@@ -149,6 +151,7 @@ local function GetSkillRequired(class, quality, level)
 			end
 		elseif(quality == 4) then
 			if(level > 599) then
+				-- Anything past this itemlevel can be disenchanted at 0 skill
 				return 0
 			elseif(level > 419) then
 				return 575
