@@ -569,7 +569,8 @@ lib.herbs = {
 	[124104] = 0, -- Fjarnskaggl
 	[124105] = 0, -- Starlight Rose
 	[124106] = 0, -- Felwort
-	[128304] = 0, -- Yseralline Seed (this might be an error in the data files)
+	[128304] = 0, -- Yseralline Seed
+	[151565] = 0, -- Astral Glory
 }
 
 -- https://gist.github.com/p3lim/5c0363251db4a110017b
@@ -593,6 +594,7 @@ lib.ores = {
 	[72103] = 600, -- White Trillium Ore
 	[123918] = 0, -- Leystone Ore
 	[123919] = 0, -- Felslate
+	[151564] = 0, -- Empyrium
 }
 
 -- http://www.wowhead.com/items?filter=10:161:128;1:1:1;::
