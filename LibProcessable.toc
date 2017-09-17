@@ -5,6 +5,9 @@
 ## Notes: Library that lets you easily check if you can process resources
 ## OptionalDeps: LibStub
 
+## X-Curse-Project-ID: 88553
+## X-WoWI-ID: 23440
+
 #@do-not-package@
 ..\LibStub\LibStub.lua
 #@end-do-not-package@
