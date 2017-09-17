@@ -346,6 +346,11 @@ function lib:IsDisenchantable(item, ignoreGarrison, ignoreGarrisonBuildingRequir
 		if(class == 2 or class == 4 or (class == 3 and subClass == 11)) then
 			local skillRequired = GetSkillRequired(class, quality, (GetDetailedItemLevelInfo(item)))
 			return skillRequired and skillRequired <= enchantingSkill, skillRequired, enchantingSkill
+		else
+			local skillRequired = lib.specialItems.enchanting[itemID]
+			if(skillRequired) then
+				return skillRequired and skillRequired <= enchantingSkill, skillRequired, enchantingSkill
+			end
 		end
 	elseif(not ignoreGarrison and (hasEnchantingBuilding or ignoreGarrisonBuildingRequirement)) then
 		local _, _, quality, _, _, _, _, _, _, _, _, class, subClass = GetItemInfo(item)
@@ -636,4 +641,13 @@ lib.enchantingBuildings = {
 	[93] = true,
 	[125] = true,
 	[126] = true,
+}
+
+lib.specialItems = {
+	enchanting = {
+		-- These items are used as part of the Legion enchanting quest line
+		[137195] = 1, -- Highmountain Armor
+		[137221] = 1, -- Enchanted Raven Sigil
+		[137286] = 1, -- Fel-Crusted Rune
+	}
 }
