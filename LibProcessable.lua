@@ -59,6 +59,7 @@ local DISENCHANTING = 13262
 -- @return skillRequired Number representing the required skill to process the item
 -- @return skillLevel Number representing the player's skill in Enchanting
 function lib:IsDisenchantable(item)
+	local itemID = item
 	if(type(item) == 'string') then
 		if(not string.match(item, 'item:(%d+):') and not tonumber(item)) then
 			assert(false, 'item must be an item ID or item Link')
@@ -67,11 +68,12 @@ function lib:IsDisenchantable(item)
 		if(tonumber(item)) then
 			item = tonumber(item)
 		end
+
+		itemID = GetItemInfoFromHyperlink(item)
 	end
 
 	if(IsSpellKnown(DISENCHANTING)) then
 		local _, _, quality, _, _, _, _, _, _, _, _, class, subClass = GetItemInfo(item)
-		local itemID = GetItemInfoFromHyperlink(item)
 		if(self.specialItems.enchanting[itemID] or ((class == 2 or class == 4 or (class == 3 and subClass == 11)) and (quality >= 2 and quality <= 4))) then
 			return true, 1, enchantingSkill
 		end
