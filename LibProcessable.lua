@@ -71,6 +71,7 @@ function lib:IsDisenchantable(item)
 
 	if(IsSpellKnown(DISENCHANTING)) then
 		local _, _, quality, _, _, _, _, _, _, _, _, class, subClass = GetItemInfo(item)
+		local itemID = GetItemInfoFromHyperlink(item)
 		if(self.specialItems.enchanting[itemID] or ((class == 2 or class == 4 or (class == 3 and subClass == 11)) and (quality >= 2 and quality <= 4))) then
 			return true, 1, enchantingSkill
 		end
