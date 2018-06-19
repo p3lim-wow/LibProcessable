@@ -1,12 +1,9 @@
 package-as: LibProcessable
 
-enable-nolib-creation: no
-
 externals:
-    LibStub: https://repos.wowace.com/wow/libstub/trunk
-
-optional-dependencies:
-  - libstub
+  LibStub:
+    url: https://repos.wowace.com/wow/libstub/trunk
+    tag: 1.0
 
 ignore:
   - README.md
