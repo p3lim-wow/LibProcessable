@@ -295,6 +295,13 @@ lib.herbs = {
 	[124106] = 0, -- Felwort
 	[128304] = 0, -- Yseralline Seed
 	[151565] = 0, -- Astral Glory
+	[152511] = 0, -- Sea Stalk
+	[152509] = 0, -- Siren's Pollen
+	[152508] = 0, -- Winter's Kiss
+	[152507] = 0, -- Akunda's Bite
+	[152506] = 0, -- Star Moss
+	[152505] = 0, -- Riverbud
+	[152510] = 0, -- Anchor Weed
 }
 
 -- https://gist.github.com/p3lim/5c0363251db4a110017b
@@ -319,6 +326,9 @@ lib.ores = {
 	[123918] = 0, -- Leystone Ore
 	[123919] = 0, -- Felslate
 	[151564] = 0, -- Empyrium
+	[152579] = 0, -- Storm Silver Ore
+	[152512] = 0, -- Monelite Ore
+	[152513] = 0, -- Platinum Ore
 }
 
 -- http://www.wowhead.com/items?filter=10:161:128;1:1:1;::
