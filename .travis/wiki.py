@@ -1,7 +1,7 @@
 import os, re, glob
 
 # compile regex patterns beforehand
-START = re.compile(r'^\t*--\[\[ ?((\w+):(.+))$')
+START = re.compile(r'^\t*--\[\[ ?((\w+)[:.](.+))$')
 STOP = re.compile(r'^\t*--\]\]$')
 
 # create a dictionary to store our pages
