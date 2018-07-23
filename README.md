@@ -1,7 +1,6 @@
 # LibProcessable
 
-This is an addon for the popular MMORPG "World of Warcraft".  
-It can be downloaded at [Curse](//mods.curse.com/addons/wow/libprocessable) or at [WoWInterface](//wowinterface.com/downloads/info23440).
+This is an addon for the popular MMORPG "World of Warcraft".
 
 ## Description
 
