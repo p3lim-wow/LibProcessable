@@ -12,7 +12,7 @@ local professions = {}
 Returns `true`/`false` wether the player can open the given item with a class ability.
 
 * `item`: item ID or link
-* `ignoreMortar`: `true`/`false` if the [Draenic Mortar]() should be ignored or not, if the player has one
+* `ignoreMortar`: `true`/`false` if the [Draenic Mortar](http://www.wowhead.com/item=114942) should be ignored or not, if the player has one
 --]]
 function lib:IsMillable(itemID, ignoreMortar)
 	if(type(itemID) == 'string') then
@@ -163,7 +163,7 @@ end
 --[[ LibProcessable:HasProfession(_professionID_)
 Returns `true`/`false` wether the player has the given profession.
 
-* `professionID`: a profession's ID (see [LibProcessable.professions](#libprocessable.professions))
+* `professionID`: a profession's ID (see [LibProcessable.professions](LibProcessable#libprocessableprofessions))
 --]]
 function lib:HasProfession(professionID)
 	return not not professions[professionID]
@@ -172,8 +172,8 @@ end
 --[[ LibProcessable:GetProfessionSkill(_professionID, categoryID_)
 Returns the current and maximum skill for a category in a profession, as well the localized category's name.
 
-* `professionID`: a profession's ID (see [LibProcessable.professions](#libprocessable.professions))
-* `categoryID`: a profession's category ID (see [LibProcessable:GetProfessionCategories(_professionID[, tableToUse]_)](#libprocessablegetprofessioncategoriesprofessionidtabletouse))
+* `professionID`: a profession's ID (see [LibProcessable.professions](LibProcessable#libprocessableprofessions))
+* `categoryID`: a profession's category ID (see [LibProcessable:GetProfessionCategories(_professionID[, tableToUse]_)](LibProcessable#libprocessablegetprofessioncategoriesprofessionidtabletouse))
 --]]
 function lib:GetProfessionSkill(professionID, categoryID)
 	local profession = professions[professionID]
@@ -187,7 +187,7 @@ end
 --[[ LibProcessable:GetProfessionName(_professionID_)
 Returns the localized name of a profession.
 
-* `professionID`: a profession's ID (see [LibProcessable.professions](#libprocessable.professions))
+* `professionID`: a profession's ID (see [LibProcessable.professions](LibProcessable#libprocessableprofessions))
 --]]
 function lib:GetProfessionName(professionID)
 	local name = C_TradeSkillUI.GetTradeSkillDisplayName(professionID)
@@ -196,9 +196,9 @@ function lib:GetProfessionName(professionID)
 end
 
 --[[ LibProcessable:GetProfessionCategories(_professionID[, tableToUse]_)
-Returns a table of all categories for a given profession (basically [LibProcessable.professions](#libprocessableprofessions)).
+Returns a table of all categories for a given profession (basically [LibProcessable.professions](LibProcessable#libprocessableprofessions)).
 
-* `professionID`: a profession's ID (see [LibProcessable.professions](#libprocessable.professions))
+* `professionID`: a profession's ID (see [LibProcessable.professions](LibProcessable#libprocessableprofessions))
 * `tableToUse`: a table to fill the data in instead of creating a new one (optional)
 --]]
 function lib:GetProfessionCategories(professionID, tableToUse)
@@ -222,7 +222,7 @@ end
 --[[ LibProcessable:GetProfessionCategoryIDByExpansion(_professionID, expansionIndex_)
 Returns the category ID for the given profession by expansion index.
 
-* `professionID`: a profession's ID (see [LibProcessable.professions](#libprocessable.professions))
+* `professionID`: a profession's ID (see [LibProcessable.professions](LibProcessable#libprocessableprofessions))
 * `expansionIndex`: an expansion's index, between `1` and `GetNumExpansions()`
 --]]
 function lib:GetProfessionCategoryIDByExpansion(professionID, expansionIndex)
@@ -308,7 +308,7 @@ Table of all ores that can be prospected by a jewelcrafter.
 
 **NB:** Some items have specific profession skill requirements, thus the item's value is a table.
 
-See [LibProcessable:IsProspectable(_item)](#libprocessableisprospectableitem).
+See [LibProcessable:IsProspectable(_item)](LibProcessable#libprocessableisprospectableitem).
 --]]
 lib.ores = {
 	-- http://www.wowhead.com/spell=31252/prospecting#prospected-from:0+1+17-20
@@ -340,7 +340,7 @@ lib.ores = {
 --[[ LibProcessable.herbs
 Table of all herbs that can be milled by a scribe.
 
-See [LibProcessable:IsMillable(_item[, ignoreMortar]_)](#libprocessableismillableitemignoremortar).
+See [LibProcessable:IsMillable(_item[, ignoreMortar]_)](LibProcessable#libprocessableismillableitemignoremortar).
 --]]
 lib.herbs = {
 	-- http://www.wowhead.com/spell=51005/milling#milled-from:0+1+17-20
@@ -427,7 +427,7 @@ lib.herbs = {
 --[[ LibProcessable.enchantingItems
 Table of special items used as part of the Enchanting profession's quest line in the Legion expansion.
 
-See [LibProcessable:IsDisenchantable(_item_)](#libprocessableisdisenchantableitem).
+See [LibProcessable:IsDisenchantable(_item_)](LibProcessable#libprocessableisdisenchantableitem).
 --]]
 lib.enchantingItems = {
 	-- These items are used as part of the Legion enchanting quest line
@@ -441,8 +441,8 @@ Table of all items that can be opened with a Rogue's _Pick Lock_ ability, or wit
 
 The value is the required skill to open the item.
 
-See [LibProcessable:IsOpenable(_item_)](#libprocessableisopenableitem) and
-[LibProcessable:IsOpenableProfession(_item_)](#libprocessableisopenableprofessionitem).
+See [LibProcessable:IsOpenable(_item_)](LibProcessable#libprocessableisopenableitem) and
+[LibProcessable:IsOpenableProfession(_item_)](LibProcessable#libprocessableisopenableprofessionitem).
 --]]
 lib.containers = {
 	-- http://www.wowhead.com/items?filter=10:161:128;1:1:1;::
