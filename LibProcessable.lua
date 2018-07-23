@@ -173,7 +173,7 @@ end
 Returns the current and maximum skill for a category in a profession, as well the localized category's name.
 
 * `professionID`: a profession's ID (see [LibProcessable.professions](LibProcessable#libprocessableprofessions))
-* `categoryID`: a profession's category ID (see [LibProcessable:GetProfessionCategories(_professionID[, tableToUse]_)](LibProcessable#libprocessablegetprofessioncategoriesprofessionidtabletouse))
+* `categoryID`: a profession's category ID (see [LibProcessable:GetProfessionCategories()](LibProcessable#libprocessablegetprofessioncategoriesprofessionid-tabletouse))
 --]]
 function lib:GetProfessionSkill(professionID, categoryID)
 	local profession = professions[professionID]
@@ -308,7 +308,7 @@ Table of all ores that can be prospected by a jewelcrafter.
 
 **NB:** Some items have specific profession skill requirements, thus the item's value is a table.
 
-See [LibProcessable:IsProspectable(_item)](LibProcessable#libprocessableisprospectableitem).
+See [LibProcessable:IsProspectable()](LibProcessable#libprocessableisprospectableitem).
 --]]
 lib.ores = {
 	-- http://www.wowhead.com/spell=31252/prospecting#prospected-from:0+1+17-20
@@ -340,7 +340,7 @@ lib.ores = {
 --[[ LibProcessable.herbs
 Table of all herbs that can be milled by a scribe.
 
-See [LibProcessable:IsMillable(_item[, ignoreMortar]_)](LibProcessable#libprocessableismillableitemignoremortar).
+See [LibProcessable:IsMillable()](LibProcessable#libprocessableismillableitemignoremortar).
 --]]
 lib.herbs = {
 	-- http://www.wowhead.com/spell=51005/milling#milled-from:0+1+17-20
@@ -427,7 +427,7 @@ lib.herbs = {
 --[[ LibProcessable.enchantingItems
 Table of special items used as part of the Enchanting profession's quest line in the Legion expansion.
 
-See [LibProcessable:IsDisenchantable(_item_)](LibProcessable#libprocessableisdisenchantableitem).
+See [LibProcessable:IsDisenchantable()](LibProcessable#libprocessableisdisenchantableitem).
 --]]
 lib.enchantingItems = {
 	-- These items are used as part of the Legion enchanting quest line
@@ -441,8 +441,8 @@ Table of all items that can be opened with a Rogue's _Pick Lock_ ability, or wit
 
 The value is the required skill to open the item.
 
-See [LibProcessable:IsOpenable(_item_)](LibProcessable#libprocessableisopenableitem) and
-[LibProcessable:IsOpenableProfession(_item_)](LibProcessable#libprocessableisopenableprofessionitem).
+See [LibProcessable:IsOpenable()](LibProcessable#libprocessableisopenableitem) and
+[LibProcessable:IsOpenableProfession()](LibProcessable#libprocessableisopenableprofessionitem).
 --]]
 lib.containers = {
 	-- http://www.wowhead.com/items?filter=10:161:128;1:1:1;::
