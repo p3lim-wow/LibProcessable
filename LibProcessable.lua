@@ -28,12 +28,13 @@ function lib:IsMillable(itemID, ignoreMortar)
 	end
 end
 
---[[ LibProcessable:IsProspectable(_item_)
+--[[ LibProcessable:IsProspectable(_item[, ignoreSkillRequirements]_)
 Returns `true`/`false` wether the player can prospect the given item.
 
 * `item`: item ID or link
+* `ignoreSkillRequirements`: `true` if the check should ignore any potential skill requirements to prospect
 --]]
-function lib:IsProspectable(itemID)
+function lib:IsProspectable(itemID, ignoreSkillRequirements)
 	if(type(itemID) == 'string') then
 		assert(string.match(itemID, 'item:(%d+):') or tonumber(itemID), 'item must be an item ID or item Link')
 		itemID = (tonumber(itemID)) or (GetItemInfoFromHyperlink(itemID))
@@ -42,7 +43,7 @@ function lib:IsProspectable(itemID)
 	if(self:HasProfession(755)) then -- Jewelcrafting
 		local ore = self.ores[itemID]
 		if(ore) then
-			if(type(ore) == 'table') then
+			if(not ignoreSkillRequirements and type(ore) == 'table') then
 				-- some ores require some actual skill
 				local categoryID, skillLevelRequired = unpack(ore)
 				local skillLevel = self:GetProfessionSkill(755, categoryID)
