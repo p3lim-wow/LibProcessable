@@ -131,7 +131,8 @@ function lib:IsOpenable(itemID)
 end
 
 --[[ LibProcessable:IsOpenableProfession(_item_)
-Returns `true`/`false` wether the player can open the given item with a profession.
+Returns `true`/`false` wether the player can open the given item with a profession, and the `itemID`
+of the item used to open with, if any.
 
 * `item`: item ID or link
 --]]
@@ -309,7 +310,7 @@ Table of all ores that can be prospected by a jewelcrafter.
 
 **NB:** Some items have specific profession skill requirements, thus the item's value is a table.
 
-See [LibProcessable:IsProspectable()](LibProcessable#libprocessableisprospectableitem).
+See [LibProcessable:IsProspectable()](LibProcessable#libprocessableisprospectableitem-ignoreskillrequirements).
 --]]
 lib.ores = {
 	-- http://www.wowhead.com/spell=31252/prospecting#prospected-from:0+1+17-20
