@@ -289,7 +289,10 @@ Handler:SetScript('OnEvent', function(self, event)
 				C_TradeSkillUI.CloseTradeSkill()
 			end
 
-			UIParent:RegisterEvent('TRADE_SKILL_SHOW')
+			if(not IsAddOnLoaded('TradeSkillMaster_Crafting')) then
+				UIParent:RegisterEvent('TRADE_SKILL_SHOW')
+			end
+
 			professionQueueActive = false
 			QueryProfessions()
 		end
