@@ -519,7 +519,7 @@ lib.professions = {
 	},
 	[164] = { -- Blacksmithing
 		590, -- Classic
-		854, -- Outland
+		584, -- Outland
 		577, -- Northrend
 		569, -- Cataclysm
 		553, -- Pandaria
