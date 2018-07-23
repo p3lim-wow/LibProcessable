@@ -280,7 +280,7 @@ Handler:RegisterEvent('TRADE_SKILL_DATA_SOURCE_CHANGED')
 Handler:SetScript('OnEvent', function(self, event)
 	if(event == 'TRADE_SKILL_DATA_SOURCE_CHANGED') then
 		local _, _, _, _, _, professionID = C_TradeSkillUI.GetTradeSkillLine()
-		if(professionID) then
+		if(professionID and lib.professions[professionID]) then
 			UpdateProfession(professionID)
 		end
 
