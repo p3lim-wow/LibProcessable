@@ -45,7 +45,7 @@ function lib:IsProspectable(itemID)
 			if(type(ore) == 'table') then
 				-- some ores require some actual skill
 				local categoryID, skillLevelRequired = unpack(ore)
-				local skillLevel = self:GetProfessionSkill(professionID, categoryID)
+				local skillLevel = self:GetProfessionSkill(755, categoryID)
 				return skillLevel >= skillLevelRequired
 			else
 				return true
