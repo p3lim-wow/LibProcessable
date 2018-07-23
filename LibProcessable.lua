@@ -285,7 +285,7 @@ Handler:SetScript('OnEvent', function(self, event)
 		end
 
 		if(professionQueueActive) then
-			if(not TradeSkillFrame or not TradeSkillFrame:IsShown()) then
+			if((not TradeSkillFrame or not TradeSkillFrame:IsShown()) and (not TSMCraftingTradeSkillFrame or not TSMCraftingTradeSkillFrame:IsShown())) then
 				C_TradeSkillUI.CloseTradeSkill()
 			end
 
