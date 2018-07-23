@@ -1,25 +1,31 @@
-sudo: false
-language: c
+language: python
 
-addons:
-  apt:
-    packages:
-    - pandoc
+python:
+  - "3.6"
 
 branches:
   only:
-  - /^\d+?-?\w+?$/
+    - master
+
+before_script:
+  - openssl aes-256-cbc -K $encrypted_bfa1e34e2ba5_key -iv $encrypted_bfa1e34e2ba5_iv -in .travis/deploy.enc -out "$HOME/.ssh/deploy" -d
+  - chmod 600 "$HOME/.ssh/deploy"
+  - echo -e "Host github.com\n\tIdentityFile $HOME/.ssh/deploy\n" >> $HOME/.ssh/config
+  - git config --global user.email "$GIT_EMAIL"
+  - git config --global user.name "$GIT_NAME"
+
+script:
+  - git clone "git@github.com:$TRAVIS_REPO_SLUG.wiki" .wiki
+  - python3 .travis/wiki.py
+  - cd .wiki
+  - git add .
+  - git commit -m "$TRAVIS_COMMIT"
+  - git push origin master
 
 env:
   global:
-  - secure: GQc6uTIL5ftRT6LOhp9XTxuL8ZBBRBo5hijK3e0ySIhFXSCCyiUV1k1nJUa9I7u83jcRatZLPeQkpG5jJoyzg65bpZ0O4jh5+NbXymTQtqrbxC7e60ZKgPawGxjVAQhCYx9nvrKObdzU7Du6XJhM0IgDfWXTNnHa/gOoxo/1GjHHXOsWNqHEhnVrSwv5jVj7IZH4EXrMUHCpIfXncEbMGrTi+bxtHPrat2Lmfr0qTPLm3XTV7MJiP/N36+EgWz3k2hvXcycbGiIMPAiKtwGEvR0fmnN+sePzBUMRlaKie0UChkMOOWRwO69JHaGR29cqQAEug5XkGpXmgTYpKEkseuEYatnODkY/2VEbEdj9mJ0uopBz+qGUgbFaif1KcRCcxxemm91NN5GP+g9jjWV83iC3SXrardskZik9swzVh/3AONCs/p3BB6+VSOpXlPH3bZ0/BO7fEin9Ns3H03sGVlgecnOg0bhWppLOLEdPZM9HvrURO5F1qO7G2GIohCa+PuNHgabIAb8EyXA7FsSiAvHw9IHfez0WONjs0uedMHPdDhWq43uG7/AaSjU6diDBT1a1hgofoZddirZEL8mEvJD4ZlV+c5fwxQc2N4g9bX5ElRaBd5OsyUm2uoVjH4BkGC0LXAcUqcBiXwArROA8Vt/l6CZg5xFu3SyZ8q0etTg=
-  - secure: hHlF13qATs9dZZGDWEOcQxGrYb0HVrHFLUVdO7uSmcE+KhS5tcz17a2YEneYaSKOwLrNNxjIODCmQdj3S61A7IsPDFMHurRnSWsG9J3AV90AVDQRy6qXHtcxFzZTdJIVYdSf8IOz0decZIKXM7QMb7w+DwGjj9j4ic1m1UcZkXfCHWe8k7LskRCwhzY0AehmwOtAteEFTRyM9FMWAE16E+x1x2Ha9ftHMoHzeUqjY5E7LIl4BWf/y+Q7/hIgvJrpZuwoccNDTlyJy3X4t3M0UjG4LbNY6I2SfM0SmfTgfW1p0U5Zi59oThAmQrW7BFtOaq5uw5Rpqf6M8nJ7CDOxV6+iM32jBfgr7SlGoQTONBiteuzZJjt2HinOytzyrAxmbL5nZ78GfvdshaMUxnBa6G0yU3zDnuJwQXdsdRnjKlWf+JXX5FQN2fAFiw3G+35V9ZF5AE7EOY9kTSBmIkHPHt29SB16HzbPEfqorqM+e4JgyovR67udxK83P1KkCIzunQXtjGiVzo1Vdbi0i5i008pW0iklOxQSNxVatUBBEJ3r8g9PXqjX1fRUp0ARiFSYLHyuQ/jYjUFwAgBgNea8K71GNRazaME+7x8VtmqHoTpDLeQgPRuyY3GVZvhOv6OpgPvuGvwH4cLRwV3HjW0BlDwKRLzMs2NNynjlJRW4t/Y=
-
-script: curl -s https://raw.githubusercontent.com/oUF-wow/packager/master/release.sh | bash
+    - secure: WIE/pramTCcTVElGyLZ0oGallWz1frBrPLq4Bf3d/B/+oRePk2TvfS7iNQKx1P+EzIS3buf82e85iartH0G5Ybu7WTIwWCK8F551+3rdqM6XswGqiKcLjwzp5K4pRyiT7hD0suDWwX4QmCPe94YjPrN1yrIcdW5qSrzcDStd2iPCCwWX01g6zUj580/JxTAXDtjIPHeHFXVIXgJre8wvGdcjg0BEIASRoXod9BUv6AMv+BqIB/P4RkIpkuT1BbhBqil4QyEL2Yn3Umk/q3XTiLqraVzh9gmXk/FxwRKy4Qa86GQJWDA8qZevRCuOBDksnd7IcpwVNGEoMvzL7G8QkrO3+tRrCzUxxjXRFii1XBsiZB5sL+Wi+YyBwO0iMUjaBNBT6xs1oBQV0R4Q/y8xMR/WSDq2as5THIB/uzL+lBlxm2HQsAEHfFKGzHwd0V1+DuCYyhHnLnTcZt2HbiEusGODwpE4v043nCT9vuQ6u4e8bcUA6In1TpApr3gS4KoXhd1CI/KUzTeRji3tPc7gSsDjYXkC+KaMZKS0czjCU+8DeUJsdaEM4tM4gXL4Zdz23iGGVDV0FuNIgd3sGBRodvHvbGFzPJQQ1BHHO3De9GExPc4HTycMV/BmZHKunzKwo2LBDy1c8zSvEorPouUI1RXCkbhm40/1Z/JaYkW6Bkk=
+    - secure: oLMAkdMTcD2tuwtMK1IeLDDqjJWIy8p8P2dllVpHW2cWntMg/Gnsa5ftCxxN6Lsx/NUlTQADVHApk0v6+Kr5apINtvHSnd3V6GZCwviTiT5/B+1FiIPstcqA0TOzoP2F31SIBHuUYwsualWmAdzljEDq1fQqXAUUzpMj7xWHwnk8Z+OlXjbJhXiIi6AR169sfy2imf+SsJCvS+LTldFxBBSLdCZbOXzq3ujypZydv+8iSzv9NJCNecWvBJKGpDEIdS14B2DY3pYX3FWpG3tT4S5pk+hTwii0kCbtAksQr4xs1unlQ9NpL5hx3q0PU4c3QfksTUDVZTfHZG12qDJYjwIS1bpUKo+B5SiXynShwC41tU2jpV2iqiizZK+LXX339urEv7RynyZHm1DZ2+10KUJRHXvk2c80VnOOIw2TvTWAS5px4DJCY+E2MvyGjtjPkF1ZP7Q5f1hW/qpVHbVDZ0fJJVoCbYyxjjnukOoq+ElNPqy63TuM6W+FB5wkwuQtfqXPmcDSTBgdaimzJfDxGKjpFCWk+vyJt/WLML/9LoTO3CGVOYx7idFBOKhrH2z0KtLSglUCU1dAFY2xSCZgNQAR952SV8mS1lHqKczvwBZCEAcWjrNT+s5tIZ7aRn1CRScxMtvLrrSm+n5QYH8hl8Z1laJS8CdFHSGycwQRmpc=
 
 notifications:
-  email:
-    on_success: always
-    on_failure: always
-    recipients:
-    - secure: eRRfA5P60lZHHP5wbNtbWgmzVXEXc1BhLPdW6RNB3b1zx4ItFV4AR3Sai9iC11jdZx8jF8NbI1sHQ2+dYA1qmSbyso+qE3/n2PrJXEG3VYl0Rl9jVNjovTxvEImdI1NENdVIMTHgEcUAYvJwR+iwLRPVSveaC2l1qv9pZvzg8mlpBigMwu9DA7b6p4zJwHSuk+bNyIFAwbfjegrQt4x3GuqXGL0y86gX1djEeas10GciD8u0YjOVfviwFlb/WKXkPZSCmuYHXrd5eZbZ4PFkuIErWQUmYcDPa9JIEPfEB9wm8lf0PdMW1bhuaPd8OXvdbqUWISuYkKIi7poMgjDM1YEA3SMoCLTO64L38yMvA4WmV0s/HTP7G56Nr+tNE75GXPGno7jTIFkBkwqjk0trt2O5Zvkl6p5ebX9lBatPUpYu4kBYW4zQYAXDRzXPKXHwTdX/dvFoQ90PH0g+97FCP7TeK/AJ7M93CstmSeQCcIWlJxUOEPQ48nuVe7x6Wusjzjbv1KJ4j6WEXMFnPKdMH8LylTlyhNeCeOOV5PSjhcT5UKE4UqLJvqm8A3pE179OToEOllNTyIkU37wkGGaJ0wDPRoAmk5wIZFC7Mvgg6GXnZgD6uv/LZd5mCCA/+HmtKuFoNoljLtFSIwewNhym10RDcaKy7BUmW3kFCebO3tA=
+  email: false
