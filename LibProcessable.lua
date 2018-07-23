@@ -337,9 +337,9 @@ lib.ores = {
 	[123918] = true, -- Leystone Ore
 	[123919] = true, -- Felslate
 	[151564] = true, -- Empyrium
-	-- [152579] = true, -- Storm Silver Ore
-	-- [152512] = true, -- Monelite Ore
-	-- [152513] = true, -- Platinum Ore
+	[152579] = true, -- Storm Silver Ore
+	[152512] = true, -- Monelite Ore
+	[152513] = true, -- Platinum Ore
 }
 
 --[[ LibProcessable.herbs
@@ -420,13 +420,13 @@ lib.herbs = {
 	[124106] = true, -- Felwort
 	[128304] = true, -- Yseralline Seed
 	[151565] = true, -- Astral Glory
-	-- [152511] = true, -- Sea Stalk
-	-- [152509] = true, -- Siren's Pollen
-	-- [152508] = true, -- Winter's Kiss
-	-- [152507] = true, -- Akunda's Bite
-	-- [152506] = true, -- Star Moss
-	-- [152505] = true, -- Riverbud
-	-- [152510] = true, -- Anchor Weed
+	[152511] = true, -- Sea Stalk
+	[152509] = true, -- Siren's Pollen
+	[152508] = true, -- Winter's Kiss
+	[152507] = true, -- Akunda's Bite
+	[152506] = true, -- Star Moss
+	[152505] = true, -- Riverbud
+	[152510] = true, -- Anchor Weed
 }
 
 --[[ LibProcessable.enchantingItems
