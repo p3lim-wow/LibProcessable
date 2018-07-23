@@ -9,7 +9,7 @@ end
 local professions = {}
 
 --[[ LibProcessable:IsMillable(_item[, ignoreMortar]_)
-Returns `true`/`false` wether the player can open the given item with a class ability.
+Returns `true`/`false` wether the player can mill the given item, and `true`/`false` if using the [Draenic Mortar](http://www.wowhead.com/item=114942).
 
 * `item`: item ID or link
 * `ignoreMortar`: `true`/`false` if the [Draenic Mortar](http://www.wowhead.com/item=114942) should be ignored or not, if the player has one
@@ -24,7 +24,7 @@ function lib:IsMillable(itemID, ignoreMortar)
 		-- any herb can be milled at level 1
 		return self.herbs[itemID]
 	elseif(not ignoreMortar and GetItemCount(114942) > 0) then
-		return itemID >= 109124 and itemID <= 109130
+		return itemID >= 109124 and itemID <= 109130, true
 	end
 end
 
