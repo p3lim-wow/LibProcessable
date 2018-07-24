@@ -28,30 +28,22 @@ function lib:IsMillable(itemID, ignoreMortar)
 	end
 end
 
---[[ LibProcessable:IsProspectable(_item[, ignoreSkillRequirements]_)
+--[[ LibProcessable:IsProspectable(_item_)
 Returns `true`/`false` wether the player can prospect the given item.
 
+**NB**: Outland and Pandaria ores have actual skill level requirements which this addon does not check for.
+See [issue #14](https://github.com/p3lim-wow/LibProcessable/issues/14) for more information.
+
 * `item`: item ID or link
-* `ignoreSkillRequirements`: `true` if the check should ignore any potential skill requirements to prospect
 --]]
-function lib:IsProspectable(itemID, ignoreSkillRequirements)
+function lib:IsProspectable(itemID)
 	if(type(itemID) == 'string') then
 		assert(string.match(itemID, 'item:(%d+):') or tonumber(itemID), 'item must be an item ID or item Link')
 		itemID = (tonumber(itemID)) or (GetItemInfoFromHyperlink(itemID))
 	end
 
 	if(self:HasProfession(755)) then -- Jewelcrafting
-		local ore = self.ores[itemID]
-		if(ore) then
-			if(not ignoreSkillRequirements and type(ore) == 'table') then
-				-- some ores require some actual skill
-				local categoryID, skillLevelRequired = unpack(ore)
-				local skillLevel = self:GetProfessionSkill(755, categoryID)
-				return skillLevel >= skillLevelRequired
-			else
-				return true
-			end
-		end
+		return not not self.ores[itemID]
 	end
 end
 
@@ -165,146 +157,42 @@ end
 --[[ LibProcessable:HasProfession(_professionID_)
 Returns `true`/`false` wether the player has the given profession.
 
-* `professionID`: a profession's ID (see [LibProcessable.professions](LibProcessable#libprocessableprofessions))
+Here's a table with the profession ID for each profession.
+
+| Profession Name | Profession ID |
+|-----------------|:--------------|
+| Alchemy         | 171           |
+| Blacksmithing   | 164           |
+| Enchanting      | 333           |
+| Engineering     | 202           |
+| Herbalism       | 182           |
+| Inscription     | 773           |
+| Jewelcrafting   | 755           |
+| Leatherworking  | 165           |
+| Mining          | 186           |
+| Skinning        | 393           |
+| Tailoring       | 197           |
+
+* `professionID`: a profession's ID
 --]]
 function lib:HasProfession(professionID)
 	return not not professions[professionID]
 end
 
---[[ LibProcessable:GetProfessionSkill(_professionID, categoryID_)
-Returns the current and maximum skill for a category in a profession, as well the localized category's name.
-
-* `professionID`: a profession's ID (see [LibProcessable.professions](LibProcessable#libprocessableprofessions))
-* `categoryID`: a profession's category ID (see [LibProcessable:GetProfessionCategories()](LibProcessable#libprocessablegetprofessioncategoriesprofessionid-tabletouse))
---]]
-function lib:GetProfessionSkill(professionID, categoryID)
-	local profession = professions[professionID]
-	assert(profession, 'Player does not have this profession')
-
-	local info = profession[categoryID]
-	assert(info, 'Invalid category ID')
-	return info.cur, info.max, info.name
-end
-
---[[ LibProcessable:GetProfessionName(_professionID_)
-Returns the localized name of a profession.
-
-* `professionID`: a profession's ID (see [LibProcessable.professions](LibProcessable#libprocessableprofessions))
---]]
-function lib:GetProfessionName(professionID)
-	local name = C_TradeSkillUI.GetTradeSkillDisplayName(professionID)
-	assert(name ~= 'Unknown', 'Invalid profession ID')
-	return name
-end
-
---[[ LibProcessable:GetProfessionCategories(_professionID[, tableToUse]_)
-Returns a table of all categories for a given profession (basically [LibProcessable.professions](LibProcessable#libprocessableprofessions)).
-
-* `professionID`: a profession's ID (see [LibProcessable.professions](LibProcessable#libprocessableprofessions))
-* `tableToUse`: a table to fill the data in instead of creating a new one (optional)
---]]
-function lib:GetProfessionCategories(professionID, tableToUse)
-	local profession = self.professions[professionID]
-	assert(profession, 'Invalid profession ID')
-
-	if(tableToUse) then
-		assert(type(tableToUse) == 'table', 'Invalid argument \'tableToUse\', must be a table')
-		table.wipe(tableToUse)
-
-		for k, v in next, profession do
-			tableToUse[k] = v
-		end
-
-		return tableToUse
-	else
-		return CopyTable(profession)
-	end
-end
-
---[[ LibProcessable:GetProfessionCategoryIDByExpansion(_professionID, expansionIndex_)
-Returns the category ID for the given profession by expansion index.
-
-* `professionID`: a profession's ID (see [LibProcessable.professions](LibProcessable#libprocessableprofessions))
-* `expansionIndex`: an expansion's index, between `1` and `GetNumExpansions()`
---]]
-function lib:GetProfessionCategoryIDByExpansion(professionID, expansionIndex)
-	assert(tonumber(expansionIndex), 'Invalid expansion index')
-	local profession = self.professions[professionID]
-	assert(profession, 'Invalid profession ID')
-	return profession[Clamp(expansionIndex, 1, GetNumExpansions())]
-end
-
-local function UpdateProfession(professionID)
-	if(not professions[professionID]) then
-		professions[professionID] = {}
-	end
-
-	for _, categoryID in next, lib.professions[professionID] do
-		local info = C_TradeSkillUI.GetCategoryInfo(categoryID)
-		if(not professions[professionID][categoryID]) then
-			professions[professionID][categoryID] = {
-				name = info.name
-			}
-		end
-
-		professions[professionID][categoryID].cur = info.skillLineCurrentLevel
-		professions[professionID][categoryID].max = info.skillLineMaxLevel
-	end
-end
-
-local professionQueueActive = false
-local professionQueue = {}
-local function QueryProfessions()
-	local professionID = next(professionQueue)
-	if(professionID) then
-		professionQueue[professionID] = nil
-		professionQueueActive = true
-		UIParent:UnregisterEvent('TRADE_SKILL_SHOW')
-		C_TradeSkillUI.OpenTradeSkill(professionID)
-	end
-end
-
-local function QueueProfessionByIndex(index)
-	if(not index) then
-		-- player has no profession in this slot
-		return
-	end
-
-	local _, _, _, _, _, _, professionID = GetProfessionInfo(index)
-	professionQueue[professionID] = true
-end
-
 local Handler = CreateFrame('Frame')
-Handler:RegisterEvent('PLAYER_LOGIN')
-Handler:RegisterEvent('TRADE_SKILL_DATA_SOURCE_CHANGED')
-Handler:SetScript('OnEvent', function(self, event)
-	if(event == 'TRADE_SKILL_DATA_SOURCE_CHANGED') then
-		local _, _, _, _, _, professionID = C_TradeSkillUI.GetTradeSkillLine()
-		if(professionID and lib.professions[professionID]) then
-			UpdateProfession(professionID)
-		end
+Handler:RegisterEvent('SKILL_LINES_CHANGED')
+Handler:SetScript('OnEvent', function(self, event, ...)
+	table.wipe(professions)
 
-		if(professionQueueActive) then
-			if((not TradeSkillFrame or not TradeSkillFrame:IsShown()) and (not TSMCraftingTradeSkillFrame or not TSMCraftingTradeSkillFrame:IsShown())) then
-				C_TradeSkillUI.CloseTradeSkill()
-			end
+	local first, second = GetProfessions()
+	if(first) then
+		local _, _, _, _, _, _, professionID = GetProfessionInfo(first)
+		professions[professionID] = true
+	end
 
-			if(not IsAddOnLoaded('TradeSkillMaster_Crafting')) then
-				UIParent:RegisterEvent('TRADE_SKILL_SHOW')
-			end
-
-			professionQueueActive = false
-			QueryProfessions()
-		end
-	else
-		local first, second = GetProfessions()
-		QueueProfessionByIndex(first)
-		QueueProfessionByIndex(second)
-		QueryProfessions()
-
-		if(event == 'PLAYER_LOGIN') then
-			self:RegisterEvent('SKILL_LINES_CHANGED')
-		end
+	if(second) then
+		local _, _, _, _, _, _, professionID = GetProfessionInfo(second)
+		professions[professionID] = true
 	end
 end)
 
@@ -313,7 +201,7 @@ Table of all ores that can be prospected by a jewelcrafter.
 
 **NB:** Some items have specific profession skill requirements, thus the item's value is a table.
 
-See [LibProcessable:IsProspectable()](LibProcessable#libprocessableisprospectableitem-ignoreskillrequirements).
+See [LibProcessable:IsProspectable()](LibProcessable#libprocessableisprospectableitem).
 --]]
 lib.ores = {
 	-- http://www.wowhead.com/spell=31252/prospecting#prospected-from:0+1+17-20
@@ -482,139 +370,4 @@ lib.containers = {
 	[106895] = 500, -- Iron-Bound Junkbox
 	[116920] = 500, -- True Steel Lockbox
 	[121331] = 550, -- Leystone Lockbox
-}
-
---[[ LibProcessable.professions
-Table of raw profession data.
-
-Keyed by the profession ID, it holds all the category IDs, keyed by expansion index.  
-E.g. `[393][3]` holds the category ID for Northrend Skinning.
-
-Here's a table with the profession ID for each profession.
-
-| Profession Name | Profession ID |
-|-----------------|:--------------|
-| Alchemy         | 171           |
-| Blacksmithing   | 164           |
-| Enchanting      | 333           |
-| Engineering     | 202           |
-| Herbalism       | 182           |
-| Inscription     | 773           |
-| Jewelcrafting   | 755           |
-| Leatherworking  | 165           |
-| Mining          | 186           |
-| Skinning        | 393           |
-| Tailoring       | 197           |
---]]
-lib.professions = {
-	[171] = { -- Alchemy
-		604, -- Classic
-		602, -- Outland
-		600, -- Northrend
-		598, -- Cataclysm
-		596, -- Pandaria
-		332, -- Draenor
-		433, -- Legion
-		592, -- Zandalari/Kul Tiran
-	},
-	[164] = { -- Blacksmithing
-		590, -- Classic
-		584, -- Outland
-		577, -- Northrend
-		569, -- Cataclysm
-		553, -- Pandaria
-		389, -- Draenor
-		426, -- Legion
-		542, -- Zandalari/Kul Tiran
-	},
-	[333] = { -- Enchanting
-		667, -- Classic
-		665, -- Outland
-		663, -- Northrend
-		661, -- Cataclysm
-		656, -- Pandaria
-		348, -- Draenor
-		443, -- Legion
-		647, -- Zandalari/Kul Tiran
-	},
-	[202] = { -- Engineering
-		419, -- Classic
-		719, -- Outland
-		717, -- Northrend
-		715, -- Cataclysm
-		713, -- Pandaria
-		347, -- Draenor
-		469, -- Legion
-		709, -- Zandalari/Kul Tiran
-	},
-	[182] = { -- Herbalism
-		1044, -- Classic
-		1042, -- Outland
-		1040, -- Northrend
-		1038, -- Cataclysm
-		1036, -- Pandaria
-		1034, -- Draenor
-		456, -- Legion
-		1029, -- Zandalari/Kul Tiran
-	},
-	[773] = { -- Inscription
-		415, -- Classic
-		769, -- Outland
-		767, -- Northrend
-		765, -- Cataclysm
-		763, -- Pandaria
-		410, -- Draenor
-		450, -- Legion
-		759, -- Zandalari/Kul Tiran
-	},
-	[755] = { -- Jewelcrafting
-		372, -- Classic
-		815, -- Outland
-		813, -- Northrend
-		811, -- Cataclysm
-		809, -- Pandaria
-		373, -- Draenor
-		464, -- Legion
-		805, -- Zandalari/Kul Tiran
-	},
-	[165] = { -- Leatherworking
-		379, -- Classic
-		882, -- Outland
-		880, -- Northrend
-		878, -- Cataclysm
-		876, -- Pandaria
-		380, -- Draenor
-		460, -- Legion
-		871, -- Zandalari/Kul Tiran
-	},
-	[186] = { -- Mining
-		1078, -- Classic
-		1076, -- Outland
-		1074, -- Northrend
-		1072, -- Cataclysm
-		1070, -- Pandaria
-		nil, -- Draenor
-		425, -- Legion
-		1065, -- Zandalari/Kul Tiran
-	},
-	[393] = { -- Skinning
-		1060, -- Classic
-		1058, -- Outland
-		1056, -- Northrend
-		1054, -- Cataclysm
-		nil, -- Pandaria
-		nil, -- Draenor
-		459, -- Legion
-		1046, -- Zandalari/Kul Tiran
-	},
-	[197] = { -- Tailoring
-		362, -- Classic
-		956, -- Outland
-		954, -- Northrend
-		952, -- Cataclysm
-		950, -- Pandaria
-		369, -- Draenor
-		430, -- Legion
-		942, -- Zandalari/Kul Tiran
-	}
 }
