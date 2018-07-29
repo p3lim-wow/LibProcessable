@@ -9,7 +9,7 @@ end
 local professions = {}
 
 --[[ LibProcessable:IsMillable(_item[, ignoreMortar]_)
-Returns `true`/`false` wether the player can mill the given item, and `true`/`false` if using the [Draenic Mortar](http://www.wowhead.com/item=114942).
+Returns `true`/`false` whether the player can mill the given item, and `true`/`false` if using the [Draenic Mortar](http://www.wowhead.com/item=114942).
 
 * `item`: item ID or link
 * `ignoreMortar`: `true`/`false` if the [Draenic Mortar](http://www.wowhead.com/item=114942) should be ignored or not, if the player has one
@@ -29,7 +29,7 @@ function lib:IsMillable(itemID, ignoreMortar)
 end
 
 --[[ LibProcessable:IsProspectable(_item_)
-Returns `true`/`false` wether the player can prospect the given item.
+Returns `true`/`false` whether the player can prospect the given item.
 
 **NB**: Outland and Pandaria ores have actual skill level requirements which this addon does not check for.
 See [issue #14](https://github.com/p3lim-wow/LibProcessable/issues/14) for more information.
@@ -48,7 +48,7 @@ function lib:IsProspectable(itemID)
 end
 
 --[[ LibProcessable:IsDisenchantable(_item_)
-Returns `true`/`false` wether the player can disenchant the given item.
+Returns `true`/`false` whether the player can disenchant the given item.
 
 **NB**: Many items that are not disenchantable will still return as `true`, as the amount of such
 items and the volatility of that list is too much effort to keep up to date and accurate.
@@ -106,7 +106,7 @@ local function GetJeweledLockpick(pickLevel)
 end
 
 --[[ LibProcessable:IsOpenable(_item_)
-Returns `true`/`false` wether the player can open the given item with a class ability.
+Returns `true`/`false` whether the player can open the given item with a class ability.
 
 * `item`: item ID or link
 --]]
@@ -123,7 +123,7 @@ function lib:IsOpenable(itemID)
 end
 
 --[[ LibProcessable:IsOpenableProfession(_item_)
-Returns `true`/`false` wether the player can open the given item with a profession, and the `itemID`
+Returns `true`/`false` whether the player can open the given item with a profession, and the `itemID`
 of the item used to open with, if any.
 
 * `item`: item ID or link
@@ -155,7 +155,7 @@ function lib:IsOpenableProfession(itemID)
 end
 
 --[[ LibProcessable:HasProfession(_professionID_)
-Returns `true`/`false` wether the player has the given profession.
+Returns `true`/`false` whether the player has the given profession.
 
 Here's a table with the profession ID for each profession.
 
