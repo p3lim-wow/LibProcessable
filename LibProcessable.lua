@@ -427,7 +427,7 @@ lib.containers = {
 --[[ LibProcessable.professionCategories
 Table of all professionIDs and their respective categories, indexed by expansion ID.
 
-See [LibProcessable:GetProfessionCategories()](LibProcessable#libprocessablegetexpansioncategoriesprofessionid).
+See [LibProcessable:GetProfessionCategories()](LibProcessable#libprocessablegetprofessioncategoriesprofessionid).
 --]]
 lib.professionCategories = {
 	[171] = { -- Alchemy
