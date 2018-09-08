@@ -197,6 +197,20 @@ function lib:HasProfession(professionID)
 	return not not professions[professionID]
 end
 
+--[[ LibProcessable:GetProfessionCategories(_professionID_)
+Returns a table of all category IDs for a given (valid) profession, indexed by the expansion level index.
+
+**Arguments:**
+* `professionID`: The profession ID _(number)_
+
+**Return values:**
+* `categories`: Profession categories _(table)_
+--]]
+function lib:GetProfessionCategories(professionID)
+	local professionCategories = lib.professionCategories[professionID]
+	return professionCategories and CopyTable(professionCategories)
+end
+
 local Handler = CreateFrame('Frame')
 Handler:RegisterEvent('SKILL_LINES_CHANGED')
 Handler:SetScript('OnEvent', function(self, event, ...)
@@ -388,4 +402,122 @@ lib.containers = {
 	[106895] = 500, -- Iron-Bound Junkbox
 	[116920] = 500, -- True Steel Lockbox
 	[121331] = 550, -- Leystone Lockbox
+}
+
+--[[ LibProcessable.professionCategories
+Table of all professionIDs and their respective categories, indexed by expansion ID.
+
+See [LibProcessable:GetProfessionCategories()](LibProcessable#libprocessablegetexpansioncategoriesprofessionid).
+--]]
+lib.professionCategories = {
+	[171] = { -- Alchemy
+		604, -- Classic
+		602, -- Outland
+		600, -- Northrend
+		598, -- Cataclysm
+		596, -- Pandaria
+		332, -- Draenor
+		433, -- Legion
+		592, -- Zandalari/Kul Tiran
+	},
+	[164] = { -- Blacksmithing
+		590, -- Classic
+		584, -- Outland
+		577, -- Northrend
+		569, -- Cataclysm
+		553, -- Pandaria
+		389, -- Draenor
+		426, -- Legion
+		542, -- Zandalari/Kul Tiran
+	},
+	[333] = { -- Enchanting
+		667, -- Classic
+		665, -- Outland
+		663, -- Northrend
+		661, -- Cataclysm
+		656, -- Pandaria
+		348, -- Draenor
+		443, -- Legion
+		647, -- Zandalari/Kul Tiran
+	},
+	[202] = { -- Engineering
+		419, -- Classic
+		719, -- Outland
+		717, -- Northrend
+		715, -- Cataclysm
+		713, -- Pandaria
+		347, -- Draenor
+		469, -- Legion
+		709, -- Zandalari/Kul Tiran
+	},
+	[182] = { -- Herbalism
+		1044, -- Classic
+		1042, -- Outland
+		1040, -- Northrend
+		1038, -- Cataclysm
+		1036, -- Pandaria
+		1034, -- Draenor
+		456, -- Legion
+		1029, -- Zandalari/Kul Tiran
+	},
+	[773] = { -- Inscription
+		415, -- Classic
+		769, -- Outland
+		767, -- Northrend
+		765, -- Cataclysm
+		763, -- Pandaria
+		410, -- Draenor
+		450, -- Legion
+		759, -- Zandalari/Kul Tiran
+	},
+	[755] = { -- Jewelcrafting
+		372, -- Classic
+		815, -- Outland
+		813, -- Northrend
+		811, -- Cataclysm
+		809, -- Pandaria
+		373, -- Draenor
+		464, -- Legion
+		805, -- Zandalari/Kul Tiran
+	},
+	[165] = { -- Leatherworking
+		379, -- Classic
+		882, -- Outland
+		880, -- Northrend
+		878, -- Cataclysm
+		876, -- Pandaria
+		380, -- Draenor
+		460, -- Legion
+		871, -- Zandalari/Kul Tiran
+	},
+	[186] = { -- Mining
+		1078, -- Classic
+		1076, -- Outland
+		1074, -- Northrend
+		1072, -- Cataclysm
+		1070, -- Pandaria
+		nil, -- Draenor
+		425, -- Legion
+		1065, -- Zandalari/Kul Tiran
+	},
+	[393] = { -- Skinning
+		1060, -- Classic
+		1058, -- Outland
+		1056, -- Northrend
+		1054, -- Cataclysm
+		nil, -- Pandaria
+		nil, -- Draenor
+		459, -- Legion
+		1046, -- Zandalari/Kul Tiran
+	},
+	[197] = { -- Tailoring
+		362, -- Classic
+		956, -- Outland
+		954, -- Northrend
+		952, -- Cataclysm
+		950, -- Pandaria
+		369, -- Draenor
+		430, -- Legion
+		942, -- Zandalari/Kul Tiran
+	},
 }
