@@ -7,12 +7,15 @@ if(not lib) then
 end
 
 local professions = {}
-
 --[[ LibProcessable:IsMillable(_item[, ignoreMortar]_)
-Returns `true`/`false` whether the player can mill the given item, and `true`/`false` if using the [Draenic Mortar](http://www.wowhead.com/item=114942).
+Returns whether the player can mill the given item.
 
+**Arguments:**
 * `item`: item ID or link
-* `ignoreMortar`: `true`/`false` if the [Draenic Mortar](http://www.wowhead.com/item=114942) should be ignored or not, if the player has one
+* `ignoreMortar`: whether the [Draenic Mortar](http://www.wowhead.com/item=114942) should be ignored or not _(boolean, optional)_
+
+**Return values:**
+* `isMillable`: Whether or not the player can mill the given item _(boolean)_
 --]]
 function lib:IsMillable(itemID, ignoreMortar)
 	if(type(itemID) == 'string') then
@@ -29,12 +32,16 @@ function lib:IsMillable(itemID, ignoreMortar)
 end
 
 --[[ LibProcessable:IsProspectable(_item_)
-Returns `true`/`false` whether the player can prospect the given item.
+Returns whether the player can prospect the given item.
 
-**NB**: Outland and Pandaria ores have actual skill level requirements which this addon does not check for.
+**Note**: Outland and Pandaria ores have actual skill level requirements which this addon does not check for.  
 See [issue #14](https://github.com/p3lim-wow/LibProcessable/issues/14) for more information.
 
+**Arguments:**
 * `item`: item ID or link
+
+**Return values:**
+* `isProspectable`: Whether or not the player can prospect the given item _(boolean)_
 --]]
 function lib:IsProspectable(itemID)
 	if(type(itemID) == 'string') then
@@ -48,12 +55,16 @@ function lib:IsProspectable(itemID)
 end
 
 --[[ LibProcessable:IsDisenchantable(_item_)
-Returns `true`/`false` whether the player can disenchant the given item.
+Returns whether the player can disenchant the given item.
 
-**NB**: Many items that are not disenchantable will still return as `true`, as the amount of such
+**Note**: Many items that are not disenchantable will still return as `true`, as the amount of such
 items and the volatility of that list is too much effort to keep up to date and accurate.
 
+**Arguments:**
 * `item`: item ID or link
+
+**Return values:**
+* `isDisenchantable`: Whether or not the player can disenchant the given item _(boolean)_
 --]]
 function lib:IsDisenchantable(item)
 	local itemID = item
@@ -105,6 +116,7 @@ local function GetJeweledLockpick(pickLevel)
 	end
 end
 
+-- https://www.wowhead.com/items/name:unlock?filter=86;15;0
 local function GetScrollUnlocking(pickLevel)
 	if(pickLevel <= 600 and GetItemCount(169825) > 0) then
 		return 169825, 759, 1 -- Scroll of Unlocking
@@ -112,9 +124,13 @@ local function GetScrollUnlocking(pickLevel)
 end
 
 --[[ LibProcessable:IsOpenable(_item_)
-Returns `true`/`false` whether the player can open the given item with a class ability.
+Returns whether the player can open the given item with a class ability.
 
+**Arguments:**
 * `item`: item ID or link
+
+**Return values:**
+* `isOpenable`: Whether or not the player can open the given item _(boolean)_
 --]]
 function lib:IsOpenable(itemID)
 	if(type(itemID) == 'string') then
@@ -132,7 +148,7 @@ end
 Returns the profession data if the given item can be opened by a profession item that the player
 posesses.
 
-**Arguments**:
+**Arguments:**
 * `item`: item ID or link
 
 **Return values:**
@@ -173,7 +189,7 @@ function lib:IsOpenableProfession(itemID)
 end
 
 --[[ LibProcessable:HasProfession(_professionID_)
-Returns `true`/`false` whether the player has the given profession.
+Returns whether the player has the given profession.
 
 Here's a table with the profession ID for each profession.
 
@@ -191,14 +207,18 @@ Here's a table with the profession ID for each profession.
 | Skinning        | 393           |
 | Tailoring       | 197           |
 
-* `professionID`: a profession's ID
+**Arguments:**
+* `professionID`: The profession ID
+
+**Return values:**
+* `hasProfession`: Whether or not the player has the profession _(boolean)_
 --]]
 function lib:HasProfession(professionID)
 	return not not professions[professionID]
 end
 
 --[[ LibProcessable:GetProfessionCategories(_professionID_)
-Returns a table of all category IDs for a given (valid) profession, indexed by the expansion level index.
+Returns data of all category IDs for a given (valid) profession, indexed by the expansion level index.
 
 **Arguments:**
 * `professionID`: The profession ID _(number)_
