@@ -285,7 +285,7 @@ lib.ores = {
 --[[ LibProcessable.herbs
 Table of all herbs that can be milled by a scribe.
 
-See [LibProcessable:IsMillable()](LibProcessable#libprocessableismillableitemignoremortar).
+See [LibProcessable:IsMillable()](LibProcessable#libprocessableismillableitem-ignoremortar).
 --]]
 lib.herbs = {
 	-- http://www.wowhead.com/spell=51005/milling#milled-from:0+1+17-20
