@@ -105,6 +105,12 @@ local function GetJeweledLockpick(pickLevel)
 	end
 end
 
+local function GetScrollUnlocking(pickLevel)
+	if(pickLevel <= 600 and GetItemCount(169825) > 0) then
+		return 169825, 759, 1 -- Scroll of Unlocking
+	end
+end
+
 --[[ LibProcessable:IsOpenable(_item_)
 Returns `true`/`false` whether the player can open the given item with a class ability.
 
@@ -155,6 +161,13 @@ function lib:IsOpenableProfession(itemID)
 		local itemID, categoryID, skillLevelRequired = GetJeweledLockpick(pickLevel)
 		if(itemID) then
 			return skillLevelRequired, 755, categoryID, itemID
+		end
+	end
+
+	if(self:HasProfession(773)) then -- Inscription
+		local itemID, categoryID, skillLevelRequired = GetScrollUnlocking(pickLevel)
+		if(itemID) then
+			return skillLevelRequired, 773, categoryID, itemID
 		end
 	end
 end
