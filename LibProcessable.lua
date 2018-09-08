@@ -123,10 +123,17 @@ function lib:IsOpenable(itemID)
 end
 
 --[[ LibProcessable:IsOpenableProfession(_item_)
-Returns `true`/`false` whether the player can open the given item with a profession, and the `itemID`
-of the item used to open with, if any.
+Returns the profession data if the given item can be opened by a profession item that the player
+posesses.
 
+**Arguments**:
 * `item`: item ID or link
+
+**Return values:**
+* `skillRequired`:        The skill required in the profession category _(number)_
+* `professionID`:         The profession ID _(number)_
+* `professionCategoryID`: The profession category ID associated with the unlocking item _(number)_
+* `professionItem`:       The itemID for the unlocking item _(number)_
 --]]
 function lib:IsOpenableProfession(itemID)
 	assert(tonumber(itemID), 'itemID needs to be a number or convertable to a number')
@@ -134,22 +141,20 @@ function lib:IsOpenableProfession(itemID)
 
 	local pickLevel = lib.containers[itemID]
 	if(not pickLevel) then
-		return false
+		return
 	end
 
 	if(self:HasProfession(164)) then -- Blacksmithing
 		local itemID, categoryID, skillLevelRequired = GetSkeletonKey(pickLevel)
 		if(itemID) then
-			local skillLevel = GetProfessionSkill(164, categoryID)
-			return skillLevel >= skillLevelRequired, 164, itemID
+			return skillLevelRequired, 164, categoryID, itemID
 		end
 	end
 
-	if(self:HasProfession(755)) then
+	if(self:HasProfession(755)) then -- Jewelcrafting
 		local itemID, categoryID, skillLevelRequired = GetJeweledLockpick(pickLevel)
 		if(itemID) then
-			local skillLevel = GetProfessionSkill(755, categoryID)
-			return skillLevel >= skillLevelRequired, 755, itemID
+			return skillLevelRequired, 755, categoryID, itemID
 		end
 	end
 end
