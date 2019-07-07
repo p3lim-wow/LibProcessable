@@ -424,6 +424,7 @@ lib.containers = {
 	[106895] = 500, -- Iron-Bound Junkbox
 	[116920] = 500, -- True Steel Lockbox
 	[121331] = 550, -- Leystone Lockbox
+	[169475] = 600, -- Barnacled Lockbox
 }
 
 --[[ LibProcessable.professionCategories
