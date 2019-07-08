@@ -280,8 +280,8 @@ lib.ores = {
 	[152579] = true, -- Storm Silver Ore
 	[152512] = true, -- Monelite Ore
 	[152513] = true, -- Platinum Ore
-	
 	[155830] = true, -- Runic Core, BfA Jewelcrafting Quest
+	[168185] = true, -- Osmenite Ore
 }
 
 --[[ LibProcessable.herbs
@@ -369,6 +369,7 @@ lib.herbs = {
 	[152506] = true, -- Star Moss
 	[152505] = true, -- Riverbud
 	[152510] = true, -- Anchor Weed
+	[168487] = true, -- Zin'anthid
 }
 
 --[[ LibProcessable.enchantingItems
