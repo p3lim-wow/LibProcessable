@@ -6,6 +6,8 @@ if(not lib) then
 	return
 end
 
+local CLASSIC = select(4, GetBuildInfo()) == 11302
+
 local professions = {}
 --[[ LibProcessable:IsMillable(_item[, ignoreMortar]_)
 Returns whether the player can mill the given item.
@@ -231,20 +233,51 @@ function lib:GetProfessionCategories(professionID)
 	return professionCategories and CopyTable(professionCategories)
 end
 
+local classicRanks = {
+	[APPRENTICE] = true,
+	[JOURNEYMAN] = true,
+	[EXPERT] = true,
+	[ARTISAN] = true,
+}
+
+local classicIDs = {
+	[(GetSpellInfo(2259))] = 171, -- Alchemy
+	[(GetSpellInfo(2018))] = 164, -- Blacksmithing
+	[(GetSpellInfo(7411))] = 333, -- Enchanting
+	[(GetSpellInfo(4036))] = 202, -- Engineering
+	[(GetSpellInfo(9134))] = 182, -- Herbalism (spell from gloves with +5 herbalism)
+	[(GetSpellInfo(2108))] = 165, -- Leatherworking
+	[(GetSpellInfo(2575))] = 186, -- Mining
+	[(GetSpellInfo(8613))] = 393, -- Skinning
+	[(GetSpellInfo(3908))] = 197, -- Tailoring
+}
+
 local Handler = CreateFrame('Frame')
 Handler:RegisterEvent('SKILL_LINES_CHANGED')
 Handler:SetScript('OnEvent', function(self, event, ...)
 	table.wipe(professions)
 
-	local first, second = GetProfessions()
-	if(first) then
-		local _, _, _, _, _, _, professionID = GetProfessionInfo(first)
-		professions[professionID] = true
-	end
+	if(CLASSIC) then
+		-- all professions are spells in the first spellbook tab
+		local _, _, offset, numSpells = GetSpellTabInfo(1)
+		for index = offset + 1, offset + numSpells do
+			-- iterate through all the spells, the professions have subtitles for their ranks
+			local name, rank = GetSpellBookItemName(index, BOOKTYPE_SPELL)
+			if(classicRanks[rank]) then
+				professions[classicIDs[name]] = true
+			end
+		end
+	else
+		local first, second = GetProfessions()
+		if(first) then
+			local _, _, _, _, _, _, professionID = GetProfessionInfo(first)
+			professions[professionID] = true
+		end
 
-	if(second) then
-		local _, _, _, _, _, _, professionID = GetProfessionInfo(second)
-		professions[professionID] = true
+		if(second) then
+			local _, _, _, _, _, _, professionID = GetProfessionInfo(second)
+			professions[professionID] = true
+		end
 	end
 end)
 
@@ -396,6 +429,8 @@ lib.containers = {
 	-- http://www.wowhead.com/items?filter=10:161:128;1:1:1;::
 	[4632] = 1, -- Ornate Bronze Lockbox
 	[6354] = 1, -- Small Locked Chest
+	[6712] = 1, -- Practice Lock (Classic)
+	[7209] = 1, -- Tazan's Satchel
 	[16882] = 1, -- Battered Junkbox
 	[4633] = 25, -- Heavy Bronze Lockbox
 	[4634] = 70, -- Iron Lockbox
