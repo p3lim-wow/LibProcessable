@@ -263,7 +263,7 @@ Handler:SetScript('OnEvent', function(self, event, ...)
 		for index = offset + 1, offset + numSpells do
 			-- iterate through all the spells, the professions have subtitles for their ranks
 			local name, rank = GetSpellBookItemName(index, BOOKTYPE_SPELL)
-			if(classicRanks[rank]) then
+			if(classicRanks[rank] and classicIDs[name]) then
 				professions[classicIDs[name]] = true
 			end
 		end
