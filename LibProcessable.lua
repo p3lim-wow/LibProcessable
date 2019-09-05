@@ -233,13 +233,6 @@ function lib:GetProfessionCategories(professionID)
 	return professionCategories and CopyTable(professionCategories)
 end
 
-local classicRanks = {
-	[APPRENTICE] = true,
-	[JOURNEYMAN] = true,
-	[EXPERT] = true,
-	[ARTISAN] = true,
-}
-
 local classicIDs = {
 	[(GetSpellInfo(2259))] = 171, -- Alchemy
 	[(GetSpellInfo(2018))] = 164, -- Blacksmithing
@@ -261,10 +254,10 @@ Handler:SetScript('OnEvent', function(self, event, ...)
 		-- all professions are spells in the first spellbook tab
 		local _, _, offset, numSpells = GetSpellTabInfo(1)
 		for index = offset + 1, offset + numSpells do
-			-- iterate through all the spells, the professions have subtitles for their ranks
-			local name, rank = GetSpellBookItemName(index, BOOKTYPE_SPELL)
-			if(classicRanks[rank:trim()] and classicIDs[name]) then
-				professions[classicIDs[name]] = true
+			-- iterate through all the spells to find the professions
+			local professionID = classicIDs[(GetSpellBookItemName(index, BOOKTYPE_SPELL))]
+			if(professionID) then
+				professions[professionID] = true
 			end
 		end
 	else
