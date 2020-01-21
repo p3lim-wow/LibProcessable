@@ -133,6 +133,7 @@ Returns whether the player can open the given item with a class ability.
 
 **Return values:**
 * `isOpenable`: Whether or not the player can open the given item _(boolean)_
+* `spellID`:    SpellID of the spell that can be used to open the given item _(number)_
 --]]
 function lib:IsOpenable(itemID)
 	if(type(itemID) == 'string') then
@@ -140,9 +141,11 @@ function lib:IsOpenable(itemID)
 		itemID = (tonumber(itemID)) or (GetItemInfoFromHyperlink(itemID))
 	end
 
-	if(IsSpellKnown(1804)) then -- Pick Lock, Rogue ability
+	local spellID = (IsSpellKnown(1804) and 1804) or -- Pick Lock, Rogue ability
+					(IsSpellKnown(312890) and 312890) -- Skeleton Pinkie, Mechagnome racial ability
+	if(spellID) then
 		local pickLevel = lib.containers[itemID]
-		return pickLevel and pickLevel <= (UnitLevel('player') * 5)
+		return pickLevel and pickLevel <= (UnitLevel('player') * 5), spellID
 	end
 end
 
