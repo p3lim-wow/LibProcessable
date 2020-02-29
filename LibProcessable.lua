@@ -6,7 +6,7 @@ if(not lib) then
 	return
 end
 
-local CLASSIC = select(4, GetBuildInfo()) == 11303
+local CLASSIC = select(4, GetBuildInfo()) < 80000
 
 local professions = {}
 --[[ LibProcessable:IsMillable(_item[, ignoreMortar]_)
