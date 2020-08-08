@@ -12,10 +12,10 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Package and release
-        uses: BigWigsMods/packager@github-action
+        uses: BigWigsMods/packager@064e524
 
       - name: Package and release for Classic
-        uses: BigWigsMods/packager@github-action
+        uses: BigWigsMods/packager@064e524
         with:
           args: -g 1.13.5 -w 0
     env:
