@@ -6,7 +6,7 @@ if(not lib) then
 	return
 end
 
-local CLASSIC = select(4, GetBuildInfo()) < 80000
+local WOW_1 = select(4, GetBuildInfo()) < 80000
 
 local professions = {}
 --[[ LibProcessable:IsMillable(_item[, ignoreMortar]_)
@@ -253,7 +253,7 @@ Handler:RegisterEvent('SKILL_LINES_CHANGED')
 Handler:SetScript('OnEvent', function(self, event, ...)
 	table.wipe(professions)
 
-	if(CLASSIC) then
+	if(WOW_1) then
 		-- all professions are spells in the first spellbook tab
 		local _, _, offset, numSpells = GetSpellTabInfo(1)
 		for index = offset + 1, offset + numSpells do
