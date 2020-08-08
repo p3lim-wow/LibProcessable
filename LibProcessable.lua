@@ -8,6 +8,13 @@ end
 
 local WOW_1 = select(4, GetBuildInfo()) < 80000
 
+local LE_ITEM_QUALITY_UNCOMMON = LE_ITEM_QUALITY_UNCOMMON or Enum.ItemQuality.Uncommon
+local LE_ITEM_QUALITY_EPIC = LE_ITEM_QUALITY_EPIC or Enum.ItemQuality.Epic
+local LE_ITEM_CLASS_ARMOR = LE_ITEM_CLASS_ARMOR or 4
+local LE_ITEM_CLASS_WEAPON = LE_ITEM_CLASS_WEAPON or 2
+local LE_ITEM_CLASS_GEM = LE_ITEM_CLASS_GEM or 3
+local LE_ITEM_SUBCLASS_ARTIFACT = 11 -- no existing constant for this one
+
 local professions = {}
 --[[ LibProcessable:IsMillable(_item[, ignoreMortar]_)
 Returns whether the player can mill the given item.
@@ -83,7 +90,7 @@ function lib:IsDisenchantable(item)
 			local _, _, quality, _, _, _, _, _, _, _, _, class, subClass = GetItemInfo(item)
 			return (quality >= LE_ITEM_QUALITY_UNCOMMON and quality <= LE_ITEM_QUALITY_EPIC)
 				and (class == LE_ITEM_CLASS_ARMOR or class == LE_ITEM_CLASS_WEAPON
-				or (class == LE_ITEM_CLASS_GEM and subClass == 11)) -- artifact relics
+				or (class == LE_ITEM_CLASS_GEM and subClass == LE_ITEM_SUBCLASS_ARTIFACT))
 		end
 	end
 end
