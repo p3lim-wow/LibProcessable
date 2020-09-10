@@ -157,6 +157,7 @@ function lib:IsOpenable(itemID)
 					(IsSpellKnown(312890) and 312890) -- Skeleton Pinkie, Mechagnome racial ability
 	if(spellID) then
 		local pickLevel = lib.containers[itemID]
+		-- TODO: update this logic for Shadowlands
 		return pickLevel and pickLevel <= (UnitLevel('player') * 5), spellID
 	end
 end
