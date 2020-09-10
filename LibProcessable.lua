@@ -481,6 +481,7 @@ lib.professionCategories = {
 		332, -- Draenor
 		433, -- Legion
 		592, -- Zandalari/Kul Tiran
+		1294, -- Shadowlands
 	},
 	[164] = { -- Blacksmithing
 		590, -- Classic
@@ -491,6 +492,7 @@ lib.professionCategories = {
 		389, -- Draenor
 		426, -- Legion
 		542, -- Zandalari/Kul Tiran
+		1311, -- Shadowlands
 	},
 	[333] = { -- Enchanting
 		667, -- Classic
@@ -501,6 +503,7 @@ lib.professionCategories = {
 		348, -- Draenor
 		443, -- Legion
 		647, -- Zandalari/Kul Tiran
+		1364, -- Shadowlands
 	},
 	[202] = { -- Engineering
 		419, -- Classic
@@ -511,6 +514,7 @@ lib.professionCategories = {
 		347, -- Draenor
 		469, -- Legion
 		709, -- Zandalari/Kul Tiran
+		1381, -- Shadowlands
 	},
 	[182] = { -- Herbalism
 		1044, -- Classic
@@ -521,6 +525,7 @@ lib.professionCategories = {
 		1034, -- Draenor
 		456, -- Legion
 		1029, -- Zandalari/Kul Tiran
+		1441, -- Shadowlands
 	},
 	[773] = { -- Inscription
 		415, -- Classic
@@ -531,6 +536,7 @@ lib.professionCategories = {
 		410, -- Draenor
 		450, -- Legion
 		759, -- Zandalari/Kul Tiran
+		1406, -- Shadowlands
 	},
 	[755] = { -- Jewelcrafting
 		372, -- Classic
@@ -541,6 +547,7 @@ lib.professionCategories = {
 		373, -- Draenor
 		464, -- Legion
 		805, -- Zandalari/Kul Tiran
+		1418, -- Shadowlands
 	},
 	[165] = { -- Leatherworking
 		379, -- Classic
@@ -551,6 +558,7 @@ lib.professionCategories = {
 		380, -- Draenor
 		460, -- Legion
 		871, -- Zandalari/Kul Tiran
+		1334, -- Shadowlands
 	},
 	[186] = { -- Mining
 		1078, -- Classic
@@ -561,6 +569,7 @@ lib.professionCategories = {
 		nil, -- Draenor
 		425, -- Legion
 		1065, -- Zandalari/Kul Tiran
+		1320, -- Shadowlands
 	},
 	[393] = { -- Skinning
 		1060, -- Classic
@@ -571,6 +580,7 @@ lib.professionCategories = {
 		nil, -- Draenor
 		459, -- Legion
 		1046, -- Zandalari/Kul Tiran
+		1331, -- Shadowlands
 	},
 	[197] = { -- Tailoring
 		362, -- Classic
@@ -581,5 +591,6 @@ lib.professionCategories = {
 		369, -- Draenor
 		430, -- Legion
 		942, -- Zandalari/Kul Tiran
+		1395, -- Shadowlands
 	},
 }
