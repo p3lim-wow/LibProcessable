@@ -566,7 +566,7 @@ lib.professionCategories = {
 		1074, -- Northrend
 		1072, -- Cataclysm
 		1070, -- Pandaria
-		nil, -- Draenor
+		1068, -- Draenor
 		425, -- Legion
 		1065, -- Zandalari/Kul Tiran
 		1320, -- Shadowlands
@@ -576,8 +576,8 @@ lib.professionCategories = {
 		1058, -- Outland
 		1056, -- Northrend
 		1054, -- Cataclysm
-		nil, -- Pandaria
-		nil, -- Draenor
+		1042, -- Pandaria
+		1050, -- Draenor
 		459, -- Legion
 		1046, -- Zandalari/Kul Tiran
 		1331, -- Shadowlands
