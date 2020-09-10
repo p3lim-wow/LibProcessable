@@ -115,6 +115,9 @@ local function GetSkeletonKey(pickLevel)
 		return 82960, 553, 1 -- Ghostly Skeleton Key
 	elseif(pickLevel <= 600 and GetItemCount(159826) > 0) then
 		return 159826, 542, 1 -- Monelite Skeleton Key
+	elseif(pickLevel <= 600 and GetItemCount(171441) > 0) then
+		-- TODO: it can only do 600, which I will assume is a bug, it's probably supposed to be 625
+		return 171441, 1311, 1 -- Laestrite Skeleton Key
 	end
 end
 
@@ -129,6 +132,8 @@ end
 local function GetScrollUnlocking(pickLevel)
 	if(pickLevel <= 600 and GetItemCount(169825) > 0) then
 		return 169825, 759, 1 -- Scroll of Unlocking
+	elseif(pickLevel <= 625 and GetItemCount(173065) > 0) then
+		return 173065, 1406, 1 -- Writ of Grave Robbing
 	end
 end
 
@@ -318,6 +323,12 @@ lib.ores = {
 	[152513] = true, -- Platinum Ore
 	[155830] = true, -- Runic Core, BfA Jewelcrafting Quest
 	[168185] = true, -- Osmenite Ore
+	[171828] = true, -- Laestrite
+	[171829] = true, -- Solenium
+	[171830] = true, -- Oxxein
+	[171831] = true, -- Phaedrum
+	[171832] = true, -- Sinvyr
+	[171833] = true, -- Elethium
 }
 
 --[[ LibProcessable.herbs
@@ -406,6 +417,12 @@ lib.herbs = {
 	[152505] = true, -- Riverbud
 	[152510] = true, -- Anchor Weed
 	[168487] = true, -- Zin'anthid
+	[168583] = true, -- Widowbloom
+	[168586] = true, -- Rising Glory
+	[168589] = true, -- Marrowroot
+	[169701] = true, -- Deathblossom
+	[170554] = true, -- Vigil's Torch
+	[171315] = true, -- Nightshade
 }
 
 --[[ LibProcessable.enchantingItems
@@ -464,6 +481,10 @@ lib.containers = {
 	[116920] = 500, -- True Steel Lockbox
 	[121331] = 550, -- Leystone Lockbox
 	[169475] = 600, -- Barnacled Lockbox
+	[180533] = 600, -- Kyrian Lockbox
+	[180532] = 600, -- Maldraxxian Lockbox
+	[179311] = 600, -- Venthyr Lockbox
+	[180522] = 600, -- Night Fae Lockbox
 }
 
 --[[ LibProcessable.professionCategories
