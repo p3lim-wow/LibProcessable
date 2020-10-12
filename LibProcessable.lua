@@ -187,8 +187,10 @@ posesses.
 * `professionItem`:       The itemID for the unlocking item _(number)_
 --]]
 function lib:IsOpenableProfession(itemID)
-	assert(tonumber(itemID), 'itemID needs to be a number or convertable to a number')
-	itemID = tonumber(itemID)
+	if(type(itemID) == 'string') then
+		assert(string.match(itemID, 'item:(%d+):') or tonumber(itemID), 'item must be an item ID or item Link')
+		itemID = (tonumber(itemID)) or (GetItemInfoFromHyperlink(itemID))
+	end
 
 	local pickLevel = lib.containers[itemID]
 	if(not pickLevel) then
