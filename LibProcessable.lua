@@ -36,6 +36,7 @@ function lib:IsMillable(itemID, ignoreMortar)
 		-- any herb can be milled at level 1
 		return self.herbs[itemID]
 	elseif(not ignoreMortar and GetItemCount(114942) > 0) then
+		-- Draenic Mortar can mill Draenor herbs without a profession
 		return itemID >= 109124 and itemID <= 109130, true
 	end
 end
@@ -43,7 +44,7 @@ end
 --[[ LibProcessable:IsProspectable(_item_)
 Returns whether the player can prospect the given item.
 
-**Note**: Outland and Pandaria ores have actual skill level requirements which this addon does not check for.  
+**Note**: Outland and Pandaria ores have actual skill level requirements which this library does not check for.  
 See [issue #14](https://github.com/p3lim-wow/LibProcessable/issues/14) for more information.
 
 **Arguments:**
@@ -95,8 +96,8 @@ function lib:IsDisenchantable(item)
 	end
 end
 
--- http://www.wowhead.com/items/name:key?filter=86;2;0
-local function GetSkeletonKey(pickLevel)
+-- https://wowhead.com/items?filter=107:99;0:2;lockpick:0
+local function GetBlacksmithingPick(pickLevel)
 	if(pickLevel <= 25 and GetItemCount(15869) > 0) then
 		return 15869, 590, 100 -- Silver Skeleton Key
 	elseif(pickLevel <= 125 and GetItemCount(15870) > 0) then
@@ -121,15 +122,15 @@ local function GetSkeletonKey(pickLevel)
 	end
 end
 
--- http://www.wowhead.com/items/name:lock?filter=86;7;0
-local function GetJeweledLockpick(pickLevel)
+-- https://wowhead.com/items?filter=107:99;0:7;lockpick:0
+local function GetJewelcraftingPick(pickLevel)
 	if(pickLevel <= 550 and GetItemCount(130250) > 0) then
 		return 130250, 464, 1 -- Jeweled Lockpick
 	end
 end
 
--- https://www.wowhead.com/items/name:unlock?filter=86;15;0
-local function GetScrollUnlocking(pickLevel)
+-- https://wowhead.com/items?filter=107:99;0:15;lockpick:0
+local function GetInscriptionPick(pickLevel)
 	if(pickLevel <= 600 and GetItemCount(169825) > 0) then
 		return 169825, 759, 1 -- Scroll of Unlocking
 	elseif(pickLevel <= 625 and GetItemCount(173065) > 0) then
@@ -138,7 +139,7 @@ local function GetScrollUnlocking(pickLevel)
 end
 
 --[[ LibProcessable:IsOpenable(_item_)
-Returns whether the player can open the given item with a class ability.
+Returns whether the player can open the given item with a class/racial ability.
 
 **Arguments:**
 * `item`: item ID or link
@@ -185,21 +186,21 @@ function lib:IsOpenableProfession(itemID)
 	end
 
 	if(self:HasProfession(164)) then -- Blacksmithing
-		local itemID, categoryID, skillLevelRequired = GetSkeletonKey(pickLevel)
+		local itemID, categoryID, skillLevelRequired = GetBlacksmithingPick(pickLevel)
 		if(itemID) then
 			return skillLevelRequired, 164, categoryID, itemID
 		end
 	end
 
 	if(self:HasProfession(755)) then -- Jewelcrafting
-		local itemID, categoryID, skillLevelRequired = GetJeweledLockpick(pickLevel)
+		local itemID, categoryID, skillLevelRequired = GetJewelcraftingPick(pickLevel)
 		if(itemID) then
 			return skillLevelRequired, 755, categoryID, itemID
 		end
 	end
 
 	if(self:HasProfession(773)) then -- Inscription
-		local itemID, categoryID, skillLevelRequired = GetScrollUnlocking(pickLevel)
+		local itemID, categoryID, skillLevelRequired = GetInscriptionPick(pickLevel)
 		if(itemID) then
 			return skillLevelRequired, 773, categoryID, itemID
 		end
