@@ -139,6 +139,15 @@ local function GetInscriptionPick(pickLevel)
 	end
 end
 
+-- https://wowhead.com/items?filter=107:99;0:5;lockpick:0
+local function GetEngineeringPick(pickLevel)
+	if(pickLevel <= (WOW_9 and 35 or 400) and GetItemCount(60853) > 0) then
+		return 60853, 715, 1 -- Volatile Seaforium Blastpack
+	elseif(pickLevel <= (WOW_9 and 35 or 450) and GetItemCount(77532) > 0) then
+		return 77532, 713, 1 -- Locksmith's Powderkeg
+	end
+end
+
 --[[ LibProcessable:IsOpenable(_item_)
 Returns whether the player can open the given item with a class/racial ability.
 
@@ -204,6 +213,13 @@ function lib:IsOpenableProfession(itemID)
 		local itemID, categoryID, skillLevelRequired = GetInscriptionPick(pickLevel)
 		if(itemID) then
 			return skillLevelRequired, 773, categoryID, itemID
+		end
+	end
+
+	if(self:HasProfession(202)) then -- Engineering
+		local itemID, categoryID, skillLevelRequired = GetEngineeringPick(pickLevel)
+		if(itemID) then
+			return skillLevelRequired, 202, categoryID, itemID
 		end
 	end
 end
