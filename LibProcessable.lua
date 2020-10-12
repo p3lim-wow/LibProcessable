@@ -6,7 +6,9 @@ if(not lib) then
 	return
 end
 
-local WOW_1 = select(4, GetBuildInfo()) < 80000
+local BUILD = select(4, GetBuildInfo())
+local WOW_1 = BUILD < 80000
+local WOW_9 = BUILD >= 90000
 
 local LE_ITEM_QUALITY_UNCOMMON = LE_ITEM_QUALITY_UNCOMMON or Enum.ItemQuality.Uncommon
 local LE_ITEM_QUALITY_EPIC = LE_ITEM_QUALITY_EPIC or Enum.ItemQuality.Epic
@@ -98,42 +100,41 @@ end
 
 -- https://wowhead.com/items?filter=107:99;0:2;lockpick:0
 local function GetBlacksmithingPick(pickLevel)
-	if(pickLevel <= 25 and GetItemCount(15869) > 0) then
+	if(pickLevel <= (WOW_9 and 15 or 25) and GetItemCount(15869) > 0) then
 		return 15869, 590, 100 -- Silver Skeleton Key
-	elseif(pickLevel <= 125 and GetItemCount(15870) > 0) then
+	elseif(pickLevel <= (WOW_9 and 15 or 125) and GetItemCount(15870) > 0) then
 		return 15870, 590, 150 -- Golden Skeleton Key
-	elseif(pickLevel <= 200 and GetItemCount(15871) > 0) then
+	elseif(pickLevel <= (WOW_9 and 20 or 200) and GetItemCount(15871) > 0) then
 		return 15871, 590, 200 -- Truesilver Skeleton Key
-	elseif(pickLevel <= 300 and GetItemCount(15872) > 0) then
+	elseif(pickLevel <= (WOW_9 and 20 or 300) and GetItemCount(15872) > 0) then
 		return 15872, 590, 275 -- Arcanite Skeleton Key
-	elseif(pickLevel <= 375 and GetItemCount(43854) > 0) then
+	elseif(pickLevel <= (WOW_9 and 30 or 375) and GetItemCount(43854) > 0) then
 		return 43854, 577, 1 -- Cobalt Skeleton Key
-	elseif(pickLevel <= 400 and GetItemCount(43853) > 0) then
+	elseif(pickLevel <= (WOW_9 and 30 or 400) and GetItemCount(43853) > 0) then
 		return 43853, 577, 55 -- Titanium Skeleton Key
-	elseif(pickLevel <= 425 and GetItemCount(55053) > 0) then
+	elseif(pickLevel <= (WOW_9 and 30 or 425) and GetItemCount(55053) > 0) then
 		return 55053, 569, 25 -- Obsidium Skeleton Key
-	elseif(pickLevel <= 450 and GetItemCount(82960) > 0) then
+	elseif(pickLevel <= (WOW_9 and 35 or 450) and GetItemCount(82960) > 0) then
 		return 82960, 553, 1 -- Ghostly Skeleton Key
-	elseif(pickLevel <= 600 and GetItemCount(159826) > 0) then
+	elseif(pickLevel <= (WOW_9 and 50 or 600) and GetItemCount(159826) > 0) then
 		return 159826, 542, 1 -- Monelite Skeleton Key
-	elseif(pickLevel <= 600 and GetItemCount(171441) > 0) then
-		-- TODO: it can only do 600, which I will assume is a bug, it's probably supposed to be 625
+	elseif(pickLevel <= (WOW_9 and 60 or 1e9) and GetItemCount(171441) > 0) then
 		return 171441, 1311, 1 -- Laestrite Skeleton Key
 	end
 end
 
 -- https://wowhead.com/items?filter=107:99;0:7;lockpick:0
 local function GetJewelcraftingPick(pickLevel)
-	if(pickLevel <= 550 and GetItemCount(130250) > 0) then
+	if(pickLevel <= (WOW_9 and 40 or 550) and GetItemCount(130250) > 0) then -- ?? skill
 		return 130250, 464, 1 -- Jeweled Lockpick
 	end
 end
 
 -- https://wowhead.com/items?filter=107:99;0:15;lockpick:0
 local function GetInscriptionPick(pickLevel)
-	if(pickLevel <= 600 and GetItemCount(169825) > 0) then
+	if(pickLevel <= (WOW_9 and 50 or 600) and GetItemCount(169825) > 0) then
 		return 169825, 759, 1 -- Scroll of Unlocking
-	elseif(pickLevel <= 625 and GetItemCount(173065) > 0) then
+	elseif(pickLevel <= (WOW_9 and 60 or 625) and GetItemCount(173065) > 0) then -- ?? skill
 		return 173065, 1406, 1 -- Writ of Grave Robbing
 	end
 end
@@ -159,7 +160,7 @@ function lib:IsOpenable(itemID)
 	if(spellID) then
 		local pickLevel = lib.containers[itemID]
 		-- TODO: update this logic for Shadowlands
-		return pickLevel and pickLevel <= (UnitLevel('player') * 5), spellID
+		return pickLevel and pickLevel <= (UnitLevel('player') * (WOW_9 and 1 or 5)), spellID
 	end
 end
 
