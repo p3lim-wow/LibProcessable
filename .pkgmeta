@@ -7,4 +7,3 @@ externals:
 
 ignore:
   - README.md
-  - utils
