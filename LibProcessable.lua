@@ -46,14 +46,15 @@ end
 --[[ LibProcessable:IsProspectable(_item_)
 Returns whether the player can prospect the given item.
 
-**Note**: Outland and Pandaria ores have actual skill level requirements which this library does not check for.  
-See [issue #14](https://github.com/p3lim-wow/LibProcessable/issues/14) for more information.
-
 **Arguments:**
 * `item`: item ID or link
 
 **Return values:**
 * `isProspectable`: Whether or not the player can prospect the given item _(boolean)_
+
+**Notes**:
+* This does not check if the player has the required skills to use the profession items
+   * Only Outland and Pandaria ores have skill level requirements
 --]]
 function lib:IsProspectable(itemID)
 	if(type(itemID) == 'string') then
@@ -69,14 +70,15 @@ end
 --[[ LibProcessable:IsDisenchantable(_item_)
 Returns whether the player can disenchant the given item.
 
-**Note**: Many items that are not disenchantable will still return as `true`, as the amount of such
-items and the volatility of that list is too much effort to keep up to date and accurate.
-
 **Arguments:**
 * `item`: item ID or link
 
 **Return values:**
 * `isDisenchantable`: Whether or not the player can disenchant the given item _(boolean)_
+
+**Notes**:
+* Many items that are not disenchantable will still return as `true`
+   * These items are hard to keep track of since they're not flagged in any known database, and thus hard to keep track of
 --]]
 function lib:IsDisenchantable(item)
 	local itemID = item
@@ -185,6 +187,9 @@ posesses.
 * `professionID`:         The profession ID _(number)_
 * `professionCategoryID`: The profession category ID associated with the unlocking item _(number)_
 * `professionItem`:       The itemID for the unlocking item _(number)_
+
+**Notes:**
+* This does not check if the player has the required skills to use the profession items
 --]]
 function lib:IsOpenableProfession(itemID)
 	if(type(itemID) == 'string') then
@@ -313,9 +318,11 @@ end)
 --[[ LibProcessable.ores
 Table of all ores that can be prospected by a jewelcrafter.
 
-**NB:** Some items have specific profession skill requirements, thus the item's value is a table.
-
 See [LibProcessable:IsProspectable()](LibProcessable#libprocessableisprospectableitem).
+
+**Notes**:
+* Some items contains a table instead of a boolean
+   * Outland and Pandaria ores have skill level requirements, the tables hold that information
 --]]
 lib.ores = {
 	-- http://www.wowhead.com/spell=31252/prospecting#prospected-from:0+1+17-20
