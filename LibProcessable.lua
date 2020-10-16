@@ -191,7 +191,7 @@ function lib:IsOpenable(itemID)
 	end
 
 	local spellID = (IsSpellKnown(1804) and 1804) or -- Pick Lock, Rogue ability
-					(IsSpellKnown(312890) and 312890) -- Skeleton Pinkie, Mechagnome racial ability
+	                (IsSpellKnown(312890) and 312890) -- Skeleton Pinkie, Mechagnome racial ability
 	if(spellID) then
 		local pickLevel = lib.containers[itemID]
 		return pickLevel and pickLevel <= (UnitLevel('player') * (CLASSIC and 5 or 1)), spellID
