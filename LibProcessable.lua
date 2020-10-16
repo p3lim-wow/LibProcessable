@@ -6,9 +6,7 @@ if(not lib) then
 	return
 end
 
-local BUILD = select(4, GetBuildInfo())
-local WOW_1 = BUILD < 80000
-local WOW_9 = BUILD >= 90000
+local CLASSIC = select(4, GetBuildInfo()) < 20000
 
 local LE_ITEM_QUALITY_UNCOMMON = LE_ITEM_QUALITY_UNCOMMON or Enum.ItemQuality.Uncommon
 local LE_ITEM_QUALITY_EPIC = LE_ITEM_QUALITY_EPIC or Enum.ItemQuality.Epic
@@ -102,50 +100,76 @@ end
 
 -- https://wowhead.com/items?filter=107:99;0:2;lockpick:0
 local function GetBlacksmithingPick(pickLevel)
-	if(pickLevel <= (WOW_9 and 15 or 25) and GetItemCount(15869) > 0) then
-		return 15869, 590, 100 -- Silver Skeleton Key
-	elseif(pickLevel <= (WOW_9 and 15 or 125) and GetItemCount(15870) > 0) then
-		return 15870, 590, 150 -- Golden Skeleton Key
-	elseif(pickLevel <= (WOW_9 and 20 or 200) and GetItemCount(15871) > 0) then
-		return 15871, 590, 200 -- Truesilver Skeleton Key
-	elseif(pickLevel <= (WOW_9 and 20 or 300) and GetItemCount(15872) > 0) then
-		return 15872, 590, 275 -- Arcanite Skeleton Key
-	elseif(pickLevel <= (WOW_9 and 30 or 375) and GetItemCount(43854) > 0) then
-		return 43854, 577, 1 -- Cobalt Skeleton Key
-	elseif(pickLevel <= (WOW_9 and 30 or 400) and GetItemCount(43853) > 0) then
-		return 43853, 577, 55 -- Titanium Skeleton Key
-	elseif(pickLevel <= (WOW_9 and 30 or 425) and GetItemCount(55053) > 0) then
-		return 55053, 569, 25 -- Obsidium Skeleton Key
-	elseif(pickLevel <= (WOW_9 and 35 or 450) and GetItemCount(82960) > 0) then
-		return 82960, 553, 1 -- Ghostly Skeleton Key
-	elseif(pickLevel <= (WOW_9 and 50 or 600) and GetItemCount(159826) > 0) then
-		return 159826, 542, 1 -- Monelite Skeleton Key
-	elseif(pickLevel <= (WOW_9 and 60 or 1e9) and GetItemCount(171441) > 0) then
-		return 171441, 1311, 1 -- Laestrite Skeleton Key
+	if(CLASSIC) then
+		if(pickLevel <= 25 and GetItemCount(15869) > 0) then
+			return 15869, nil, 100 -- Silver Skeleton Key
+		end
+		if(pickLevel <= 125 and GetItemCount(15870) > 0) then
+			return 15870, nil, 150 -- Golden Skeleton Key
+		end
+		if(pickLevel <= 200 and GetItemCount(15871) > 0) then
+			return 15871, nil, 200 -- Truesilver Skeleton Key
+		end
+		if(pickLevel <= 300 and GetItemCount(15872) > 0) then
+			return 15872, nil, 275 -- Arcanite Skeleton Key
+		end
+	else
+		if(pickLevel <= 15 and GetItemCount(15869) > 0) then
+			return 15869, 590, 100 -- Silver Skeleton Key
+		end
+		if(pickLevel <= 15 and GetItemCount(15870) > 0) then
+			return 15870, 590, 150 -- Golden Skeleton Key
+		end
+		if(pickLevel <= 20 and GetItemCount(15871) > 0) then
+			return 15871, 590, 200 -- Truesilver Skeleton Key
+		end
+		if(pickLevel <= 30 and GetItemCount(15872) > 0) then
+			return 15872, 590, 275 -- Arcanite Skeleton Key
+		end
+		if(pickLevel <= 30 and GetItemCount(43854) > 0) then
+			return 43854, 577, 1 -- Cobalt Skeleton Key
+		end
+		if(pickLevel <= 30 and GetItemCount(43853) > 0) then
+			return 43853, 577, 55 -- Titanium Skeleton Key
+		end
+		if(pickLevel <= 35 and GetItemCount(55053) > 0) then
+			return 55053, 569, 25 -- Obsidium Skeleton Key
+		end
+		if(pickLevel <= 35 and GetItemCount(82960) > 0) then
+			return 82960, 553, 1 -- Ghostly Skeleton Key
+		end
+		if(pickLevel <= 50 and GetItemCount(159826) > 0) then
+			return 159826, 542, 1 -- Monelite Skeleton Key
+		end
+		if(pickLevel <= 50 and GetItemCount(171441) > 0) then
+			return 171441, 1311, 1 -- Laestrite Skeleton Key
+		end
 	end
 end
 
 -- https://wowhead.com/items?filter=107:99;0:7;lockpick:0
 local function GetJewelcraftingPick(pickLevel)
-	if(pickLevel <= (WOW_9 and 40 or 550) and GetItemCount(130250) > 0) then -- ?? skill
+	if(pickLevel <= 550 and GetItemCount(130250) > 0) then
+		-- TODO: this item has not been updated for 9.0, so it has incorrect pick level
 		return 130250, 464, 1 -- Jeweled Lockpick
 	end
 end
 
 -- https://wowhead.com/items?filter=107:99;0:15;lockpick:0
 local function GetInscriptionPick(pickLevel)
-	if(pickLevel <= (WOW_9 and 50 or 600) and GetItemCount(169825) > 0) then
-		return 169825, 759, 1 -- Scroll of Unlocking
-	elseif(pickLevel <= (WOW_9 and 60 or 625) and GetItemCount(173065) > 0) then -- ?? skill
+	if(pickLevel <= 50 and GetItemCount(159825) > 0) then
+		return 159825, 759, 1 -- Scroll of Unlocking
+	elseif(pickLevel <= 625 and GetItemCount(173065) > 0) then
+		-- TODO: this item has not been updated for 9.0, so it has incorrect pick level
 		return 173065, 1406, 1 -- Writ of Grave Robbing
 	end
 end
 
 -- https://wowhead.com/items?filter=107:99;0:5;lockpick:0
 local function GetEngineeringPick(pickLevel)
-	if(pickLevel <= (WOW_9 and 35 or 400) and GetItemCount(60853) > 0) then
+	if(pickLevel <= 35 and GetItemCount(60853) > 0) then
 		return 60853, 715, 1 -- Volatile Seaforium Blastpack
-	elseif(pickLevel <= (WOW_9 and 35 or 450) and GetItemCount(77532) > 0) then
+	elseif(pickLevel <= 35 and GetItemCount(77532) > 0) then
 		return 77532, 713, 1 -- Locksmith's Powderkeg
 	end
 end
@@ -170,8 +194,7 @@ function lib:IsOpenable(itemID)
 					(IsSpellKnown(312890) and 312890) -- Skeleton Pinkie, Mechagnome racial ability
 	if(spellID) then
 		local pickLevel = lib.containers[itemID]
-		-- TODO: update this logic for Shadowlands
-		return pickLevel and pickLevel <= (UnitLevel('player') * (WOW_9 and 1 or 5)), spellID
+		return pickLevel and pickLevel <= (UnitLevel('player') * (CLASSIC and 5 or 1)), spellID
 	end
 end
 
@@ -189,6 +212,7 @@ posesses.
 * `professionItem`:       The itemID for the unlocking item _(number)_
 
 **Notes:**
+* The method will return `nil` instead of a category ID for Classic clients, as there are no profession categories there
 * This does not check if the player has the required skills to use the profession items
 --]]
 function lib:IsOpenableProfession(itemID)
@@ -291,7 +315,7 @@ Handler:RegisterEvent('SKILL_LINES_CHANGED')
 Handler:SetScript('OnEvent', function(self, event, ...)
 	table.wipe(professions)
 
-	if(WOW_1) then
+	if(CLASSIC) then
 		-- all professions are spells in the first spellbook tab
 		local _, _, offset, numSpells = GetSpellTabInfo(1)
 		for index = offset + 1, offset + numSpells do
@@ -472,48 +496,71 @@ The value is the required skill to open the item.
 
 See [LibProcessable:IsOpenable()](LibProcessable#libprocessableisopenableitem) and
 [LibProcessable:IsOpenableProfession()](LibProcessable#libprocessableisopenableprofessionitem).
+
+**Notes**:
+* This table has different content based on the game version (retail vs classic).
 --]]
-lib.containers = {
-	-- http://www.wowhead.com/items?filter=10:161:128;1:1:1;::
-	[4632] = 1, -- Ornate Bronze Lockbox
-	[6354] = 1, -- Small Locked Chest
-	[6712] = 1, -- Practice Lock (Classic)
-	[7209] = 1, -- Tazan's Satchel
-	[16882] = 1, -- Battered Junkbox
-	[4633] = 25, -- Heavy Bronze Lockbox
-	[4634] = 70, -- Iron Lockbox
-	[6355] = 70, -- Sturdy Locked Chest
-	[16883] = 70, -- Worn Junkbox
-	[4636] = 125, -- Strong Iron Lockbox
-	[4637] = 175, -- Steel Lockbox
-	[13875] = 175, -- Ironbound Locked Chest
-	[16884] = 175, -- Sturdy Junkbox
-	[4638] = 225, -- Reinforced Steel Lockbox
-	[5758] = 225, -- Mithril Lockbox
-	[5759] = 225, -- Thorium Lockbox
-	[5760] = 225, -- Eternium Lockbox
-	[13918] = 250, -- Reinforced Locked Chest
-	[16885] = 250, -- Heavy Junkbox
-	[12033] = 275, -- Thaurissan Family Jewels
-	[29569] = 300, -- Strong Junkbox
-	[31952] = 325, -- Khorium Lockbox
-	[43575] = 350, -- Reinforced Junkbox
-	[43622] = 375, -- Froststeel Lockbox
-	[43624] = 400, -- Titanium Lockbox
-	[45986] = 400, -- Tiny Titanium Lockbox
-	[63349] = 400, -- Flame-Scarred Junkbox
-	[68729] = 425, -- Elementium Lockbox
-	[88567] = 450, -- Ghost Iron Lockbox
-	[88165] = 450, -- Vine-Cracked Junkbox
-	[106895] = 500, -- Iron-Bound Junkbox
-	[116920] = 500, -- True Steel Lockbox
-	[121331] = 550, -- Leystone Lockbox
-	[169475] = 600, -- Barnacled Lockbox
-	[180533] = 600, -- Kyrian Lockbox
-	[180532] = 600, -- Maldraxxian Lockbox
-	[179311] = 600, -- Venthyr Lockbox
-	[180522] = 600, -- Night Fae Lockbox
-}
+if(CLASSIC) then
+	lib.containers = {
+		-- https://classic.wowhead.com/items?filter=10:161:128;1:1:1;::
+		[7209]  = 1,    -- Tazan's Satchel
+		[6712]  = 1,    -- Practice Lock
+		[16882] = 1,    -- Battered Junkbox
+		[4632]  = 1,    -- Ornate Bronze Lockbox
+		[6354]  = 1,    -- Small Locked Chest
+		[4633]  = 25,   -- Heavy Bronze Lockbox
+		[4634]  = 70,   -- Iron Lockbox
+		[16883] = 70,   -- Worn Junkbox
+		[6355]  = 70,   -- Sturdy Locked Chest
+		[4636]  = 125,  -- Strong Iron Lockbox
+		[4637]  = 175,  -- Steel Lockbox
+		[16884] = 175,  -- Sturdy Junkbox
+		[4638]  = 225,  -- Reinforced Steel Lockbox
+		[13875] = 175,  -- Ironbound Locked Chest
+		[16885] = 250,  -- Heavy Junkbox
+		[5758]  = 225,  -- Mithril Lockbox
+		[5759]  = 225,  -- Thorium Lockbox
+		[5760]  = 225,  -- Eternium Lockbox
+		[13918] = 250,  -- Reinforced Locked Chest
+		[12033] = 275,  -- Thaurissan Family Jewels
+		[24282] = 5000, -- Rogue's Diary (lockpick requirement sourced from comments, unverified)
+	}
+else
+	lib.containers = {
+		-- https://www.wowhead.com/items?filter=10:161:128;1:1:1;::
+		[6354]   = 15, -- Small Locked Chest
+		[4632]   = 15, -- Ornate Bronze Lockbox
+		[16882]  = 15, -- Battered Junkbox
+		[4633]   = 15, -- Heavy Bronze Lockbox
+		[16883]  = 15, -- Worn Junkbox
+		[6355]   = 15, -- Sturdy Locked Chest
+		[4634]   = 15, -- Iron Lockbox
+		[4636]   = 15, -- Strong Iron Lockbox
+		[16884]  = 15, -- Sturdy Junkbox
+		[4637]   = 15, -- Steel Lockbox
+		[4638]   = 15, -- Reinforced Steel Lockbox
+		[13875]  = 15, -- Ironbound Locked Chest
+		[5758]   = 15, -- Mithril Lockbox
+		[16885]  = 15, -- Heavy Junkbox
+		[13918]  = 15, -- Reinforced Locked Chest
+		[12033]  = 15, -- Thaurissan Family Jewels
+		[5760]   = 15, -- Eternium Lockbox
+		[29569]  = 30, -- Strong Junkbox
+		[43575]  = 30, -- Reinforced Junkbox
+		[31952]  = 30, -- Khorium Lockbox
+		[43622]  = 30, -- Froststeel Lockbox
+		[43624]  = 30, -- Titanium Lockbox
+		[63349]  = 30, -- Flame-Scarred Junkbox
+		[68729]  = 30, -- Elementium Lockbox
+		[88165]  = 35, -- Vine-Cracked Junkbox
+		[88567]  = 35, -- Ghost Iron Lockbox
+		[116920] = 40, -- True Steel Lockbox
+		[121331] = 45, -- Leystone Lockbox
+		[179311] = 50, -- Venthyr Lockbox
+		[180532] = 50, -- Maldraxxian Lockbox
+		[169475] = 50, -- Barnacled Lockbox
+	}
+end
 
 --[[ LibProcessable.professionCategories
 Table of all professionIDs and their respective categories, indexed by expansion ID.
