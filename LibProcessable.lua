@@ -478,15 +478,21 @@ lib.herbs = {
 }
 
 --[[ LibProcessable.enchantingItems
-Table of special items used as part of the Enchanting profession's quest line in the Legion expansion.
+Table of special items used in Enchanting quests.
 
 See [LibProcessable:IsDisenchantable()](LibProcessable#libprocessableisdisenchantableitem).
 --]]
 lib.enchantingItems = {
-	-- These items are used as part of the Legion enchanting quest line
+	-- Legion enchanting quest line
 	[137195] = true, -- Highmountain Armor
 	[137221] = true, -- Enchanted Raven Sigil
 	[137286] = true, -- Fel-Crusted Rune
+
+	-- Shadowlands profession world quests
+	[182021] = true, -- Antique Kyrian Javelin
+	[182043] = true, -- Antique Necromancer's Staff
+	[182067] = true, -- Antique Duelist's Rapier
+	[181991] = true, -- Antique Stalker's Bow
 }
 
 --[[ LibProcessable.containers
