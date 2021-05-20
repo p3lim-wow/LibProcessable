@@ -6,7 +6,7 @@ if(not lib) then
 	return
 end
 
-local CLASSIC = select(4, GetBuildInfo()) < 20000
+local CLASSIC = select(4, GetBuildInfo()) < 90000
 
 local LE_ITEM_QUALITY_UNCOMMON = LE_ITEM_QUALITY_UNCOMMON or Enum.ItemQuality.Uncommon
 local LE_ITEM_QUALITY_EPIC = LE_ITEM_QUALITY_EPIC or Enum.ItemQuality.Epic
