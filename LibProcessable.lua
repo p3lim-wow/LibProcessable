@@ -313,7 +313,7 @@ local classicIDs = {
 	[(GetSpellInfo(2575))]  = 186, -- Mining
 	[(GetSpellInfo(8613))]  = 393, -- Skinning
 	[(GetSpellInfo(3908))]  = 197, -- Tailoring
-	[(GetSpellInfo(25229))] = 755, -- Jewelcrafting
+	[(GetSpellInfo(25229)) or 0] = 755, -- Jewelcrafting
 }
 
 local Handler = CreateFrame('Frame')
