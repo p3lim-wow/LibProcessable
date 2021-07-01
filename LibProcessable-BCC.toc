@@ -1,4 +1,4 @@
-## Interface: 20501
+## Interface: 90100
 ## Author: p3lim
 ## Version: @project-version@
 ## Title: Lib: Processable
