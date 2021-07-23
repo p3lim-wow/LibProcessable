@@ -93,9 +93,9 @@ function lib:IsDisenchantable(item)
 			-- special items that can be disenchanted
 			return true
 		else
-			local _, _, quality, _, _, _, _, _, equipLoc, _, _, class, subClass = GetItemInfo(item)
+			local _, _, quality, _, _, _, _, _, _, _, _, class, subClass = GetItemInfo(item)
 			return quality and ((quality >= LE_ITEM_QUALITY_UNCOMMON and quality <= LE_ITEM_QUALITY_EPIC)
-				and equipLoc ~= LE_ITEM_EQUIPLOC_SHIRT
+				and C_Item.GetItemInventoryTypeByID(itemID) ~= LE_ITEM_EQUIPLOC_SHIRT
 				and (class == LE_ITEM_CLASS_WEAPON
 					or (class == LE_ITEM_CLASS_ARMOR and subClass ~= LE_ITEM_ARMOR_COSMETIC)
 					or (class == LE_ITEM_CLASS_GEM and subClass == LE_ITEM_SUBCLASS_ARTIFACT)))
