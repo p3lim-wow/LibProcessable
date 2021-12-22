@@ -596,6 +596,8 @@ else
 		[180522] = 50, -- Phaedrum Lockbox
 		[180532] = 50, -- Oxxein Lockbox
 		[180533] = 50, -- Solenium Lockbox
+		[186161] = 50, -- Stygian Lockbox
+		[186160] = 50, -- Locked Artifact Case
 	}
 end
 
