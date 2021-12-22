@@ -592,10 +592,10 @@ else
 		[116920] = 40, -- True Steel Lockbox
 		[121331] = 45, -- Leystone Lockbox
 		[169475] = 50, -- Barnacled Lockbox
-		[179311] = 50, -- Venthyr Lockbox
-		[180522] = 50, -- Night Fae Lockbox
-		[180532] = 50, -- Maldraxxian Lockbox
-		[180533] = 50, -- Kyrian Lockbox
+		[179311] = 50, -- Synvir Lockbox
+		[180522] = 50, -- Phaedrum Lockbox
+		[180532] = 50, -- Oxxein Lockbox
+		[180533] = 50, -- Solenium Lockbox
 	}
 end
 
