@@ -584,9 +584,9 @@ else
 		[43575]  = 30, -- Reinforced Junkbox
 		[43622]  = 30, -- Froststeel Lockbox
 		[43624]  = 30, -- Titanium Lockbox
+		[45986]  = 30, -- Tiny Titanium Lockbox
 		[63349]  = 30, -- Flame-Scarred Junkbox
 		[68729]  = 30, -- Elementium Lockbox
-		[106895] = 30, -- Tiny Titanium Lockbox
 		[88165]  = 35, -- Vine-Cracked Junkbox
 		[88567]  = 35, -- Ghost Iron Lockbox
 		[116920] = 40, -- True Steel Lockbox
