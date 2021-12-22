@@ -401,6 +401,7 @@ else
 		[171831] = true, -- Phaedrum
 		[171832] = true, -- Sinvyr
 		[171833] = true, -- Elethium
+		[187700] = true, -- Progenium Ore
 	}
 end
 
@@ -496,6 +497,7 @@ lib.herbs = {
 	[169701] = true, -- Deathblossom
 	[170554] = true, -- Vigil's Torch
 	[171315] = true, -- Nightshade
+	[187699] = true, -- First Flower
 }
 
 --[[ LibProcessable.enchantingItems
@@ -598,6 +600,7 @@ else
 		[180533] = 50, -- Solenium Lockbox
 		[186161] = 50, -- Stygian Lockbox
 		[186160] = 50, -- Locked Artifact Case
+		[188787] = 50, -- Locked Broker Luggage
 	}
 end
 
