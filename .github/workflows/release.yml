@@ -14,17 +14,7 @@ jobs:
           fetch-depth: 100
 
       - name: Package and release
-        uses: BigWigsMods/packager@v1.0.2
-
-      - name: Package and release for Classic
-        uses: BigWigsMods/packager@v1.0.2
-        with:
-          args: -g classic
-
-      - name: Package and release for BCC
-        uses: BigWigsMods/packager@v1.0.2
-        with:
-          args: -g bcc
+        uses: BigWigsMods/packager@v2
     env:
       CF_API_KEY: ${{ secrets.CF_API_KEY }}
       WOWI_API_TOKEN: ${{ secrets.WOWI_API_TOKEN }}
