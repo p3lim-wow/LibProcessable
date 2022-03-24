@@ -8,6 +8,8 @@
 ## X-Curse-Project-ID: 88553
 ## X-WoWI-ID: 23440
 
-LibStub\LibStub.lua
+#@non-debug@
+# LibStub\LibStub.lua
+#@end-non-debug@
 
 embed.xml
