@@ -314,6 +314,7 @@ local classicIDs = {
 	[(GetSpellInfo(8613))]  = 393, -- Skinning
 	[(GetSpellInfo(3908))]  = 197, -- Tailoring
 	[(GetSpellInfo(25229)) or 0] = 755, -- Jewelcrafting
+	[(GetSpellInfo(45357)) or 0] = 773, -- Inscription
 }
 
 local Handler = CreateFrame('Frame')
