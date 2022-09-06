@@ -81,8 +81,26 @@ function lib:IsProspectable(itemID)
 	end
 
 	if(self:HasProfession(755)) then -- Jewelcrafting
-		-- TODO: consider required skill for classic prospecting?
-		return not not data.ores[itemID]
+		if CLASSIC then
+			local currentRank = professions[755]
+			local requiredRank = data.ores[itemID]
+			return requiredRank and currentRank >= requiredRank
+		else
+			local itemInfo = data.ores[itemID]
+			if itemInfo then
+				if type(itemInfo) == 'table' then
+					-- itemInfo contains expansion and requiredRank
+					local currentRank = professions[755][itemInfo[1]]
+					local requiredRank = itemInfo[2]
+					print(currentRank, requiredRank)
+					return requiredRank and currentRank >= requiredRank
+				else
+					-- itemInfo contains requiredRank only
+					-- any herb can be milled at level 1
+					return true
+				end
+			end
+		end
 	end
 end
 
