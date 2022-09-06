@@ -330,45 +330,23 @@ function lib:GetProfessionSkillLines(professionID)
 	return professionSkillLines and CopyTable(professionSkillLines)
 end
 
-local classicIDs = {
-	[(GetSpellInfo(2259))]  = 171, -- Alchemy
-	[(GetSpellInfo(2018))]  = 164, -- Blacksmithing
-	[(GetSpellInfo(7411))]  = 333, -- Enchanting
-	[(GetSpellInfo(4036))]  = 202, -- Engineering
-	[(GetSpellInfo(9134))]  = 182, -- Herbalism (spell from gloves with +5 herbalism)
-	[(GetSpellInfo(2108))]  = 165, -- Leatherworking
-	[(GetSpellInfo(2575))]  = 186, -- Mining
-	[(GetSpellInfo(8613))]  = 393, -- Skinning
-	[(GetSpellInfo(3908))]  = 197, -- Tailoring
-	[(GetSpellInfo(25229)) or 0] = 755, -- Jewelcrafting
-	[(GetSpellInfo(45357)) or 0] = 773, -- Inscription
-}
-
 local Handler = CreateFrame('Frame')
 Handler:RegisterEvent('SKILL_LINES_CHANGED')
 Handler:SetScript('OnEvent', function(self, event, ...)
 	table.wipe(professions)
 
-	if(CLASSIC) then
-		-- all professions are spells in the first spellbook tab
-		local _, _, offset, numSpells = GetSpellTabInfo(1)
-		for index = offset + 1, offset + numSpells do
-			-- iterate through all the spells to find the professions
-			local professionID = classicIDs[(GetSpellBookItemName(index, BOOKTYPE_SPELL))]
-			if(professionID) then
-				professions[professionID] = true
+	for _, professionIndex in next, {GetProfessions()} do
+		local _, _, skillLevel, _, _, _, professionID = GetProfessionInfo(professionIndex)
+		if data.professionSkillLines[professionID] then
+			if CLASSIC then
+				professions[professionID] = skillLevel
+			else
+				professions[professionID] = {}
+				for expansion, skillLine in next, data.professionSkillLines[professionID] do
+					local _, currentRank = C_TradeSkillUI.GetTradeSkillLineInfoByID(skillLine)
+					professions[professionID][expansion] = currentRank
+				end
 			end
-		end
-	else
-		local first, second = GetProfessions()
-		if(first) then
-			local _, _, _, _, _, _, professionID = GetProfessionInfo(first)
-			professions[professionID] = true
-		end
-
-		if(second) then
-			local _, _, _, _, _, _, professionID = GetProfessionInfo(second)
-			professions[professionID] = true
 		end
 	end
 end)
