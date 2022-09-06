@@ -6,6 +6,7 @@ if(not lib) then
 	return
 end
 
+local data = {} -- private table for storing data without exposing it
 local CLASSIC = select(4, GetBuildInfo()) < 90000
 
 local LE_ITEM_QUALITY_UNCOMMON = LE_ITEM_QUALITY_UNCOMMON or Enum.ItemQuality.Uncommon
@@ -36,7 +37,7 @@ function lib:IsMillable(itemID, ignoreMortar)
 
 	if(self:HasProfession(773)) then -- Inscription
 		-- any herb can be milled at level 1
-		return self.herbs[itemID]
+		return data.herbs[itemID]
 	elseif(not ignoreMortar and GetItemCount(114942) > 0) then
 		-- Draenic Mortar can mill Draenor herbs without a profession
 		return itemID >= 109124 and itemID <= 109130, true
@@ -64,7 +65,7 @@ function lib:IsProspectable(itemID)
 
 	if(self:HasProfession(755)) then -- Jewelcrafting
 		-- TODO: consider required skill for classic prospecting?
-		return not not self.ores[itemID]
+		return not not data.ores[itemID]
 	end
 end
 
@@ -89,7 +90,7 @@ function lib:IsDisenchantable(item)
 	end
 
 	if(self:HasProfession(333)) then -- Enchanting
-		if(self.enchantingItems[itemID]) then
+		if(data.enchantingItems[itemID]) then
 			-- special items that can be disenchanted
 			return true
 		else
@@ -198,7 +199,7 @@ function lib:IsOpenable(itemID)
 	local spellID = (IsSpellKnown(1804) and 1804) or -- Pick Lock, Rogue ability
 	                (IsSpellKnown(312890) and 312890) -- Skeleton Pinkie, Mechagnome racial ability
 	if(spellID) then
-		local pickLevel = lib.containers[itemID]
+		local pickLevel = data.containers[itemID]
 		return pickLevel and pickLevel <= (UnitLevel('player') * (CLASSIC and 5 or 1)), spellID
 	end
 end
@@ -226,7 +227,7 @@ function lib:IsOpenableProfession(itemID)
 		itemID = (tonumber(itemID)) or (GetItemInfoFromHyperlink(itemID))
 	end
 
-	local pickLevel = lib.containers[itemID]
+	local pickLevel = data.containers[itemID]
 	if(not pickLevel) then
 		return
 	end
@@ -299,7 +300,7 @@ Returns data of all category IDs for a given (valid) profession, indexed by the 
 * `categories`: Profession categories _(table)_
 --]]
 function lib:GetProfessionCategories(professionID)
-	local professionCategories = lib.professionCategories[professionID]
+	local professionCategories = data.professionCategories[professionID]
 	return professionCategories and CopyTable(professionCategories)
 end
 
@@ -358,7 +359,7 @@ See [LibProcessable:IsProspectable()](LibProcessable#libprocessableisprospectabl
    * In classic the values represent the required jewelcrafting skill to prospect
 --]]
 if CLASSIC then
-	lib.ores = {
+	data.ores = {
 		-- https://tbc.wowhead.com/spell=31252/prospecting#comments
 		[2770]  = 1,   -- Copper Ore
 		[2771]  = 50,  -- Tin Ore
@@ -369,7 +370,7 @@ if CLASSIC then
 		[23425] = 325, -- Adamantite Ore
 	}
 else
-	lib.ores = {
+	data.ores = {
 		-- http://www.wowhead.com/spell=31252/prospecting#prospected-from:0+1+17-20
 		[2770] = true, -- Copper Ore
 		[2771] = true, -- Tin Ore
@@ -411,7 +412,7 @@ Table of all herbs that can be milled by a scribe.
 
 See [LibProcessable:IsMillable()](LibProcessable#libprocessableismillableitem-ignoremortar).
 --]]
-lib.herbs = {
+data.herbs = {
 	-- http://www.wowhead.com/spell=51005/milling#milled-from:0+1+17-20
 	[765] = true, -- Silverleaf
 	[785] = true, -- Mageroyal
@@ -506,7 +507,7 @@ Table of special items used in Enchanting quests.
 
 See [LibProcessable:IsDisenchantable()](LibProcessable#libprocessableisdisenchantableitem).
 --]]
-lib.enchantingItems = {
+data.enchantingItems = {
 	-- Legion enchanting quest line
 	[137195] = true, -- Highmountain Armor
 	[137221] = true, -- Enchanted Raven Sigil
@@ -531,7 +532,7 @@ See [LibProcessable:IsOpenable()](LibProcessable#libprocessableisopenableitem) a
 * This table has different content based on the game version (retail vs classic).
 --]]
 if(CLASSIC) then
-	lib.containers = {
+	data.containers = {
 		-- https://classic.wowhead.com/items?filter=10:195;1:2;:0
 		[4632]  = 1,    -- Ornate Bronze Lockbox
 		[6354]  = 1,    -- Small Locked Chest
@@ -560,7 +561,7 @@ if(CLASSIC) then
 		[31952] = 325,  -- Khorium Lockbox
 	}
 else
-	lib.containers = {
+	data.containers = {
 		-- https://www.wowhead.com/items?filter=10:195;1:2;:0
 		[7209]   = 0,  -- Tazan's Satchel
 		[4632]   = 15, -- Ornate Bronze Lockbox
@@ -610,7 +611,7 @@ Table of all professionIDs and their respective categories, indexed by expansion
 
 See [LibProcessable:GetProfessionCategories()](LibProcessable#libprocessablegetprofessioncategoriesprofessionid).
 --]]
-lib.professionCategories = {
+data.professionCategories = {
 	[171] = { -- Alchemy
 		604, -- Classic
 		602, -- Outland
