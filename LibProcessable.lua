@@ -2,7 +2,7 @@ local MAJOR, MINOR = 'LibProcessable', 55
 assert(LibStub, MAJOR .. ' requires LibStub')
 
 local lib, oldMinor = LibStub:NewLibrary(MAJOR, MINOR)
-if(not lib) then
+if not lib then
 	return
 end
 
@@ -45,12 +45,12 @@ Returns whether the player can mill the given item.
 * `mortarUsed`: Whether or not a Draenic Mortar can be used
 --]]
 function lib:IsMillable(itemID, ignoreMortar)
-	if(type(itemID) == 'string') then
+	if type(itemID) == 'string' then
 		assert(string.match(itemID, 'item:(%d+):') or tonumber(itemID), 'item must be an item ID or item Link')
 		itemID = (tonumber(itemID)) or (GetItemInfoFromHyperlink(itemID))
 	end
 
-	if(self:HasProfession(773)) then -- Inscription
+	if self:HasProfession(773) then -- Inscription
 		if CLASSIC then
 			local currentSkill = professions[773]
 			return data.herbs[itemID] and currentSkill >= data.herbs[itemID]
@@ -58,7 +58,7 @@ function lib:IsMillable(itemID, ignoreMortar)
 			-- any herb can be milled at level 1
 			return not not data.herbs[itemID]
 		end
-	elseif(not ignoreMortar and GetItemCount(114942) > 0) then
+	elseif not ignoreMortar and GetItemCount(114942) > 0 then
 		-- Draenic Mortar can mill Draenor herbs without a profession
 		return itemID >= 109124 and itemID <= 109130, true
 	end
@@ -78,12 +78,12 @@ Returns whether the player can prospect the given item.
    * Only Outland and Pandaria ores have skill level requirements
 --]]
 function lib:IsProspectable(itemID)
-	if(type(itemID) == 'string') then
+	if type(itemID) == 'string' then
 		assert(string.match(itemID, 'item:(%d+):') or tonumber(itemID), 'item must be an item ID or item Link')
 		itemID = (tonumber(itemID)) or (GetItemInfoFromHyperlink(itemID))
 	end
 
-	if(self:HasProfession(755)) then -- Jewelcrafting
+	if self:HasProfession(755) then -- Jewelcrafting
 		if CLASSIC then
 			local currentRank = professions[755]
 			local requiredRank = data.ores[itemID]
@@ -122,13 +122,15 @@ Returns whether the player can disenchant the given item.
 --]]
 function lib:IsDisenchantable(item)
 	local itemID = item
-	if(type(itemID) == 'string') then
+	if type(itemID) == 'string' then
 		assert(string.match(itemID, 'item:(%d+):') or tonumber(itemID), 'item must be an item ID or item Link')
 		itemID = (tonumber(itemID)) or (GetItemInfoFromHyperlink(itemID))
 	end
 
-	if(self:HasProfession(333)) then -- Enchanting
-		if(data.enchantingItems[itemID]) then
+	-- TODO: skill level requirements for classic?
+
+	if self:HasProfession(333) then -- Enchanting
+		if data.enchantingItems[itemID] then
 			-- special items that can be disenchanted
 			return true
 		else
@@ -144,57 +146,57 @@ end
 
 -- https://wowhead.com/items?filter=107:99;0:2;lockpick:0
 local function GetBlacksmithingPick(pickLevel)
-	if(CLASSIC) then
-		if(pickLevel <= 25 and GetItemCount(15869) > 0) then
+	if CLASSIC then
+		if pickLevel <= 25 and GetItemCount(15869) > 0 then
 			return 15869, nil, 100 -- Silver Skeleton Key
 		end
-		if(pickLevel <= 125 and GetItemCount(15870) > 0) then
+		if pickLevel <= 125 and GetItemCount(15870) > 0 then
 			return 15870, nil, 150 -- Golden Skeleton Key
 		end
-		if(pickLevel <= 200 and GetItemCount(15871) > 0) then
+		if pickLevel <= 200 and GetItemCount(15871) > 0 then
 			return 15871, nil, 200 -- Truesilver Skeleton Key
 		end
-		if(pickLevel <= 300 and GetItemCount(15872) > 0) then
+		if pickLevel <= 300 and GetItemCount(15872) > 0 then
 			return 15872, nil, 275 -- Arcanite Skeleton Key
 		end
-		if(pickLevel <= 375 and GetItemCount(43854) > 0) then
+		if pickLevel <= 375 and GetItemCount(43854) > 0 then
 			return 43854, nil, 375 -- Cobalt Skeleton Key
 		end
-		if(pickLevel <= 400 and GetItemCount(43853) > 0) then
+		if pickLevel <= 400 and GetItemCount(43853) > 0 then
 			return 43853, nil, 400 -- Titanium Skeleton Key
 		end
 	else
-		if(pickLevel <= 15 and GetItemCount(15869) > 0) then
+		if pickLevel <= 15 and GetItemCount(15869) > 0 then
 			return 15869, LE_EXPANSION_CLASSIC, 100 -- Silver Skeleton Key
 		end
-		if(pickLevel <= 15 and GetItemCount(15870) > 0) then
+		if pickLevel <= 15 and GetItemCount(15870) > 0 then
 			return 15870, LE_EXPANSION_CLASSIC, 150 -- Golden Skeleton Key
 		end
-		if(pickLevel <= 20 and GetItemCount(15871) > 0) then
+		if pickLevel <= 20 and GetItemCount(15871) > 0 then
 			return 15871, LE_EXPANSION_CLASSIC, 200 -- Truesilver Skeleton Key
 		end
-		if(pickLevel <= 30 and GetItemCount(15872) > 0) then
+		if pickLevel <= 30 and GetItemCount(15872) > 0 then
 			return 15872, LE_EXPANSION_CLASSIC, 275 -- Arcanite Skeleton Key
 		end
-		if(pickLevel <= 30 and GetItemCount(43854) > 0) then
+		if pickLevel <= 30 and GetItemCount(43854) > 0 then
 			return 43854, LE_EXPANSION_WRATH_OF_THE_LICH_KING, 1 -- Cobalt Skeleton Key
 		end
-		if(pickLevel <= 30 and GetItemCount(43853) > 0) then
+		if pickLevel <= 30 and GetItemCount(43853) > 0 then
 			return 43853, LE_EXPANSION_WRATH_OF_THE_LICH_KING, 55 -- Titanium Skeleton Key
 		end
-		if(pickLevel <= 35 and GetItemCount(55053) > 0) then
+		if pickLevel <= 35 and GetItemCount(55053) > 0 then
 			return 55053, LE_EXPANSION_CATACLYSM, 25 -- Obsidium Skeleton Key
 		end
-		if(pickLevel <= 35 and GetItemCount(82960) > 0) then
+		if pickLevel <= 35 and GetItemCount(82960) > 0 then
 			return 82960, LE_EXPANSION_MISTS_OF_PANDARIA, 1 -- Ghostly Skeleton Key
 		end
-		if(pickLevel <= 50 and GetItemCount(159826) > 0) then
+		if pickLevel <= 50 and GetItemCount(159826) > 0 then
 			return 159826, LE_EXPANSION_BATTLE_FOR_AZEROTH, 1 -- Monelite Skeleton Key
 		end
-		if(pickLevel <= 60 and GetItemCount(171441) > 0) then
+		if pickLevel <= 60 and GetItemCount(171441) > 0 then
 			return 171441, LE_EXPANSION_SHADOWLANDS, 1 -- Laestrite Skeleton Key
 		end
-		if(pickLevel <= 70 and GetItemCount(191256) > 0) then
+		if pickLevel <= 70 and GetItemCount(191256) > 0 then
 			return 191256, LE_EXPANSION_DRAGONFLIGHT, 1 -- Tyrvite Skeleton Key
 		end
 	end
@@ -203,7 +205,7 @@ end
 -- https://wowhead.com/items?filter=107:99;0:7;lockpick:0
 local function GetJewelcraftingPick(pickLevel)
 	if not CLASSIC then
-		if(pickLevel <= 550 and GetItemCount(130250) > 0) then
+		if pickLevel <= 550 and GetItemCount(130250) > 0 then
 			-- BUG: this item still opens up lockboxes until 550, highly likely to get fixed
 			return 130250, LE_EXPANSION_LEGION, 1 -- Jeweled Lockpick
 		end
@@ -213,10 +215,10 @@ end
 -- https://wowhead.com/items?filter=107:99;0:15;lockpick:0
 local function GetInscriptionPick(pickLevel)
 	if not CLASSIC then
-		if(pickLevel <= 50 and GetItemCount(159825) > 0) then
+		if pickLevel <= 50 and GetItemCount(159825) > 0 then
 			return 159825, LE_EXPANSION_BATTLE_FOR_AZEROTH, 1 -- Scroll of Unlocking
 		end
-		if(pickLevel <= 60 and GetItemCount(173065) > 0) then
+		if pickLevel <= 60 and GetItemCount(173065) > 0 then
 			return 173065, LE_EXPANSION_SHADOWLANDS, 1 -- Writ of Grave Robbing
 		end
 	end
@@ -225,10 +227,10 @@ end
 -- https://wowhead.com/items?filter=107:99;0:5;lockpick:0
 local function GetEngineeringPick(pickLevel)
 	if not CLASSIC then
-		if(pickLevel <= 35 and GetItemCount(60853) > 0) then
+		if pickLevel <= 35 and GetItemCount(60853) > 0 then
 			return 60853, LE_EXPANSION_CATACLYSM, 1 -- Volatile Seaforium Blastpack
 		end
-		if(pickLevel <= 35 and GetItemCount(77532) > 0) then
+		if pickLevel <= 35 and GetItemCount(77532) > 0 then
 			return 77532, LE_EXPANSION_MISTS_OF_PANDARIA, 1 -- Locksmith's Powderkeg
 		end
 	end
@@ -245,7 +247,7 @@ Returns whether the player can open the given item with a class/racial ability.
 * `spellID`:    SpellID of the spell that can be used to open the given item _(number)_
 --]]
 function lib:IsOpenable(itemID)
-	if(type(itemID) == 'string') then
+	if type(itemID) == 'string' then
 		assert(string.match(itemID, 'item:(%d+):') or tonumber(itemID), 'item must be an item ID or item Link')
 		itemID = (tonumber(itemID)) or (GetItemInfoFromHyperlink(itemID))
 	end
@@ -254,7 +256,7 @@ function lib:IsOpenable(itemID)
 	             or (IsSpellKnown(312890) and 312890) -- Skeleton Pinkie, Mechagnome racial ability
 	             or (IsSpellKnown(323427) and 323427) -- Kevin's Keyring, Necrolord soulbind ability
 
-	if(spellID) then
+	if spellID then
 		local pickLevel = data.containers[itemID]
 		return pickLevel and pickLevel <= (UnitLevel('player') * (CLASSIC and 5 or 1)), spellID
 	end
@@ -275,43 +277,43 @@ posesses.
 * `professionItem`:       The itemID for the unlocking item _(number)_
 --]]
 function lib:IsOpenableProfession(itemID)
-	if(type(itemID) == 'string') then
+	if type(itemID) == 'string' then
 		assert(string.match(itemID, 'item:(%d+):') or tonumber(itemID), 'item must be an item ID or item Link')
 		itemID = (tonumber(itemID)) or (GetItemInfoFromHyperlink(itemID))
 	end
 
 	local pickLevel = data.containers[itemID]
-	if(not pickLevel) then
+	if not pickLevel then
 		return
 	end
 
-	if(self:HasProfession(164)) then -- Blacksmithing
+	if self:HasProfession(164) then -- Blacksmithing
 		local itemID, expansionID, requiredRank = GetBlacksmithingPick(pickLevel)
-		if(itemID) then
+		if itemID then
 			local currentRank = expansionID and professions[164][expansion] or professions[164] or 0
 			return currentRank >= requiredRank, requiredRank, 164, expansionID, itemID
 		end
 	end
 
-	if(self:HasProfession(755)) then -- Jewelcrafting
+	if self:HasProfession(755) then -- Jewelcrafting
 		local itemID, expansionID, requiredRank = GetJewelcraftingPick(pickLevel)
-		if(itemID) then
+		if itemID then
 			local currentRank = expansionID and professions[755][expansion] or professions[755] or 0
 			return currentRank >= requiredRank, requiredRank, 755, expansionID, itemID
 		end
 	end
 
-	if(self:HasProfession(773)) then -- Inscription
+	if self:HasProfession(773) then -- Inscription
 		local itemID, expansionID, requiredRank = GetInscriptionPick(pickLevel)
-		if(itemID) then
+		if itemID then
 			local currentRank = expansionID and professions[773][expansion] or professions[773] or 0
 			return currentRank >= requiredRank, requiredRank, 773, expansionID, itemID
 		end
 	end
 
-	if(self:HasProfession(202)) then -- Engineering
+	if self:HasProfession(202) then -- Engineering
 		local itemID, expansionID, requiredRank = GetEngineeringPick(pickLevel)
-		if(itemID) then
+		if itemID then
 			local currentRank = expansionID and professions[202][expansion] or professions[202] or 0
 			return currentRank >= requiredRank, requiredRank, 202, expansionID, itemID
 		end
@@ -377,7 +379,7 @@ end
 
 local Handler = CreateFrame('Frame')
 Handler:RegisterEvent('SKILL_LINES_CHANGED')
-Handler:SetScript('OnEvent', function(self, event, ...)
+Handler:SetScript('OnEvent', function()
 	table.wipe(professions)
 
 	for _, professionIndex in next, {GetProfessions()} do
@@ -387,6 +389,7 @@ Handler:SetScript('OnEvent', function(self, event, ...)
 				professions[professionID] = skillLevel
 			else
 				professions[professionID] = {}
+
 				for expansion, skillLine in next, data.professionSkillLines[professionID] do
 					if DRAGONFLIGHT then
 						local professionInfo = C_TradeSkillUI.GetProfessionInfoBySkillLineID(skillLine)
