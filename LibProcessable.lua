@@ -48,8 +48,13 @@ function lib:IsMillable(itemID, ignoreMortar)
 	end
 
 	if(self:HasProfession(773)) then -- Inscription
-		-- any herb can be milled at level 1
-		return data.herbs[itemID]
+		if CLASSIC then
+			local currentSkill = professions[773]
+			return data.herbs[itemID] and currentSkill >= data.herbs[itemID]
+		else
+			-- any herb can be milled at level 1
+			return not not data.herbs[itemID]
+		end
 	elseif(not ignoreMortar and GetItemCount(114942) > 0) then
 		-- Draenic Mortar can mill Draenor herbs without a profession
 		return itemID >= 109124 and itemID <= 109130, true
