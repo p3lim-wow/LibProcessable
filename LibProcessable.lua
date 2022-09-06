@@ -545,6 +545,7 @@ data.enchantingItems = {
 	[181991] = true, -- Antique Stalker's Bow
 }
 
+-- /run ChatFrame1:Clear(); for _,i in next,{C_TradeSkillUI.GetCategories()} do print(i, C_TradeSkillUI.GetCategoryInfo(i).name) end
 data.professionCategories = {
 	[171] = { -- Alchemy
 		[LE_EXPANSION_CLASSIC]                = 604,
