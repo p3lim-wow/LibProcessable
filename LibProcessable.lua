@@ -10,6 +10,7 @@ local data = {} -- private table for storing data without exposing it
 local professions = {} -- private table for storing cached profession info
 
 local CLASSIC = select(4, GetBuildInfo()) < 90000
+local DRAGONFLIGHT = select(4, GetBuildInfo()) >= 100000
 
 -- upvalue constants with fallbacks
 local LE_ITEM_QUALITY_UNCOMMON = LE_ITEM_QUALITY_UNCOMMON or Enum.ItemQuality.Uncommon
@@ -30,6 +31,7 @@ local LE_EXPANSION_WARLORDS_OF_DRAENOR = LE_EXPANSION_WARLORDS_OF_DRAENOR or 5
 local LE_EXPANSION_LEGION = LE_EXPANSION_LEGION or 6
 local LE_EXPANSION_BATTLE_FOR_AZEROTH = LE_EXPANSION_BATTLE_FOR_AZEROTH or 7
 local LE_EXPANSION_SHADOWLANDS = LE_EXPANSION_SHADOWLANDS or 8
+local LE_EXPANSION_DRAGONFLIGHT = LE_EXPANSION_DRAGONFLIGHT or LE_EXPANSION_10_0 or 9 -- ahead of our time
 
 --[[ LibProcessable:IsMillable(_item[, ignoreMortar]_)
 Returns whether the player can mill the given item.
@@ -191,6 +193,9 @@ local function GetBlacksmithingPick(pickLevel)
 		end
 		if(pickLevel <= 60 and GetItemCount(171441) > 0) then
 			return 171441, LE_EXPANSION_SHADOWLANDS, 1 -- Laestrite Skeleton Key
+		end
+		if(pickLevel <= 70 and GetItemCount(191256) > 0) then
+			return 191256, LE_EXPANSION_DRAGONFLIGHT, 1 -- Tyrvite Skeleton Key
 		end
 	end
 end
@@ -383,8 +388,15 @@ Handler:SetScript('OnEvent', function(self, event, ...)
 			else
 				professions[professionID] = {}
 				for expansion, skillLine in next, data.professionSkillLines[professionID] do
-					local _, currentRank = C_TradeSkillUI.GetTradeSkillLineInfoByID(skillLine)
-					professions[professionID][expansion] = currentRank
+					if DRAGONFLIGHT then
+						local professionInfo = C_TradeSkillUI.GetProfessionInfoBySkillLineID(skillLine)
+						if professionInfo then
+							professions[professionID][expansion] = professionInfo.skillLevel
+						end
+					else
+						local _, currentRank = C_TradeSkillUI.GetTradeSkillLineInfoByID(skillLine)
+						professions[professionID][expansion] = currentRank
+					end
 				end
 			end
 		end
@@ -425,6 +437,12 @@ data.ores = {
 	[171832] = 1, -- Sinvyr
 	[171833] = 1, -- Elethium
 	[187700] = 1, -- Progenium Ore
+
+	-- UNTESTED DRAGONFLIGHT ORES:
+	[188658] = 1, -- Draconium Ore
+	[194545] = 1, -- Prismatic Ore
+	[190313] = 1, -- Titaniclum Ore
+	[190394] = 1, -- Tyrivite Ore
 }
 
 data.herbs = {
@@ -515,6 +533,33 @@ data.herbs = {
 	[170554] = 1, -- Vigil's Torch
 	[171315] = 1, -- Nightshade
 	[187699] = 1, -- First Flower
+
+	-- UNTESTED DRAGONFLIGHT HERBS:
+	-- there's 3 of each herb because they have ranks/quality associated with them
+	[191460] = 1, -- Hochenblume
+	[191461] = 1, -- Hochenblume
+	[191462] = 1, -- Hochenblume
+	[191464] = 1, -- Saxifrage
+	[191465] = 1, -- Saxifrage
+	[191466] = 1, -- Saxifrage
+	[191467] = 1, -- Bubble Poppy
+	[191468] = 1, -- Bubble Poppy
+	[191469] = 1, -- Bubble Poppy
+	[191470] = 1, -- Writhebark
+	[191471] = 1, -- Writhebark
+	[191472] = 1, -- Writhebark
+	[198412] = 1, -- Serene Pigment
+	[198413] = 1, -- Serene Pigment
+	[198414] = 1, -- Serene Pigment
+	[198415] = 1, -- Flourishing Pigment
+	[198416] = 1, -- Flourishing Pigment
+	[198417] = 1, -- Flourishing Pigment
+	[198418] = 1, -- Blazing Pigment
+	[198419] = 1, -- Blazing Pigment
+	[198420] = 1, -- Blazing Pigment
+	[198421] = 1, -- Shimmering Pigment
+	[198422] = 1, -- Shimmering Pigment
+	[198423] = 1, -- Shimmering Pigment
 }
 
 data.containers = {
@@ -562,6 +607,11 @@ data.containers = {
 	[186161] = 60, -- Stygian Lockbox     TODO: confirm level requirement
 	[186160] = 60, -- Locked Artifact Case
 	[188787] = 60, -- Locked Broker Luggage
+
+	-- UNTESTED DRAGONFLIGHT BOXES:
+	[190954] = 65, -- Tyrivite Lockbox
+	[191296] = 75, -- Enchanted Lockbox (how are we supposed to get 75 skill?)
+	[194037] = 9999, -- Heavy Chest (requires an item "Gilded Key" according to in-game tooltip)
 }
 
 data.enchantingItems = {
@@ -589,6 +639,7 @@ data.professionCategories = {
 		[LE_EXPANSION_LEGION]                 = 433,
 		[LE_EXPANSION_BATTLE_FOR_AZEROTH]     = 592,
 		[LE_EXPANSION_SHADOWLANDS]            = 1294,
+		[LE_EXPANSION_DRAGONFLIGHT]           = 1582,
 	},
 	[164] = { -- Blacksmithing
 		[LE_EXPANSION_CLASSIC]                = 590,
@@ -600,6 +651,7 @@ data.professionCategories = {
 		[LE_EXPANSION_LEGION]                 = 426,
 		[LE_EXPANSION_BATTLE_FOR_AZEROTH]     = 542,
 		[LE_EXPANSION_SHADOWLANDS]            = 1311,
+		[LE_EXPANSION_DRAGONFLIGHT]           = 1566,
 	},
 	[333] = { -- Enchanting
 		[LE_EXPANSION_CLASSIC]                = 667,
@@ -611,6 +663,7 @@ data.professionCategories = {
 		[LE_EXPANSION_LEGION]                 = 443,
 		[LE_EXPANSION_BATTLE_FOR_AZEROTH]     = 647,
 		[LE_EXPANSION_SHADOWLANDS]            = 1364,
+		[LE_EXPANSION_DRAGONFLIGHT]           = 1588,
 	},
 	[202] = { -- Engineering
 		[LE_EXPANSION_CLASSIC]                = 419,
@@ -622,6 +675,7 @@ data.professionCategories = {
 		[LE_EXPANSION_LEGION]                 = 469,
 		[LE_EXPANSION_BATTLE_FOR_AZEROTH]     = 709,
 		[LE_EXPANSION_SHADOWLANDS]            = 1381,
+		[LE_EXPANSION_DRAGONFLIGHT]           = 1595,
 	},
 	[182] = { -- Herbalism
 		[LE_EXPANSION_CLASSIC]                = 1044,
@@ -633,6 +687,7 @@ data.professionCategories = {
 		[LE_EXPANSION_LEGION]                 = 456,
 		[LE_EXPANSION_BATTLE_FOR_AZEROTH]     = 1029,
 		[LE_EXPANSION_SHADOWLANDS]            = 1441,
+		[LE_EXPANSION_DRAGONFLIGHT]           = 1594,
 	},
 	[773] = { -- Inscription
 		[LE_EXPANSION_CLASSIC]                = 415,
@@ -644,6 +699,7 @@ data.professionCategories = {
 		[LE_EXPANSION_LEGION]                 = 450,
 		[LE_EXPANSION_BATTLE_FOR_AZEROTH]     = 759,
 		[LE_EXPANSION_SHADOWLANDS]            = 1406,
+		[LE_EXPANSION_DRAGONFLIGHT]           = 1592,
 	},
 	[755] = { -- Jewelcrafting
 		[LE_EXPANSION_CLASSIC]                = 372,
@@ -655,6 +711,7 @@ data.professionCategories = {
 		[LE_EXPANSION_LEGION]                 = 464,
 		[LE_EXPANSION_BATTLE_FOR_AZEROTH]     = 805,
 		[LE_EXPANSION_SHADOWLANDS]            = 1418,
+		[LE_EXPANSION_DRAGONFLIGHT]           = 1593,
 	},
 	[165] = { -- Leatherworking
 		[LE_EXPANSION_CLASSIC]                = 379,
@@ -666,6 +723,7 @@ data.professionCategories = {
 		[LE_EXPANSION_LEGION]                 = 460,
 		[LE_EXPANSION_BATTLE_FOR_AZEROTH]     = 871,
 		[LE_EXPANSION_SHADOWLANDS]            = 1334,
+		[LE_EXPANSION_DRAGONFLIGHT]           = 1587,
 	},
 	[186] = { -- Mining
 		[LE_EXPANSION_CLASSIC]                = 1078,
@@ -677,6 +735,7 @@ data.professionCategories = {
 		[LE_EXPANSION_LEGION]                 = 425,
 		[LE_EXPANSION_BATTLE_FOR_AZEROTH]     = 1065,
 		[LE_EXPANSION_SHADOWLANDS]            = 1320,
+		[LE_EXPANSION_DRAGONFLIGHT]           = 1584,
 	},
 	[393] = { -- Skinning
 		[LE_EXPANSION_CLASSIC]                = 1060,
@@ -688,6 +747,7 @@ data.professionCategories = {
 		[LE_EXPANSION_LEGION]                 = 459,
 		[LE_EXPANSION_BATTLE_FOR_AZEROTH]     = 1046,
 		[LE_EXPANSION_SHADOWLANDS]            = 1331,
+		[LE_EXPANSION_DRAGONFLIGHT]           = 1586,
 	},
 	[197] = { -- Tailoring
 		[LE_EXPANSION_CLASSIC]                = 362,
@@ -699,6 +759,7 @@ data.professionCategories = {
 		[LE_EXPANSION_LEGION]                 = 430,
 		[LE_EXPANSION_BATTLE_FOR_AZEROTH]     = 942,
 		[LE_EXPANSION_SHADOWLANDS]            = 1395,
+		[LE_EXPANSION_DRAGONFLIGHT]           = 1591,
 	},
 }
 
@@ -714,6 +775,7 @@ data.professionSkillLines = {
 		[LE_EXPANSION_LEGION]                 = 2479,
 		[LE_EXPANSION_BATTLE_FOR_AZEROTH]     = 2478,
 		[LE_EXPANSION_SHADOWLANDS]            = 2750,
+		[LE_EXPANSION_DRAGONFLIGHT]           = 2823,
 	},
 	[164] = { -- Blacksmithing
 		[LE_EXPANSION_CLASSIC]                = 2477,
@@ -725,6 +787,7 @@ data.professionSkillLines = {
 		[LE_EXPANSION_LEGION]                 = 2454,
 		[LE_EXPANSION_BATTLE_FOR_AZEROTH]     = 2437,
 		[LE_EXPANSION_SHADOWLANDS]            = 2751,
+		[LE_EXPANSION_DRAGONFLIGHT]           = 2822,
 	},
 	[333] = { -- Enchanting
 		[LE_EXPANSION_CLASSIC]                = 2494,
@@ -736,6 +799,7 @@ data.professionSkillLines = {
 		[LE_EXPANSION_LEGION]                 = 2487,
 		[LE_EXPANSION_BATTLE_FOR_AZEROTH]     = 2486,
 		[LE_EXPANSION_SHADOWLANDS]            = 2753,
+		[LE_EXPANSION_DRAGONFLIGHT]           = 2825,
 	},
 	[202] = { -- Engineering
 		[LE_EXPANSION_CLASSIC]                = 2506,
@@ -747,6 +811,7 @@ data.professionSkillLines = {
 		[LE_EXPANSION_LEGION]                 = 2500,
 		[LE_EXPANSION_BATTLE_FOR_AZEROTH]     = 2499,
 		[LE_EXPANSION_SHADOWLANDS]            = 2755,
+		[LE_EXPANSION_DRAGONFLIGHT]           = 2827,
 	},
 	[182] = { -- Herbalism
 		[LE_EXPANSION_CLASSIC]                = 2556,
@@ -758,6 +823,7 @@ data.professionSkillLines = {
 		[LE_EXPANSION_LEGION]                 = 2550,
 		[LE_EXPANSION_BATTLE_FOR_AZEROTH]     = 2549,
 		[LE_EXPANSION_SHADOWLANDS]            = 2760,
+		[LE_EXPANSION_DRAGONFLIGHT]           = 2832,
 	},
 	[773] = { -- Inscription
 		[LE_EXPANSION_CLASSIC]                = 2514,
@@ -769,6 +835,7 @@ data.professionSkillLines = {
 		[LE_EXPANSION_LEGION]                 = 2508,
 		[LE_EXPANSION_BATTLE_FOR_AZEROTH]     = 2507,
 		[LE_EXPANSION_SHADOWLANDS]            = 2756,
+		[LE_EXPANSION_DRAGONFLIGHT]           = 2828,
 	},
 	[755] = { -- Jewelcrafting
 		[LE_EXPANSION_CLASSIC]                = 2524,
@@ -780,6 +847,7 @@ data.professionSkillLines = {
 		[LE_EXPANSION_LEGION]                 = 2518,
 		[LE_EXPANSION_BATTLE_FOR_AZEROTH]     = 2517,
 		[LE_EXPANSION_SHADOWLANDS]            = 2757,
+		[LE_EXPANSION_DRAGONFLIGHT]           = 2829,
 	},
 	[165] = { -- Leatherworking
 		[LE_EXPANSION_CLASSIC]                = 2532,
@@ -791,6 +859,7 @@ data.professionSkillLines = {
 		[LE_EXPANSION_LEGION]                 = 2526,
 		[LE_EXPANSION_BATTLE_FOR_AZEROTH]     = 2525,
 		[LE_EXPANSION_SHADOWLANDS]            = 2758,
+		[LE_EXPANSION_DRAGONFLIGHT]           = 2830,
 	},
 	[186] = { -- Mining
 		[LE_EXPANSION_CLASSIC]                = 2572,
@@ -802,6 +871,7 @@ data.professionSkillLines = {
 		[LE_EXPANSION_LEGION]                 = 2566,
 		[LE_EXPANSION_BATTLE_FOR_AZEROTH]     = 2565,
 		[LE_EXPANSION_SHADOWLANDS]            = 2761,
+		[LE_EXPANSION_DRAGONFLIGHT]           = 2833,
 	},
 	[393] = { -- Skinning
 		[LE_EXPANSION_CLASSIC]                = 2564,
@@ -813,6 +883,7 @@ data.professionSkillLines = {
 		[LE_EXPANSION_LEGION]                 = 2558,
 		[LE_EXPANSION_BATTLE_FOR_AZEROTH]     = 2557,
 		[LE_EXPANSION_SHADOWLANDS]            = 2762,
+		[LE_EXPANSION_DRAGONFLIGHT]           = 2834,
 	},
 	[197] = { -- Tailoring
 		[LE_EXPANSION_CLASSIC]                = 2540,
@@ -824,5 +895,6 @@ data.professionSkillLines = {
 		[LE_EXPANSION_LEGION]                 = 2534,
 		[LE_EXPANSION_BATTLE_FOR_AZEROTH]     = 2533,
 		[LE_EXPANSION_SHADOWLANDS]            = 2759,
+		[LE_EXPANSION_DRAGONFLIGHT]           = 2831,
 	},
 }
