@@ -133,62 +133,69 @@ local function GetBlacksmithingPick(pickLevel)
 		end
 	else
 		if(pickLevel <= 15 and GetItemCount(15869) > 0) then
-			return 15869, 590, 100 -- Silver Skeleton Key
+			return 15869, LE_EXPANSION_CLASSIC, 100 -- Silver Skeleton Key
 		end
 		if(pickLevel <= 15 and GetItemCount(15870) > 0) then
-			return 15870, 590, 150 -- Golden Skeleton Key
+			return 15870, LE_EXPANSION_CLASSIC, 150 -- Golden Skeleton Key
 		end
 		if(pickLevel <= 20 and GetItemCount(15871) > 0) then
-			return 15871, 590, 200 -- Truesilver Skeleton Key
+			return 15871, LE_EXPANSION_CLASSIC, 200 -- Truesilver Skeleton Key
 		end
 		if(pickLevel <= 30 and GetItemCount(15872) > 0) then
-			return 15872, 590, 275 -- Arcanite Skeleton Key
+			return 15872, LE_EXPANSION_CLASSIC, 275 -- Arcanite Skeleton Key
 		end
 		if(pickLevel <= 30 and GetItemCount(43854) > 0) then
-			return 43854, 577, 1 -- Cobalt Skeleton Key
+			return 43854, LE_EXPANSION_WRATH_OF_THE_LICH_KING, 1 -- Cobalt Skeleton Key
 		end
 		if(pickLevel <= 30 and GetItemCount(43853) > 0) then
-			return 43853, 577, 55 -- Titanium Skeleton Key
+			return 43853, LE_EXPANSION_WRATH_OF_THE_LICH_KING, 55 -- Titanium Skeleton Key
 		end
 		if(pickLevel <= 35 and GetItemCount(55053) > 0) then
-			return 55053, 569, 25 -- Obsidium Skeleton Key
+			return 55053, LE_EXPANSION_CATACLYSM, 25 -- Obsidium Skeleton Key
 		end
 		if(pickLevel <= 35 and GetItemCount(82960) > 0) then
-			return 82960, 553, 1 -- Ghostly Skeleton Key
+			return 82960, LE_EXPANSION_MISTS_OF_PANDARIA, 1 -- Ghostly Skeleton Key
 		end
 		if(pickLevel <= 50 and GetItemCount(159826) > 0) then
-			return 159826, 542, 1 -- Monelite Skeleton Key
+			return 159826, LE_EXPANSION_BATTLE_FOR_AZEROTH, 1 -- Monelite Skeleton Key
 		end
 		if(pickLevel <= 50 and GetItemCount(171441) > 0) then
-			return 171441, 1311, 1 -- Laestrite Skeleton Key
+			return 171441, LE_EXPANSION_SHADOWLANDS, 1 -- Laestrite Skeleton Key
 		end
 	end
 end
 
 -- https://wowhead.com/items?filter=107:99;0:7;lockpick:0
 local function GetJewelcraftingPick(pickLevel)
-	if(pickLevel <= 550 and GetItemCount(130250) > 0) then
-		-- TODO: this item has not been updated for 9.0, so it has incorrect pick level
-		return 130250, 464, 1 -- Jeweled Lockpick
+	if not CLASSIC then
+		if(pickLevel <= 550 and GetItemCount(130250) > 0) then
+			-- BUG: this item still opens up lockboxes until 550, highly likely to get fixed
+			return 130250, LE_EXPANSION_LEGION, 1 -- Jeweled Lockpick
+		end
 	end
 end
 
 -- https://wowhead.com/items?filter=107:99;0:15;lockpick:0
 local function GetInscriptionPick(pickLevel)
-	if(pickLevel <= 50 and GetItemCount(159825) > 0) then
-		return 159825, 759, 1 -- Scroll of Unlocking
-	elseif(pickLevel <= 625 and GetItemCount(173065) > 0) then
-		-- TODO: this item has not been updated for 9.0, so it has incorrect pick level
-		return 173065, 1406, 1 -- Writ of Grave Robbing
+	if not CLASSIC then
+		if(pickLevel <= 50 and GetItemCount(159825) > 0) then
+			return 159825, LE_EXPANSION_BATTLE_FOR_AZEROTH, 1 -- Scroll of Unlocking
+		end
+		if(pickLevel <= 625 and GetItemCount(173065) > 0) then
+			return 173065, LE_EXPANSION_SHADOWLANDS, 1 -- Writ of Grave Robbing
+		end
 	end
 end
 
 -- https://wowhead.com/items?filter=107:99;0:5;lockpick:0
 local function GetEngineeringPick(pickLevel)
-	if(pickLevel <= 35 and GetItemCount(60853) > 0) then
-		return 60853, 715, 1 -- Volatile Seaforium Blastpack
-	elseif(pickLevel <= 35 and GetItemCount(77532) > 0) then
-		return 77532, 713, 1 -- Locksmith's Powderkeg
+	if not CLASSIC then
+		if(pickLevel <= 35 and GetItemCount(60853) > 0) then
+			return 60853, LE_EXPANSION_CATACLYSM, 1 -- Volatile Seaforium Blastpack
+		end
+		if(pickLevel <= 35 and GetItemCount(77532) > 0) then
+			return 77532, LE_EXPANSION_MISTS_OF_PANDARIA, 1 -- Locksmith's Powderkeg
+		end
 	end
 end
 
@@ -224,14 +231,11 @@ posesses.
 * `item`: item ID or link
 
 **Return values:**
-* `skillRequired`:        The skill required in the profession category _(number)_
+* `isOpenable`:           Whether or not the player can open the given item _(boolean)_
+* `requiredRank`:         The skill level required in the profession _(number)_
 * `professionID`:         The profession ID _(number)_
-* `professionCategoryID`: The profession category ID associated with the unlocking item _(number)_
+* `expansionID`:          The associated expansion with the profession _(number/nil)_
 * `professionItem`:       The itemID for the unlocking item _(number)_
-
-**Notes:**
-* The method will return `nil` instead of a category ID for Classic clients, as there are no profession categories there
-* This does not check if the player has the required skills to use the profession items
 --]]
 function lib:IsOpenableProfession(itemID)
 	if(type(itemID) == 'string') then
@@ -245,30 +249,34 @@ function lib:IsOpenableProfession(itemID)
 	end
 
 	if(self:HasProfession(164)) then -- Blacksmithing
-		local itemID, categoryID, skillLevelRequired = GetBlacksmithingPick(pickLevel)
+		local itemID, expansionID, requiredRank = GetBlacksmithingPick(pickLevel)
 		if(itemID) then
-			return skillLevelRequired, 164, categoryID, itemID
+			local currentRank = expansionID and professions[164][expansion] or professions[164] or 0
+			return currentRank >= requiredRank, requiredRank, 164, expansionID, itemID
 		end
 	end
 
 	if(self:HasProfession(755)) then -- Jewelcrafting
-		local itemID, categoryID, skillLevelRequired = GetJewelcraftingPick(pickLevel)
+		local itemID, expansionID, requiredRank = GetJewelcraftingPick(pickLevel)
 		if(itemID) then
-			return skillLevelRequired, 755, categoryID, itemID
+			local currentRank = expansionID and professions[755][expansion] or professions[755] or 0
+			return currentRank >= requiredRank, requiredRank, 755, expansionID, itemID
 		end
 	end
 
 	if(self:HasProfession(773)) then -- Inscription
-		local itemID, categoryID, skillLevelRequired = GetInscriptionPick(pickLevel)
+		local itemID, expansionID, requiredRank = GetInscriptionPick(pickLevel)
 		if(itemID) then
-			return skillLevelRequired, 773, categoryID, itemID
+			local currentRank = expansionID and professions[773][expansion] or professions[773] or 0
+			return currentRank >= requiredRank, requiredRank, 773, expansionID, itemID
 		end
 	end
 
 	if(self:HasProfession(202)) then -- Engineering
-		local itemID, categoryID, skillLevelRequired = GetEngineeringPick(pickLevel)
+		local itemID, expansionID, requiredRank = GetEngineeringPick(pickLevel)
 		if(itemID) then
-			return skillLevelRequired, 202, categoryID, itemID
+			local currentRank = expansionID and professions[202][expansion] or professions[202] or 0
+			return currentRank >= requiredRank, requiredRank, 202, expansionID, itemID
 		end
 	end
 end
