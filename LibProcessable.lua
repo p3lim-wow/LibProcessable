@@ -159,7 +159,7 @@ local function GetBlacksmithingPick(pickLevel)
 		if(pickLevel <= 50 and GetItemCount(159826) > 0) then
 			return 159826, LE_EXPANSION_BATTLE_FOR_AZEROTH, 1 -- Monelite Skeleton Key
 		end
-		if(pickLevel <= 50 and GetItemCount(171441) > 0) then
+		if(pickLevel <= 60 and GetItemCount(171441) > 0) then
 			return 171441, LE_EXPANSION_SHADOWLANDS, 1 -- Laestrite Skeleton Key
 		end
 	end
