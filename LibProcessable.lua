@@ -181,7 +181,7 @@ local function GetInscriptionPick(pickLevel)
 		if(pickLevel <= 50 and GetItemCount(159825) > 0) then
 			return 159825, LE_EXPANSION_BATTLE_FOR_AZEROTH, 1 -- Scroll of Unlocking
 		end
-		if(pickLevel <= 625 and GetItemCount(173065) > 0) then
+		if(pickLevel <= 60 and GetItemCount(173065) > 0) then
 			return 173065, LE_EXPANSION_SHADOWLANDS, 1 -- Writ of Grave Robbing
 		end
 	end
