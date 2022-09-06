@@ -155,6 +155,12 @@ local function GetBlacksmithingPick(pickLevel)
 		if(pickLevel <= 300 and GetItemCount(15872) > 0) then
 			return 15872, nil, 275 -- Arcanite Skeleton Key
 		end
+		if(pickLevel <= 375 and GetItemCount(43854) > 0) then
+			return 43854, nil, 375 -- Cobalt Skeleton Key
+		end
+		if(pickLevel <= 400 and GetItemCount(43853) > 0) then
+			return 43853, nil, 400 -- Titanium Skeleton Key
+		end
 	else
 		if(pickLevel <= 15 and GetItemCount(15869) > 0) then
 			return 15869, LE_EXPANSION_CLASSIC, 100 -- Silver Skeleton Key
