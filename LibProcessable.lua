@@ -40,6 +40,7 @@ Returns whether the player can mill the given item.
 
 **Return values:**
 * `isMillable`: Whether or not the player can mill the given item _(boolean)_
+* `mortarUsed`: Whether or not a Draenic Mortar can be used
 --]]
 function lib:IsMillable(itemID, ignoreMortar)
 	if(type(itemID) == 'string') then
