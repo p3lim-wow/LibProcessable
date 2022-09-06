@@ -7,8 +7,11 @@ if(not lib) then
 end
 
 local data = {} -- private table for storing data without exposing it
+local professions = {} -- private table for storing cached profession info
+
 local CLASSIC = select(4, GetBuildInfo()) < 90000
 
+-- upvalue constants with fallbacks
 local LE_ITEM_QUALITY_UNCOMMON = LE_ITEM_QUALITY_UNCOMMON or Enum.ItemQuality.Uncommon
 local LE_ITEM_QUALITY_EPIC = LE_ITEM_QUALITY_EPIC or Enum.ItemQuality.Epic
 local LE_ITEM_CLASS_ARMOR = LE_ITEM_CLASS_ARMOR or 4
@@ -18,7 +21,16 @@ local LE_ITEM_ARMOR_COSMETIC = LE_ITEM_ARMOR_COSMETIC or 5
 local LE_ITEM_SUBCLASS_ARTIFACT = 11 -- no existing constant for this one
 local LE_ITEM_EQUIPLOC_SHIRT = Enum and Enum.InventoryType and Enum.InventoryType.IndexBodyType or 4
 
-local professions = {}
+local LE_EXPANSION_CLASSIC = LE_EXPANSION_CLASSIC or 0
+local LE_EXPANSION_BURNING_CRUSADE = LE_EXPANSION_BURNING_CRUSADE or 1
+local LE_EXPANSION_WRATH_OF_THE_LICH_KING = LE_EXPANSION_WRATH_OF_THE_LICH_KING or 2
+local LE_EXPANSION_CATACLYSM = LE_EXPANSION_CATACLYSM or 3
+local LE_EXPANSION_MISTS_OF_PANDARIA = LE_EXPANSION_MISTS_OF_PANDARIA or 4
+local LE_EXPANSION_WARLORDS_OF_DRAENOR = LE_EXPANSION_WARLORDS_OF_DRAENOR or 5
+local LE_EXPANSION_LEGION = LE_EXPANSION_LEGION or 6
+local LE_EXPANSION_BATTLE_FOR_AZEROTH = LE_EXPANSION_BATTLE_FOR_AZEROTH or 7
+local LE_EXPANSION_SHADOWLANDS = LE_EXPANSION_SHADOWLANDS or 8
+
 --[[ LibProcessable:IsMillable(_item[, ignoreMortar]_)
 Returns whether the player can mill the given item.
 
@@ -606,131 +618,126 @@ else
 	}
 end
 
---[[ LibProcessable.professionCategories
-Table of all professionIDs and their respective categories, indexed by expansion ID.
-
-See [LibProcessable:GetProfessionCategories()](LibProcessable#libprocessablegetprofessioncategoriesprofessionid).
---]]
 data.professionCategories = {
 	[171] = { -- Alchemy
-		604, -- Classic
-		602, -- Outland
-		600, -- Northrend
-		598, -- Cataclysm
-		596, -- Pandaria
-		332, -- Draenor
-		433, -- Legion
-		592, -- Zandalari/Kul Tiran
-		1294, -- Shadowlands
+		[LE_EXPANSION_CLASSIC]                = 604,
+		[LE_EXPANSION_BURNING_CRUSADE]        = 602,
+		[LE_EXPANSION_WRATH_OF_THE_LICH_KING] = 600,
+		[LE_EXPANSION_CATACLYSM]              = 598,
+		[LE_EXPANSION_MISTS_OF_PANDARIA]      = 596,
+		[LE_EXPANSION_WARLORDS_OF_DRAENOR]    = 332,
+		[LE_EXPANSION_LEGION]                 = 433,
+		[LE_EXPANSION_BATTLE_FOR_AZEROTH]     = 592,
+		[LE_EXPANSION_SHADOWLANDS]            = 1294,
 	},
 	[164] = { -- Blacksmithing
-		590, -- Classic
-		584, -- Outland
-		577, -- Northrend
-		569, -- Cataclysm
-		553, -- Pandaria
-		389, -- Draenor
-		426, -- Legion
-		542, -- Zandalari/Kul Tiran
-		1311, -- Shadowlands
+		[LE_EXPANSION_CLASSIC]                = 590,
+		[LE_EXPANSION_BURNING_CRUSADE]        = 584,
+		[LE_EXPANSION_WRATH_OF_THE_LICH_KING] = 577,
+		[LE_EXPANSION_CATACLYSM]              = 569,
+		[LE_EXPANSION_MISTS_OF_PANDARIA]      = 553,
+		[LE_EXPANSION_WARLORDS_OF_DRAENOR]    = 389,
+		[LE_EXPANSION_LEGION]                 = 426,
+		[LE_EXPANSION_BATTLE_FOR_AZEROTH]     = 542,
+		[LE_EXPANSION_SHADOWLANDS]            = 1311,
 	},
 	[333] = { -- Enchanting
-		667, -- Classic
-		665, -- Outland
-		663, -- Northrend
-		661, -- Cataclysm
-		656, -- Pandaria
-		348, -- Draenor
-		443, -- Legion
-		647, -- Zandalari/Kul Tiran
-		1364, -- Shadowlands
+		[LE_EXPANSION_CLASSIC]                = 667,
+		[LE_EXPANSION_BURNING_CRUSADE]        = 665,
+		[LE_EXPANSION_WRATH_OF_THE_LICH_KING] = 663,
+		[LE_EXPANSION_CATACLYSM]              = 661,
+		[LE_EXPANSION_MISTS_OF_PANDARIA]      = 656,
+		[LE_EXPANSION_WARLORDS_OF_DRAENOR]    = 348,
+		[LE_EXPANSION_LEGION]                 = 443,
+		[LE_EXPANSION_BATTLE_FOR_AZEROTH]     = 647,
+		[LE_EXPANSION_SHADOWLANDS]            = 1364,
 	},
 	[202] = { -- Engineering
-		419, -- Classic
-		719, -- Outland
-		717, -- Northrend
-		715, -- Cataclysm
-		713, -- Pandaria
-		347, -- Draenor
-		469, -- Legion
-		709, -- Zandalari/Kul Tiran
-		1381, -- Shadowlands
+		[LE_EXPANSION_CLASSIC]                = 419,
+		[LE_EXPANSION_BURNING_CRUSADE]        = 719,
+		[LE_EXPANSION_WRATH_OF_THE_LICH_KING] = 717,
+		[LE_EXPANSION_CATACLYSM]              = 715,
+		[LE_EXPANSION_MISTS_OF_PANDARIA]      = 713,
+		[LE_EXPANSION_WARLORDS_OF_DRAENOR]    = 347,
+		[LE_EXPANSION_LEGION]                 = 469,
+		[LE_EXPANSION_BATTLE_FOR_AZEROTH]     = 709,
+		[LE_EXPANSION_SHADOWLANDS]            = 1381,
 	},
 	[182] = { -- Herbalism
-		1044, -- Classic
-		1042, -- Outland
-		1040, -- Northrend
-		1038, -- Cataclysm
-		1036, -- Pandaria
-		1034, -- Draenor
-		456, -- Legion
-		1029, -- Zandalari/Kul Tiran
-		1441, -- Shadowlands
+		[LE_EXPANSION_CLASSIC]                = 1044,
+		[LE_EXPANSION_BURNING_CRUSADE]        = 1042,
+		[LE_EXPANSION_WRATH_OF_THE_LICH_KING] = 1040,
+		[LE_EXPANSION_CATACLYSM]              = 1038,
+		[LE_EXPANSION_MISTS_OF_PANDARIA]      = 1036,
+		[LE_EXPANSION_WARLORDS_OF_DRAENOR]    = 1034,
+		[LE_EXPANSION_LEGION]                 = 456,
+		[LE_EXPANSION_BATTLE_FOR_AZEROTH]     = 1029,
+		[LE_EXPANSION_SHADOWLANDS]            = 1441,
 	},
 	[773] = { -- Inscription
-		415, -- Classic
-		769, -- Outland
-		767, -- Northrend
-		765, -- Cataclysm
-		763, -- Pandaria
-		410, -- Draenor
-		450, -- Legion
-		759, -- Zandalari/Kul Tiran
-		1406, -- Shadowlands
+		[LE_EXPANSION_CLASSIC]                = 415,
+		[LE_EXPANSION_BURNING_CRUSADE]        = 769,
+		[LE_EXPANSION_WRATH_OF_THE_LICH_KING] = 767,
+		[LE_EXPANSION_CATACLYSM]              = 765,
+		[LE_EXPANSION_MISTS_OF_PANDARIA]      = 763,
+		[LE_EXPANSION_WARLORDS_OF_DRAENOR]    = 410,
+		[LE_EXPANSION_LEGION]                 = 450,
+		[LE_EXPANSION_BATTLE_FOR_AZEROTH]     = 759,
+		[LE_EXPANSION_SHADOWLANDS]            = 1406,
 	},
 	[755] = { -- Jewelcrafting
-		372, -- Classic
-		815, -- Outland
-		813, -- Northrend
-		811, -- Cataclysm
-		809, -- Pandaria
-		373, -- Draenor
-		464, -- Legion
-		805, -- Zandalari/Kul Tiran
-		1418, -- Shadowlands
+		[LE_EXPANSION_CLASSIC]                = 372,
+		[LE_EXPANSION_BURNING_CRUSADE]        = 815,
+		[LE_EXPANSION_WRATH_OF_THE_LICH_KING] = 813,
+		[LE_EXPANSION_CATACLYSM]              = 811,
+		[LE_EXPANSION_MISTS_OF_PANDARIA]      = 809,
+		[LE_EXPANSION_WARLORDS_OF_DRAENOR]    = 373,
+		[LE_EXPANSION_LEGION]                 = 464,
+		[LE_EXPANSION_BATTLE_FOR_AZEROTH]     = 805,
+		[LE_EXPANSION_SHADOWLANDS]            = 1418,
 	},
 	[165] = { -- Leatherworking
-		379, -- Classic
-		882, -- Outland
-		880, -- Northrend
-		878, -- Cataclysm
-		876, -- Pandaria
-		380, -- Draenor
-		460, -- Legion
-		871, -- Zandalari/Kul Tiran
-		1334, -- Shadowlands
+		[LE_EXPANSION_CLASSIC]                = 379,
+		[LE_EXPANSION_BURNING_CRUSADE]        = 882,
+		[LE_EXPANSION_WRATH_OF_THE_LICH_KING] = 880,
+		[LE_EXPANSION_CATACLYSM]              = 878,
+		[LE_EXPANSION_MISTS_OF_PANDARIA]      = 876,
+		[LE_EXPANSION_WARLORDS_OF_DRAENOR]    = 380,
+		[LE_EXPANSION_LEGION]                 = 460,
+		[LE_EXPANSION_BATTLE_FOR_AZEROTH]     = 871,
+		[LE_EXPANSION_SHADOWLANDS]            = 1334,
 	},
 	[186] = { -- Mining
-		1078, -- Classic
-		1076, -- Outland
-		1074, -- Northrend
-		1072, -- Cataclysm
-		1070, -- Pandaria
-		1068, -- Draenor
-		425, -- Legion
-		1065, -- Zandalari/Kul Tiran
-		1320, -- Shadowlands
+		[LE_EXPANSION_CLASSIC]                = 1078,
+		[LE_EXPANSION_BURNING_CRUSADE]        = 1076,
+		[LE_EXPANSION_WRATH_OF_THE_LICH_KING] = 1074,
+		[LE_EXPANSION_CATACLYSM]              = 1072,
+		[LE_EXPANSION_MISTS_OF_PANDARIA]      = 1070,
+		[LE_EXPANSION_WARLORDS_OF_DRAENOR]    = 1068,
+		[LE_EXPANSION_LEGION]                 = 425,
+		[LE_EXPANSION_BATTLE_FOR_AZEROTH]     = 1065,
+		[LE_EXPANSION_SHADOWLANDS]            = 1320,
 	},
 	[393] = { -- Skinning
-		1060, -- Classic
-		1058, -- Outland
-		1056, -- Northrend
-		1054, -- Cataclysm
-		1042, -- Pandaria
-		1050, -- Draenor
-		459, -- Legion
-		1046, -- Zandalari/Kul Tiran
-		1331, -- Shadowlands
+		[LE_EXPANSION_CLASSIC]                = 1060,
+		[LE_EXPANSION_BURNING_CRUSADE]        = 1058,
+		[LE_EXPANSION_WRATH_OF_THE_LICH_KING] = 1056,
+		[LE_EXPANSION_CATACLYSM]              = 1054,
+		[LE_EXPANSION_MISTS_OF_PANDARIA]      = 1042,
+		[LE_EXPANSION_WARLORDS_OF_DRAENOR]    = 1050,
+		[LE_EXPANSION_LEGION]                 = 459,
+		[LE_EXPANSION_BATTLE_FOR_AZEROTH]     = 1046,
+		[LE_EXPANSION_SHADOWLANDS]            = 1331,
 	},
 	[197] = { -- Tailoring
-		362, -- Classic
-		956, -- Outland
-		954, -- Northrend
-		952, -- Cataclysm
-		950, -- Pandaria
-		369, -- Draenor
-		430, -- Legion
-		942, -- Zandalari/Kul Tiran
-		1395, -- Shadowlands
+		[LE_EXPANSION_CLASSIC]                = 362,
+		[LE_EXPANSION_BURNING_CRUSADE]        = 956,
+		[LE_EXPANSION_WRATH_OF_THE_LICH_KING] = 954,
+		[LE_EXPANSION_CATACLYSM]              = 952,
+		[LE_EXPANSION_MISTS_OF_PANDARIA]      = 950,
+		[LE_EXPANSION_WARLORDS_OF_DRAENOR]    = 369,
+		[LE_EXPANSION_LEGION]                 = 430,
+		[LE_EXPANSION_BATTLE_FOR_AZEROTH]     = 942,
+		[LE_EXPANSION_SHADOWLANDS]            = 1395,
 	},
 }
