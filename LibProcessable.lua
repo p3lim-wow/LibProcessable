@@ -377,28 +377,58 @@ function lib:GetProfessionSkillLines(professionID)
 	return professionSkillLines and CopyTable(professionSkillLines)
 end
 
+local CLASSIC_PROFESSIONS = {
+	-- these are all the Apprentice-level spells
+	[(GetSpellInfo(2259))]  = 171, -- Alchemy
+	[(GetSpellInfo(2018))]  = 164, -- Blacksmithing
+	[(GetSpellInfo(7411))]  = 333, -- Enchanting
+	[(GetSpellInfo(4036))]  = 202, -- Engineering
+	[(GetSpellInfo(9134))]  = 182, -- Herbalism (this is an effect on a pair of gloves, no spellID exists for herbalism)
+	[(GetSpellInfo(45357))] = 773, -- Inscription
+	[(GetSpellInfo(25229))] = 755, -- Jewelcrafting
+	[(GetSpellInfo(2108))]  = 165, -- Leatherworking
+	[(GetSpellInfo(2575))]  = 186, -- Mining
+	[(GetSpellInfo(8613))]  = 393, -- Skinning
+	[(GetSpellInfo(3908))]  = 197, -- Tailoring
+}
+
 local Handler = CreateFrame('Frame')
 Handler:RegisterEvent('SKILL_LINES_CHANGED')
 Handler:SetScript('OnEvent', function()
 	table.wipe(professions)
 
-	for _, professionIndex in next, {GetProfessions()} do
-		local _, _, skillLevel, _, _, _, professionID = GetProfessionInfo(professionIndex)
-		if data.professionSkillLines[professionID] then
-			if CLASSIC then
-				professions[professionID] = skillLevel
+	if CLASSIC then
+		for index = 1, GetNumSkillLines() do
+			local skillName, isHeader, isExpanded, skillLevel = GetSkillLineInfo(index)
+			if skillName == TRADE_SKILLS and isHeader and not isExpanded then
+				ExpandSkillHeader(index) -- this will expand the header and trigger SKILL_LINES_CHANGED
+				return
 			else
-				professions[professionID] = {}
+				local professionID = CLASSIC_PROFESSIONS[skillName]
+				if professionID then
+					professions[professionID] = skillLevel
+				end
+			end
+		end
+	else
+		for _, professionIndex in next, {GetProfessions()} do
+			local _, _, skillLevel, _, _, _, professionID = GetProfessionInfo(professionIndex)
+			if data.professionSkillLines[professionID] then
+				if CLASSIC then
+					professions[professionID] = skillLevel
+				else
+					professions[professionID] = {}
 
-				for expansion, skillLine in next, data.professionSkillLines[professionID] do
-					if DRAGONFLIGHT then
-						local professionInfo = C_TradeSkillUI.GetProfessionInfoBySkillLineID(skillLine)
-						if professionInfo then
-							professions[professionID][expansion] = professionInfo.skillLevel
+					for expansion, skillLine in next, data.professionSkillLines[professionID] do
+						if DRAGONFLIGHT then
+							local professionInfo = C_TradeSkillUI.GetProfessionInfoBySkillLineID(skillLine)
+							if professionInfo then
+								professions[professionID][expansion] = professionInfo.skillLevel
+							end
+						else
+							local _, currentRank = C_TradeSkillUI.GetTradeSkillLineInfoByID(skillLine)
+							professions[professionID][expansion] = currentRank
 						end
-					else
-						local _, currentRank = C_TradeSkillUI.GetTradeSkillLineInfoByID(skillLine)
-						professions[professionID][expansion] = currentRank
 					end
 				end
 			end
