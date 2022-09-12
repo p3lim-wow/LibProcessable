@@ -414,21 +414,17 @@ Handler:SetScript('OnEvent', function()
 		for _, professionIndex in next, {GetProfessions()} do
 			local _, _, skillLevel, _, _, _, professionID = GetProfessionInfo(professionIndex)
 			if data.professionSkillLines[professionID] then
-				if CLASSIC then
-					professions[professionID] = skillLevel
-				else
-					professions[professionID] = {}
+				professions[professionID] = {}
 
-					for expansion, skillLine in next, data.professionSkillLines[professionID] do
-						if DRAGONFLIGHT then
-							local professionInfo = C_TradeSkillUI.GetProfessionInfoBySkillLineID(skillLine)
-							if professionInfo then
-								professions[professionID][expansion] = professionInfo.skillLevel
-							end
-						else
-							local _, currentRank = C_TradeSkillUI.GetTradeSkillLineInfoByID(skillLine)
-							professions[professionID][expansion] = currentRank
+				for expansion, skillLine in next, data.professionSkillLines[professionID] do
+					if DRAGONFLIGHT then
+						local professionInfo = C_TradeSkillUI.GetProfessionInfoBySkillLineID(skillLine)
+						if professionInfo then
+							professions[professionID][expansion] = professionInfo.skillLevel
 						end
+					else
+						local _, currentRank = C_TradeSkillUI.GetTradeSkillLineInfoByID(skillLine)
+						professions[professionID][expansion] = currentRank
 					end
 				end
 			end
