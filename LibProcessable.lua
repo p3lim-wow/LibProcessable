@@ -33,6 +33,19 @@ local LE_EXPANSION_BATTLE_FOR_AZEROTH = LE_EXPANSION_BATTLE_FOR_AZEROTH or 7
 local LE_EXPANSION_SHADOWLANDS = LE_EXPANSION_SHADOWLANDS or 8
 local LE_EXPANSION_DRAGONFLIGHT = LE_EXPANSION_DRAGONFLIGHT or 9
 
+-- TODO: use Enum.Profession instead
+local LE_PROFESSION_ALCHEMY = 171
+local LE_PROFESSION_BLACKSMITHING = 164
+local LE_PROFESSION_ENCHANTING = 333
+local LE_PROFESSION_ENGINEERING = 202
+local LE_PROFESSION_HERBALISM = 182
+local LE_PROFESSION_INSCRIPTION = 773
+local LE_PROFESSION_JEWELCRAFTING = 755
+local LE_PROFESSION_LEATHERWORKING = 165
+local LE_PROFESSION_MINING = 186
+local LE_PROFESSION_SKINNING = 393
+local LE_PROFESSION_TAILORING = 197
+
 --[[ LibProcessable:IsMillable(_item[, ignoreMortar]_)
 Returns whether the player can mill the given item.
 
@@ -50,9 +63,9 @@ function lib:IsMillable(itemID, ignoreMortar)
 		itemID = (tonumber(itemID)) or (GetItemInfoFromHyperlink(itemID))
 	end
 
-	if self:HasProfession(773) then -- Inscription
+	if self:HasProfession(LE_PROFESSION_INSCRIPTION) then
 		if CLASSIC then
-			local currentSkill = professions[773]
+			local currentSkill = professions[LE_PROFESSION_INSCRIPTION]
 			return data.herbs[itemID] and currentSkill >= data.herbs[itemID]
 		else
 			-- any herb can be milled at level 1
@@ -83,9 +96,9 @@ function lib:IsProspectable(itemID)
 		itemID = (tonumber(itemID)) or (GetItemInfoFromHyperlink(itemID))
 	end
 
-	if self:HasProfession(755) then -- Jewelcrafting
+	if self:HasProfession(LE_PROFESSION_JEWELCRAFTING) then
 		if CLASSIC then
-			local currentRank = professions[755]
+			local currentRank = professions[LE_PROFESSION_JEWELCRAFTING]
 			local requiredRank = data.ores[itemID]
 			return requiredRank and currentRank >= requiredRank
 		else
@@ -93,7 +106,7 @@ function lib:IsProspectable(itemID)
 			if itemInfo then
 				if type(itemInfo) == 'table' then
 					-- itemInfo contains expansion and requiredRank
-					local currentRank = professions[755][itemInfo[1]]
+					local currentRank = professions[LE_PROFESSION_JEWELCRAFTING][itemInfo[1]]
 					local requiredRank = itemInfo[2]
 					print(currentRank, requiredRank)
 					return requiredRank and currentRank >= requiredRank
@@ -129,7 +142,7 @@ function lib:IsDisenchantable(item)
 
 	-- TODO: skill level requirements for classic?
 
-	if self:HasProfession(333) then -- Enchanting
+	if self:HasProfession(LE_PROFESSION_ENCHANTING) then
 		if data.enchantingItems[itemID] then
 			-- special items that can be disenchanted
 			return true
@@ -287,35 +300,35 @@ function lib:IsOpenableProfession(itemID)
 		return
 	end
 
-	if self:HasProfession(164) then -- Blacksmithing
-		local itemID, expansionID, requiredRank = GetBlacksmithingPick(pickLevel)
-		if itemID then
-			local currentRank = expansionID and professions[164][expansion] or professions[164] or 0
-			return currentRank >= requiredRank, requiredRank, 164, expansionID, itemID
+	if self:HasProfession(LE_PROFESSION_BLACKSMITHING) then -- Blacksmithing
+		local professionItemID, expansionID, requiredRank = GetBlacksmithingPick(pickLevel)
+		if professionItemID then
+			local currentRank = expansionID and professions[LE_PROFESSION_BLACKSMITHING][expansionID] or professions[LE_PROFESSION_BLACKSMITHING] or 0
+			return currentRank >= requiredRank, requiredRank, LE_PROFESSION_BLACKSMITHING, expansionID, professionItemID
 		end
 	end
 
-	if self:HasProfession(755) then -- Jewelcrafting
-		local itemID, expansionID, requiredRank = GetJewelcraftingPick(pickLevel)
-		if itemID then
-			local currentRank = expansionID and professions[755][expansion] or professions[755] or 0
-			return currentRank >= requiredRank, requiredRank, 755, expansionID, itemID
+	if self:HasProfession(LE_PROFESSION_JEWELCRAFTING) then -- Jewelcrafting
+		local professionItemID, expansionID, requiredRank = GetJewelcraftingPick(pickLevel)
+		if professionItemID then
+			local currentRank = expansionID and professions[LE_PROFESSION_JEWELCRAFTING][expansionID] or professions[LE_PROFESSION_JEWELCRAFTING] or 0
+			return currentRank >= requiredRank, requiredRank, LE_PROFESSION_JEWELCRAFTING, expansionID, professionItemID
 		end
 	end
 
-	if self:HasProfession(773) then -- Inscription
-		local itemID, expansionID, requiredRank = GetInscriptionPick(pickLevel)
-		if itemID then
-			local currentRank = expansionID and professions[773][expansion] or professions[773] or 0
-			return currentRank >= requiredRank, requiredRank, 773, expansionID, itemID
+	if self:HasProfession(LE_PROFESSION_INSCRIPTION) then -- Inscription
+		local professionItemID, expansionID, requiredRank = GetInscriptionPick(pickLevel)
+		if professionItemID then
+			local currentRank = expansionID and professions[LE_PROFESSION_INSCRIPTION][expansionID] or professions[LE_PROFESSION_INSCRIPTION] or 0
+			return currentRank >= requiredRank, requiredRank, LE_PROFESSION_INSCRIPTION, expansionID, professionItemID
 		end
 	end
 
-	if self:HasProfession(202) then -- Engineering
-		local itemID, expansionID, requiredRank = GetEngineeringPick(pickLevel)
-		if itemID then
-			local currentRank = expansionID and professions[202][expansion] or professions[202] or 0
-			return currentRank >= requiredRank, requiredRank, 202, expansionID, itemID
+	if self:HasProfession(LE_PROFESSION_ENGINEERING) then -- Engineering
+		local professionItemID, expansionID, requiredRank = GetEngineeringPick(pickLevel)
+		if professionItemID then
+			local currentRank = expansionID and professions[LE_PROFESSION_ENGINEERING][expansionID] or professions[LE_PROFESSION_ENGINEERING] or 0
+			return currentRank >= requiredRank, requiredRank, LE_PROFESSION_ENGINEERING, expansionID, professionItemID
 		end
 	end
 end
@@ -658,7 +671,7 @@ data.enchantingItems = {
 
 -- /run ChatFrame1:Clear(); for _,i in next,{C_TradeSkillUI.GetCategories()} do print(i, C_TradeSkillUI.GetCategoryInfo(i).name) end
 data.professionCategories = {
-	[171] = { -- Alchemy
+	[LE_PROFESSION_ALCHEMY] = {
 		[LE_EXPANSION_CLASSIC]                = 604,
 		[LE_EXPANSION_BURNING_CRUSADE]        = 602,
 		[LE_EXPANSION_WRATH_OF_THE_LICH_KING] = 600,
@@ -670,7 +683,7 @@ data.professionCategories = {
 		[LE_EXPANSION_SHADOWLANDS]            = 1294,
 		[LE_EXPANSION_DRAGONFLIGHT]           = 1582,
 	},
-	[164] = { -- Blacksmithing
+	[LE_PROFESSION_BLACKSMITHING] = {
 		[LE_EXPANSION_CLASSIC]                = 590,
 		[LE_EXPANSION_BURNING_CRUSADE]        = 584,
 		[LE_EXPANSION_WRATH_OF_THE_LICH_KING] = 577,
@@ -682,7 +695,7 @@ data.professionCategories = {
 		[LE_EXPANSION_SHADOWLANDS]            = 1311,
 		[LE_EXPANSION_DRAGONFLIGHT]           = 1566,
 	},
-	[333] = { -- Enchanting
+	[LE_PROFESSION_ENCHANTING] = {
 		[LE_EXPANSION_CLASSIC]                = 667,
 		[LE_EXPANSION_BURNING_CRUSADE]        = 665,
 		[LE_EXPANSION_WRATH_OF_THE_LICH_KING] = 663,
@@ -694,7 +707,7 @@ data.professionCategories = {
 		[LE_EXPANSION_SHADOWLANDS]            = 1364,
 		[LE_EXPANSION_DRAGONFLIGHT]           = 1588,
 	},
-	[202] = { -- Engineering
+	[LE_PROFESSION_ENGINEERING] = {
 		[LE_EXPANSION_CLASSIC]                = 419,
 		[LE_EXPANSION_BURNING_CRUSADE]        = 719,
 		[LE_EXPANSION_WRATH_OF_THE_LICH_KING] = 717,
@@ -706,7 +719,7 @@ data.professionCategories = {
 		[LE_EXPANSION_SHADOWLANDS]            = 1381,
 		[LE_EXPANSION_DRAGONFLIGHT]           = 1595,
 	},
-	[182] = { -- Herbalism
+	[LE_PROFESSION_HERBALISM] = {
 		[LE_EXPANSION_CLASSIC]                = 1044,
 		[LE_EXPANSION_BURNING_CRUSADE]        = 1042,
 		[LE_EXPANSION_WRATH_OF_THE_LICH_KING] = 1040,
@@ -718,7 +731,7 @@ data.professionCategories = {
 		[LE_EXPANSION_SHADOWLANDS]            = 1441,
 		[LE_EXPANSION_DRAGONFLIGHT]           = 1594,
 	},
-	[773] = { -- Inscription
+	[LE_PROFESSION_INSCRIPTION] = {
 		[LE_EXPANSION_CLASSIC]                = 415,
 		[LE_EXPANSION_BURNING_CRUSADE]        = 769,
 		[LE_EXPANSION_WRATH_OF_THE_LICH_KING] = 767,
@@ -730,7 +743,7 @@ data.professionCategories = {
 		[LE_EXPANSION_SHADOWLANDS]            = 1406,
 		[LE_EXPANSION_DRAGONFLIGHT]           = 1592,
 	},
-	[755] = { -- Jewelcrafting
+	[LE_PROFESSION_JEWELCRAFTING] = {
 		[LE_EXPANSION_CLASSIC]                = 372,
 		[LE_EXPANSION_BURNING_CRUSADE]        = 815,
 		[LE_EXPANSION_WRATH_OF_THE_LICH_KING] = 813,
@@ -742,7 +755,7 @@ data.professionCategories = {
 		[LE_EXPANSION_SHADOWLANDS]            = 1418,
 		[LE_EXPANSION_DRAGONFLIGHT]           = 1593,
 	},
-	[165] = { -- Leatherworking
+	[LE_PROFESSION_LEATHERWORKING] = {
 		[LE_EXPANSION_CLASSIC]                = 379,
 		[LE_EXPANSION_BURNING_CRUSADE]        = 882,
 		[LE_EXPANSION_WRATH_OF_THE_LICH_KING] = 880,
@@ -754,7 +767,7 @@ data.professionCategories = {
 		[LE_EXPANSION_SHADOWLANDS]            = 1334,
 		[LE_EXPANSION_DRAGONFLIGHT]           = 1587,
 	},
-	[186] = { -- Mining
+	[LE_PROFESSION_MINING] = {
 		[LE_EXPANSION_CLASSIC]                = 1078,
 		[LE_EXPANSION_BURNING_CRUSADE]        = 1076,
 		[LE_EXPANSION_WRATH_OF_THE_LICH_KING] = 1074,
@@ -766,7 +779,7 @@ data.professionCategories = {
 		[LE_EXPANSION_SHADOWLANDS]            = 1320,
 		[LE_EXPANSION_DRAGONFLIGHT]           = 1584,
 	},
-	[393] = { -- Skinning
+	[LE_PROFESSION_SKINNING] = {
 		[LE_EXPANSION_CLASSIC]                = 1060,
 		[LE_EXPANSION_BURNING_CRUSADE]        = 1058,
 		[LE_EXPANSION_WRATH_OF_THE_LICH_KING] = 1056,
@@ -778,7 +791,7 @@ data.professionCategories = {
 		[LE_EXPANSION_SHADOWLANDS]            = 1331,
 		[LE_EXPANSION_DRAGONFLIGHT]           = 1586,
 	},
-	[197] = { -- Tailoring
+	[LE_PROFESSION_TAILORING] = {
 		[LE_EXPANSION_CLASSIC]                = 362,
 		[LE_EXPANSION_BURNING_CRUSADE]        = 956,
 		[LE_EXPANSION_WRATH_OF_THE_LICH_KING] = 954,
@@ -794,7 +807,7 @@ data.professionCategories = {
 
 -- https://wowpedia.fandom.com/wiki/TradeSkillLineID
 data.professionSkillLines = {
-	[171] = { -- Alchemy
+	[LE_PROFESSION_ALCHEMY] = {
 		[LE_EXPANSION_CLASSIC]                = 2485,
 		[LE_EXPANSION_BURNING_CRUSADE]        = 2484,
 		[LE_EXPANSION_WRATH_OF_THE_LICH_KING] = 2483,
@@ -806,7 +819,7 @@ data.professionSkillLines = {
 		[LE_EXPANSION_SHADOWLANDS]            = 2750,
 		[LE_EXPANSION_DRAGONFLIGHT]           = 2823,
 	},
-	[164] = { -- Blacksmithing
+	[LE_PROFESSION_BLACKSMITHING] = {
 		[LE_EXPANSION_CLASSIC]                = 2477,
 		[LE_EXPANSION_BURNING_CRUSADE]        = 2476,
 		[LE_EXPANSION_WRATH_OF_THE_LICH_KING] = 2475,
@@ -818,7 +831,7 @@ data.professionSkillLines = {
 		[LE_EXPANSION_SHADOWLANDS]            = 2751,
 		[LE_EXPANSION_DRAGONFLIGHT]           = 2822,
 	},
-	[333] = { -- Enchanting
+	[LE_PROFESSION_ENCHANTING] = {
 		[LE_EXPANSION_CLASSIC]                = 2494,
 		[LE_EXPANSION_BURNING_CRUSADE]        = 2493,
 		[LE_EXPANSION_WRATH_OF_THE_LICH_KING] = 2492,
@@ -830,7 +843,7 @@ data.professionSkillLines = {
 		[LE_EXPANSION_SHADOWLANDS]            = 2753,
 		[LE_EXPANSION_DRAGONFLIGHT]           = 2825,
 	},
-	[202] = { -- Engineering
+	[LE_PROFESSION_ENGINEERING] = {
 		[LE_EXPANSION_CLASSIC]                = 2506,
 		[LE_EXPANSION_BURNING_CRUSADE]        = 2505,
 		[LE_EXPANSION_WRATH_OF_THE_LICH_KING] = 2504,
@@ -842,7 +855,7 @@ data.professionSkillLines = {
 		[LE_EXPANSION_SHADOWLANDS]            = 2755,
 		[LE_EXPANSION_DRAGONFLIGHT]           = 2827,
 	},
-	[182] = { -- Herbalism
+	[LE_PROFESSION_HERBALISM] = {
 		[LE_EXPANSION_CLASSIC]                = 2556,
 		[LE_EXPANSION_BURNING_CRUSADE]        = 2555,
 		[LE_EXPANSION_WRATH_OF_THE_LICH_KING] = 2554,
@@ -854,7 +867,7 @@ data.professionSkillLines = {
 		[LE_EXPANSION_SHADOWLANDS]            = 2760,
 		[LE_EXPANSION_DRAGONFLIGHT]           = 2832,
 	},
-	[773] = { -- Inscription
+	[LE_PROFESSION_INSCRIPTION] = {
 		[LE_EXPANSION_CLASSIC]                = 2514,
 		[LE_EXPANSION_BURNING_CRUSADE]        = 2513,
 		[LE_EXPANSION_WRATH_OF_THE_LICH_KING] = 2512,
@@ -866,7 +879,7 @@ data.professionSkillLines = {
 		[LE_EXPANSION_SHADOWLANDS]            = 2756,
 		[LE_EXPANSION_DRAGONFLIGHT]           = 2828,
 	},
-	[755] = { -- Jewelcrafting
+	[LE_PROFESSION_JEWELCRAFTING] = {
 		[LE_EXPANSION_CLASSIC]                = 2524,
 		[LE_EXPANSION_BURNING_CRUSADE]        = 2523,
 		[LE_EXPANSION_WRATH_OF_THE_LICH_KING] = 2522,
@@ -878,7 +891,7 @@ data.professionSkillLines = {
 		[LE_EXPANSION_SHADOWLANDS]            = 2757,
 		[LE_EXPANSION_DRAGONFLIGHT]           = 2829,
 	},
-	[165] = { -- Leatherworking
+	[LE_PROFESSION_LEATHERWORKING] = {
 		[LE_EXPANSION_CLASSIC]                = 2532,
 		[LE_EXPANSION_BURNING_CRUSADE]        = 2531,
 		[LE_EXPANSION_WRATH_OF_THE_LICH_KING] = 2530,
@@ -890,7 +903,7 @@ data.professionSkillLines = {
 		[LE_EXPANSION_SHADOWLANDS]            = 2758,
 		[LE_EXPANSION_DRAGONFLIGHT]           = 2830,
 	},
-	[186] = { -- Mining
+	[LE_PROFESSION_MINING] = {
 		[LE_EXPANSION_CLASSIC]                = 2572,
 		[LE_EXPANSION_BURNING_CRUSADE]        = 2571,
 		[LE_EXPANSION_WRATH_OF_THE_LICH_KING] = 2570,
@@ -902,7 +915,7 @@ data.professionSkillLines = {
 		[LE_EXPANSION_SHADOWLANDS]            = 2761,
 		[LE_EXPANSION_DRAGONFLIGHT]           = 2833,
 	},
-	[393] = { -- Skinning
+	[LE_PROFESSION_SKINNING] = {
 		[LE_EXPANSION_CLASSIC]                = 2564,
 		[LE_EXPANSION_BURNING_CRUSADE]        = 2563,
 		[LE_EXPANSION_WRATH_OF_THE_LICH_KING] = 2562,
@@ -914,7 +927,7 @@ data.professionSkillLines = {
 		[LE_EXPANSION_SHADOWLANDS]            = 2762,
 		[LE_EXPANSION_DRAGONFLIGHT]           = 2834,
 	},
-	[197] = { -- Tailoring
+	[LE_PROFESSION_TAILORING] = {
 		[LE_EXPANSION_CLASSIC]                = 2540,
 		[LE_EXPANSION_BURNING_CRUSADE]        = 2539,
 		[LE_EXPANSION_WRATH_OF_THE_LICH_KING] = 2538,
