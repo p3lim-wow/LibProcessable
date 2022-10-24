@@ -336,7 +336,8 @@ end
 --[[ LibProcessable:HasProfession(_professionID_)
 Returns whether the player has the given profession.
 
-Here's a table with the profession ID for each profession.
+Here's a table with the profession ID for each profession.  
+Source: <https://wowpedia.fandom.com/wiki/TradeSkillLineID>
 
 | Profession Name | Profession ID |
 |-----------------|:--------------|
@@ -363,7 +364,7 @@ function lib:HasProfession(professionID)
 end
 
 --[[ LibProcessable:GetProfessionCategories(_professionID_)
-Returns data of all category IDs for a given (valid) profession, indexed by the expansion level index.
+Returns data of all category IDs for a given (valid) profession, indexed by the expansionID level index.
 
 **Arguments:**
 * `professionID`: The profession ID _(number)_
