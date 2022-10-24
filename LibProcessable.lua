@@ -390,20 +390,7 @@ function lib:GetProfessionSkillLines(professionID)
 	return professionSkillLines and CopyTable(professionSkillLines)
 end
 
-local CLASSIC_PROFESSIONS = {
-	-- these are all the Apprentice-level spells
-	[(GetSpellInfo(2259))]  = 171, -- Alchemy
-	[(GetSpellInfo(2018))]  = 164, -- Blacksmithing
-	[(GetSpellInfo(7411))]  = 333, -- Enchanting
-	[(GetSpellInfo(4036))]  = 202, -- Engineering
-	[(GetSpellInfo(9134))]  = 182, -- Herbalism (this is an effect on a pair of gloves, no spellID exists for herbalism)
-	[(GetSpellInfo(45357)) or 0] = 773, -- Inscription
-	[(GetSpellInfo(25229)) or 0] = 755, -- Jewelcrafting
-	[(GetSpellInfo(2108))]  = 165, -- Leatherworking
-	[(GetSpellInfo(2575))]  = 186, -- Mining
-	[(GetSpellInfo(8613))]  = 393, -- Skinning
-	[(GetSpellInfo(3908))]  = 197, -- Tailoring
-}
+local CLASSIC_PROFESSIONS -- don't populate this unless necessary
 
 local Handler = CreateFrame('Frame')
 Handler:RegisterEvent('SKILL_LINES_CHANGED')
@@ -411,6 +398,23 @@ Handler:SetScript('OnEvent', function()
 	table.wipe(professions)
 
 	if CLASSIC then
+		if not CLASSIC_PROFESSIONS then
+			CLASSIC_PROFESSIONS = {
+				-- these are all the Apprentice-level spells
+				[(GetSpellInfo(2259))]  = LE_PROFESSION_ALCHEMY,
+				[(GetSpellInfo(2018))]  = LE_PROFESSION_BLACKSMITHING,
+				[(GetSpellInfo(7411))]  = LE_PROFESSION_ENCHANTING,
+				[(GetSpellInfo(4036))]  = LE_PROFESSION_ENGINEERING,
+				[(GetSpellInfo(9134))]  = LE_PROFESSION_HERBALISM,	-- this is an effect on a pair of gloves, no spellID exists for herbalism
+				[(GetSpellInfo(45357)) or 0] = LE_PROFESSION_INSCRIPTION,
+				[(GetSpellInfo(25229)) or 0] = LE_PROFESSION_JEWELCRAFTING,
+				[(GetSpellInfo(2108))]  = LE_PROFESSION_LEATHERWORKING,
+				[(GetSpellInfo(2575))]  = LE_PROFESSION_MINING,
+				[(GetSpellInfo(8613))]  = LE_PROFESSION_SKINNING,
+				[(GetSpellInfo(3908))]  = LE_PROFESSION_TAILORING,
+			}
+		end
+
 		for index = 1, GetNumSkillLines() do
 			local skillName, isHeader, isExpanded, skillLevel = GetSkillLineInfo(index)
 			if skillName == TRADE_SKILLS and isHeader and not isExpanded then
