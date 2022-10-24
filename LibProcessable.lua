@@ -1,7 +1,7 @@
 local MAJOR, MINOR = 'LibProcessable', 56
 assert(LibStub, MAJOR .. ' requires LibStub')
 
-local lib, oldMinor = LibStub:NewLibrary(MAJOR, MINOR)
+local lib = LibStub:NewLibrary(MAJOR, MINOR)
 if not lib then
 	return
 end
@@ -13,14 +13,14 @@ local CLASSIC = select(4, GetBuildInfo()) < 90000
 local DRAGONFLIGHT = select(4, GetBuildInfo()) >= 100000
 
 -- upvalue constants with fallbacks
-local LE_ITEM_QUALITY_UNCOMMON = LE_ITEM_QUALITY_UNCOMMON or Enum.ItemQuality.Uncommon
-local LE_ITEM_QUALITY_EPIC = LE_ITEM_QUALITY_EPIC or Enum.ItemQuality.Epic
-local LE_ITEM_CLASS_ARMOR = LE_ITEM_CLASS_ARMOR or 4
-local LE_ITEM_CLASS_WEAPON = LE_ITEM_CLASS_WEAPON or 2
-local LE_ITEM_CLASS_GEM = LE_ITEM_CLASS_GEM or 3
-local LE_ITEM_ARMOR_COSMETIC = LE_ITEM_ARMOR_COSMETIC or 5
+local LE_ITEM_QUALITY_UNCOMMON = LE_ITEM_QUALITY_UNCOMMON or Enum.ItemQuality.Uncommon or 2
+local LE_ITEM_QUALITY_EPIC = LE_ITEM_QUALITY_EPIC or Enum.ItemQuality.Epic or 4
+local LE_ITEM_CLASS_ARMOR = Enum.ItemClass.Armor or 4
+local LE_ITEM_CLASS_WEAPON = Enum.ItemClass.Weapon or 2
+local LE_ITEM_CLASS_GEM = Enum.ItemClass.Gem or 3
+local LE_ITEM_ARMOR_COSMETIC = Enum.ItemClass.Cosmetic or 5
 local LE_ITEM_SUBCLASS_ARTIFACT = 11 -- no existing constant for this one
-local LE_ITEM_EQUIPLOC_SHIRT = Enum and Enum.InventoryType and Enum.InventoryType.IndexBodyType or 4
+local LE_ITEM_EQUIPLOC_SHIRT = Enum.InventoryType.IndexBodyType or 4
 
 local LE_EXPANSION_CLASSIC = LE_EXPANSION_CLASSIC or 0
 local LE_EXPANSION_BURNING_CRUSADE = LE_EXPANSION_BURNING_CRUSADE or 1
@@ -31,7 +31,7 @@ local LE_EXPANSION_WARLORDS_OF_DRAENOR = LE_EXPANSION_WARLORDS_OF_DRAENOR or 5
 local LE_EXPANSION_LEGION = LE_EXPANSION_LEGION or 6
 local LE_EXPANSION_BATTLE_FOR_AZEROTH = LE_EXPANSION_BATTLE_FOR_AZEROTH or 7
 local LE_EXPANSION_SHADOWLANDS = LE_EXPANSION_SHADOWLANDS or 8
-local LE_EXPANSION_DRAGONFLIGHT = LE_EXPANSION_DRAGONFLIGHT or LE_EXPANSION_10_0 or 9 -- ahead of our time
+local LE_EXPANSION_DRAGONFLIGHT = LE_EXPANSION_DRAGONFLIGHT or 9
 
 --[[ LibProcessable:IsMillable(_item[, ignoreMortar]_)
 Returns whether the player can mill the given item.
@@ -412,7 +412,7 @@ Handler:SetScript('OnEvent', function()
 		end
 	else
 		for _, professionIndex in next, {GetProfessions()} do
-			local _, _, skillLevel, _, _, _, professionID = GetProfessionInfo(professionIndex)
+			local _, _, _, _, _, _, professionID = GetProfessionInfo(professionIndex)
 			if data.professionSkillLines[professionID] then
 				professions[professionID] = {}
 
