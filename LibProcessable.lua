@@ -401,6 +401,9 @@ local CLASSIC_PROFESSIONS -- don't populate this unless necessary
 
 local Handler = CreateFrame('Frame')
 Handler:RegisterEvent('SKILL_LINES_CHANGED')
+if not CLASSIC then
+	Handler:RegisterEvent('TRADE_SKILL_SHOW')
+end
 Handler:SetScript('OnEvent', function()
 	table.wipe(professions)
 
@@ -435,6 +438,13 @@ Handler:SetScript('OnEvent', function()
 			end
 		end
 	else
+		-- this section will iterate through the player's professions and gather skill levels in each
+		-- profession's expansions. however, C_TradeSkillUI's getters will not return valid data
+		-- unless the tradeskill ui has been opened (with C_TradeSkillUI.OpenTradeSkill), which is a
+		-- hardware protected API, and as such LibProcessable will not do this. this means that the
+		-- other APIs exposed by LibProcessable will not be complete unless the tradeskill ui is open
+		-- or has been opened during the current play session (it's cached between reloads). in
+		-- particular this especially affects IsMillable, IsProspectable and IsOpenableProfession.
 		for _, professionIndex in next, {GetProfessions()} do
 			local _, _, _, _, _, _, professionID = GetProfessionInfo(professionIndex)
 			if data.professionSkillLines[professionID] then
