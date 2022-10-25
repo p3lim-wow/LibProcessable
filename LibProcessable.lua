@@ -55,7 +55,12 @@ Returns whether the player can mill the given item.
 
 **Return values:**
 * `isMillable`: Whether or not the player can mill the given item _(boolean)_
-* `mortarUsed`: Whether or not a Draenic Mortar can be used
+* `millingSpellID`: ItemID of the Draenic Mortar if used, otherwise spellID to use to mill the given item _(number|nil)_
+* `useDraenicMortar`: Whether or not a Draenic Mortar could be used
+
+**Notes**:
+* since Dragonflight it's required to use the tradeskill API to mill, e.g:
+    `C_TradeSkillUI.CraftRecipe(prospectingSkillID, numCasts, {})`
 --]]
 function lib:IsMillable(itemID, ignoreMortar)
 	if type(itemID) == 'string' then
@@ -68,8 +73,14 @@ function lib:IsMillable(itemID, ignoreMortar)
 			local currentSkill = professions[LE_PROFESSION_INSCRIPTION]
 			return data.herbs[itemID] and currentSkill >= data.herbs[itemID]
 		else
-			-- any herb can be milled at level 1
-			return not not data.herbs[itemID]
+			local itemInfo = data.herbs[itemID]
+			if itemInfo then
+				local currentRank = professions[LE_PROFESSION_INSCRIPTION][itemInfo[1]]
+				local requiredRank = itemInfo[2]
+				if requiredRank and currentRank >= requiredRank then
+					return true, data.professionSkills[LE_PROFESSION_INSCRIPTION][itemInfo[1]]
+				end
+			end
 		end
 	elseif not ignoreMortar and GetItemCount(114942) > 0 then
 		-- Draenic Mortar can mill Draenor herbs without a profession
@@ -85,10 +96,11 @@ Returns whether the player can prospect the given item.
 
 **Return values:**
 * `isProspectable`: Whether or not the player can prospect the given item _(boolean)_
+* `prospectingSpellID`: SpellID that needs to be used to prospect the given item _(number|nil)_
 
 **Notes**:
-* This does not check if the player has the required skills to use the profession items
-   * Only Outland and Pandaria ores have skill level requirements
+* since Dragonflight it's required to use the tradeskill API to prospect, e.g:
+    `C_TradeSkillUI.CraftRecipe(prospectingSkillID, numCasts, {})`
 --]]
 function lib:IsProspectable(itemID)
 	if type(itemID) == 'string' then
@@ -104,16 +116,10 @@ function lib:IsProspectable(itemID)
 		else
 			local itemInfo = data.ores[itemID]
 			if itemInfo then
-				if type(itemInfo) == 'table' then
-					-- itemInfo contains expansion and requiredRank
-					local currentRank = professions[LE_PROFESSION_JEWELCRAFTING][itemInfo[1]]
-					local requiredRank = itemInfo[2]
-					print(currentRank, requiredRank)
-					return requiredRank and currentRank >= requiredRank
-				else
-					-- itemInfo contains requiredRank only
-					-- any herb can be milled at level 1
-					return true
+				local currentRank = professions[LE_PROFESSION_JEWELCRAFTING][itemInfo[1]]
+				local requiredRank = itemInfo[2]
+				if requiredRank and currentRank >= requiredRank then
+					return true, data.professionSkills[LE_PROFESSION_JEWELCRAFTING][itemInfo[1]]
 				end
 			end
 		end
@@ -452,161 +458,161 @@ end)
 
 data.ores = {
 	-- http://www.wowhead.com/spell=31252/prospecting#prospected-from:0+1+17-20
-	[2770] = 1, -- Copper Ore
-	[2771] = CLASSIC and 50 or 1, -- Tin Ore
-	[2772] = CLASSIC and 125 or 1, -- Iron Ore
-	[3858] = CLASSIC and 175 or 1, -- Mithril Ore
-	[10620] = CLASSIC and 250 or 1, -- Thorium Ore
+	[2770] = CLASSIC and 1 or {LE_EXPANSION_CLASSIC, 1}, -- Copper Ore
+	[2771] = CLASSIC and 50 or {LE_EXPANSION_CLASSIC, 1}, -- Tin Ore
+	[2772] = CLASSIC and 125 or {LE_EXPANSION_CLASSIC, 1}, -- Iron Ore
+	[3858] = CLASSIC and 175 or {LE_EXPANSION_CLASSIC, 1}, -- Mithril Ore
+	[10620] = CLASSIC and 250 or {LE_EXPANSION_CLASSIC, 1}, -- Thorium Ore
 	[23424] = CLASSIC and 275 or {LE_EXPANSION_BURNING_CRUSADE, 1}, -- Fel Iron Ore
 	[23425] = CLASSIC and 325 or {LE_EXPANSION_BURNING_CRUSADE, 25}, -- Adamantite Ore
-	[36909] = CLASSIC and 350 or 1, -- Cobalt Ore
-	[36910] = CLASSIC and 450 or 1, -- Titanium Ore
-	[36912] = CLASSIC and 400 or 1, -- Saronite Ore
-	[52183] = 1, -- Pyrite Ore
-	[52185] = 1, -- Elementium Ore
-	[53038] = 1, -- Obsidium Ore
+	[36909] = CLASSIC and 350 or {LE_EXPANSION_WRATH_OF_THE_LICH_KING, 1}, -- Cobalt Ore
+	[36910] = CLASSIC and 450 or {LE_EXPANSION_WRATH_OF_THE_LICH_KING, 1}, -- Titanium Ore
+	[36912] = CLASSIC and 400 or {LE_EXPANSION_WRATH_OF_THE_LICH_KING, 1}, -- Saronite Ore
+	[52183] = {LE_EXPANSION_CATACLYSM, 1}, -- Pyrite Ore
+	[52185] = {LE_EXPANSION_CATACLYSM, 1}, -- Elementium Ore
+	[53038] = {LE_EXPANSION_CATACLYSM, 1}, -- Obsidium Ore
 	[72092] = {LE_EXPANSION_MISTS_OF_PANDARIA, 1}, -- Ghost Iron Ore
-	[72093] = {LE_EXPANSION_MISTS_OF_PANDARIA, 25}, -- Kyparite
-	[72094] = {LE_EXPANSION_MISTS_OF_PANDARIA, 75}, -- Black Trillium Ore
-	[72103] = {LE_EXPANSION_MISTS_OF_PANDARIA, 75}, -- White Trillium Ore
-	[123918] = 1, -- Leystone Ore
-	[123919] = 1, -- Felslate
-	[151564] = 1, -- Empyrium
-	[152579] = 1, -- Storm Silver Ore
-	[152512] = 1, -- Monelite Ore
-	[152513] = 1, -- Platinum Ore
-	[155830] = 1, -- Runic Core, BfA Jewelcrafting Quest
-	[168185] = 1, -- Osmenite Ore
-	[171828] = 1, -- Laestrite
-	[171829] = 1, -- Solenium
-	[171830] = 1, -- Oxxein
-	[171831] = 1, -- Phaedrum
-	[171832] = 1, -- Sinvyr
-	[171833] = 1, -- Elethium
-	[187700] = 1, -- Progenium Ore
+	[72093] = {LE_EXPANSION_MISTS_OF_PANDARIA, 1}, -- Kyparite
+	[72094] = {LE_EXPANSION_MISTS_OF_PANDARIA, 1}, -- Black Trillium Ore
+	[72103] = {LE_EXPANSION_MISTS_OF_PANDARIA, 1}, -- White Trillium Ore
+	[123918] = {LE_EXPANSION_LEGION, 1}, -- Leystone Ore
+	[123919] = {LE_EXPANSION_LEGION, 1}, -- Felslate
+	[151564] = {LE_EXPANSION_LEGION, 1}, -- Empyrium
+	[152579] = {LE_EXPANSION_BATTLE_FOR_AZEROTH, 1}, -- Storm Silver Ore
+	[152512] = {LE_EXPANSION_BATTLE_FOR_AZEROTH, 1}, -- Monelite Ore
+	[152513] = {LE_EXPANSION_BATTLE_FOR_AZEROTH, 1}, -- Platinum Ore
+	[155830] = {LE_EXPANSION_BATTLE_FOR_AZEROTH, 1}, -- Runic Core, BfA Jewelcrafting Quest
+	[168185] = {LE_EXPANSION_BATTLE_FOR_AZEROTH, 1}, -- Osmenite Ore
+	[171828] = {LE_EXPANSION_SHADOWLANDS, 1}, -- Laestrite
+	[171829] = {LE_EXPANSION_SHADOWLANDS, 1}, -- Solenium
+	[171830] = {LE_EXPANSION_SHADOWLANDS, 1}, -- Oxxein
+	[171831] = {LE_EXPANSION_SHADOWLANDS, 1}, -- Phaedrum
+	[171832] = {LE_EXPANSION_SHADOWLANDS, 1}, -- Sinvyr
+	[171833] = {LE_EXPANSION_SHADOWLANDS, 1}, -- Elethium
+	[187700] = {LE_EXPANSION_SHADOWLANDS, 1}, -- Progenium Ore
 
 	-- UNTESTED DRAGONFLIGHT ORES:
-	[188658] = 1, -- Draconium Ore
-	[194545] = 1, -- Prismatic Ore
-	[190313] = 1, -- Titaniclum Ore
-	[190394] = 1, -- Tyrivite Ore
+	[188658] = {LE_EXPANSION_DRAGONFLIGHT, 1}, -- Draconium Ore
+	[194545] = {LE_EXPANSION_DRAGONFLIGHT, 1}, -- Prismatic Ore
+	[190313] = {LE_EXPANSION_DRAGONFLIGHT, 1}, -- Titaniclum Ore
+	[190394] = {LE_EXPANSION_DRAGONFLIGHT, 1}, -- Tyrivite Ore
 }
 
 data.herbs = {
 	-- http://www.wowhead.com/spell=51005/milling#milled-from:0+1+17-20
-	[765] = 1, -- Silverleaf
-	[785] = 1, -- Mageroyal
-	[2447] = 1, -- Peacebloom
-	[2449] = 1, -- Earthroot
-	[2450] = CLASSIC and 25 or 1, -- Briarthorn
-	[2452] = CLASSIC and 25 or 1, -- Swiftthistle
-	[2453] = CLASSIC and 25 or 1, -- Bruiseweed
-	[3355] = CLASSIC and 75 or 1, -- Wild Steelbloom
-	[3356] = CLASSIC and 75 or 1, -- Kingsblood
-	[3357] = CLASSIC and 75 or 1, -- Liferoot
-	[3358] = CLASSIC and 125 or 1, -- Khadgar's Whisker
-	[3369] = CLASSIC and 75 or 1, -- Grave Moss
-	[3818] = CLASSIC and 125 or 1, -- Fadeleaf
-	[3819] = CLASSIC and 125 or 1, -- Dragon's Teeth
-	[3820] = CLASSIC and 25 or 1, -- Stranglekelp
-	[3821] = CLASSIC and 125 or 1, -- Goldthorn
-	[4625] = CLASSIC and 175 or 1, -- Firebloom
-	[8831] = CLASSIC and 175 or 1, -- Purple Lotus
-	[8836] = CLASSIC and 175 or 1, -- Arthas' Tears
-	[8838] = CLASSIC and 175 or 1, -- Sungrass
-	[8839] = CLASSIC and 175 or 1, -- Blindweed
-	[8845] = CLASSIC and 175 or 1, -- Ghost Mushroom
-	[8846] = CLASSIC and 175 or 1, -- Gromsblood
-	[13463] = CLASSIC and 225 or 1, -- Dreamfoil
-	[13464] = CLASSIC and 225 or 1, -- Golden Sansam
-	[13465] = CLASSIC and 225 or 1, -- Mountain Silversage
-	[13466] = CLASSIC and 225 or 1, -- Sorrowmoss
-	[13467] = CLASSIC and 200 or 1, -- Icecap
-	[22785] = CLASSIC and 275 or 1, -- Felweed
-	[22786] = CLASSIC and 275 or 1, -- Dreaming Glory
-	[22787] = CLASSIC and 275 or 1, -- Ragveil
-	[22789] = CLASSIC and 275 or 1, -- Terocone
-	[22790] = CLASSIC and 275 or 1, -- Ancient Lichen
-	[22791] = CLASSIC and 275 or 1, -- Netherbloom
-	[22792] = CLASSIC and 275 or 1, -- Nightmare Vine
-	[22793] = CLASSIC and 275 or 1, -- Mana Thistle
-	[36901] = CLASSIC and 325 or 1, -- Goldclover
-	[36903] = CLASSIC and 325 or 1, -- Adder's Tongue
-	[36904] = CLASSIC and 325 or 1, -- Tiger Lily
-	[36905] = CLASSIC and 325 or 1, -- Lichbloom
-	[36906] = CLASSIC and 325 or 1, -- Icethorn
-	[36907] = CLASSIC and 325 or 1, -- Talandra's Rose
-	[37921] = CLASSIC and 325 or 1, -- Deadnettle
-	[39970] = CLASSIC and 325 or 1, -- Fire Leaf
+	[765] = CLASSIC and 1 or {LE_EXPANSION_CLASSIC, 1}, -- Silverleaf
+	[785] = CLASSIC and 1 or {LE_EXPANSION_CLASSIC, 1}, -- Mageroyal
+	[2447] = CLASSIC and 1 or {LE_EXPANSION_CLASSIC, 1}, -- Peacebloom
+	[2449] = CLASSIC and 1 or {LE_EXPANSION_CLASSIC, 1}, -- Earthroot
+	[2450] = CLASSIC and 25 or {LE_EXPANSION_CLASSIC, 1}, -- Briarthorn
+	[2452] = CLASSIC and 25 or {LE_EXPANSION_CLASSIC, 1}, -- Swiftthistle
+	[2453] = CLASSIC and 25 or {LE_EXPANSION_CLASSIC, 1}, -- Bruiseweed
+	[3355] = CLASSIC and 75 or {LE_EXPANSION_CLASSIC, 1}, -- Wild Steelbloom
+	[3356] = CLASSIC and 75 or {LE_EXPANSION_CLASSIC, 1}, -- Kingsblood
+	[3357] = CLASSIC and 75 or {LE_EXPANSION_CLASSIC, 1}, -- Liferoot
+	[3358] = CLASSIC and 125 or {LE_EXPANSION_CLASSIC, 1}, -- Khadgar's Whisker
+	[3369] = CLASSIC and 75 or {LE_EXPANSION_CLASSIC, 1}, -- Grave Moss
+	[3818] = CLASSIC and 125 or {LE_EXPANSION_CLASSIC, 1}, -- Fadeleaf
+	[3819] = CLASSIC and 125 or {LE_EXPANSION_CLASSIC, 1}, -- Dragon's Teeth
+	[3820] = CLASSIC and 25 or {LE_EXPANSION_CLASSIC, 1}, -- Stranglekelp
+	[3821] = CLASSIC and 125 or {LE_EXPANSION_CLASSIC, 1}, -- Goldthorn
+	[4625] = CLASSIC and 175 or {LE_EXPANSION_CLASSIC, 1}, -- Firebloom
+	[8831] = CLASSIC and 175 or {LE_EXPANSION_CLASSIC, 1}, -- Purple Lotus
+	[8836] = CLASSIC and 175 or {LE_EXPANSION_CLASSIC, 1}, -- Arthas' Tears
+	[8838] = CLASSIC and 175 or {LE_EXPANSION_CLASSIC, 1}, -- Sungrass
+	[8839] = CLASSIC and 175 or {LE_EXPANSION_CLASSIC, 1}, -- Blindweed
+	[8845] = CLASSIC and 175 or {LE_EXPANSION_CLASSIC, 1}, -- Ghost Mushroom
+	[8846] = CLASSIC and 175 or {LE_EXPANSION_CLASSIC, 1}, -- Gromsblood
+	[13463] = CLASSIC and 225 or {LE_EXPANSION_CLASSIC, 1}, -- Dreamfoil
+	[13464] = CLASSIC and 225 or {LE_EXPANSION_CLASSIC, 1}, -- Golden Sansam
+	[13465] = CLASSIC and 225 or {LE_EXPANSION_CLASSIC, 1}, -- Mountain Silversage
+	[13466] = CLASSIC and 225 or {LE_EXPANSION_CLASSIC, 1}, -- Sorrowmoss
+	[13467] = CLASSIC and 200 or {LE_EXPANSION_CLASSIC, 1}, -- Icecap
+	[22785] = CLASSIC and 275 or {LE_EXPANSION_BURNING_CRUSADE, 1}, -- Felweed
+	[22786] = CLASSIC and 275 or {LE_EXPANSION_BURNING_CRUSADE, 1}, -- Dreaming Glory
+	[22787] = CLASSIC and 275 or {LE_EXPANSION_BURNING_CRUSADE, 1}, -- Ragveil
+	[22789] = CLASSIC and 275 or {LE_EXPANSION_BURNING_CRUSADE, 1}, -- Terocone
+	[22790] = CLASSIC and 275 or {LE_EXPANSION_BURNING_CRUSADE, 1}, -- Ancient Lichen
+	[22791] = CLASSIC and 275 or {LE_EXPANSION_BURNING_CRUSADE, 1}, -- Netherbloom
+	[22792] = CLASSIC and 275 or {LE_EXPANSION_BURNING_CRUSADE, 1}, -- Nightmare Vine
+	[22793] = CLASSIC and 275 or {LE_EXPANSION_BURNING_CRUSADE, 1}, -- Mana Thistle
+	[36901] = CLASSIC and 325 or {LE_EXPANSION_WRATH_OF_THE_LICH_KING, 1}, -- Goldclover
+	[36903] = CLASSIC and 325 or {LE_EXPANSION_WRATH_OF_THE_LICH_KING, 1}, -- Adder's Tongue
+	[36904] = CLASSIC and 325 or {LE_EXPANSION_WRATH_OF_THE_LICH_KING, 1}, -- Tiger Lily
+	[36905] = CLASSIC and 325 or {LE_EXPANSION_WRATH_OF_THE_LICH_KING, 1}, -- Lichbloom
+	[36906] = CLASSIC and 325 or {LE_EXPANSION_WRATH_OF_THE_LICH_KING, 1}, -- Icethorn
+	[36907] = CLASSIC and 325 or {LE_EXPANSION_WRATH_OF_THE_LICH_KING, 1}, -- Talandra's Rose
+	[37921] = CLASSIC and 325 or {LE_EXPANSION_WRATH_OF_THE_LICH_KING, 1}, -- Deadnettle
+	[39970] = CLASSIC and 325 or {LE_EXPANSION_WRATH_OF_THE_LICH_KING, 1}, -- Fire Leaf
 	-- [39969] = CLASSIC and ? or nil, -- Fire Seed
-	[52983] = 1, -- Cinderbloom
-	[52984] = 1, -- Stormvine
-	[52985] = 1, -- Azshara's Veil
-	[52986] = 1, -- Heartblossom
-	[52987] = 1, -- Twilight Jasmine
-	[52988] = 1, -- Whiptail
-	[72234] = 1, -- Green Tea Leaf
-	[72235] = 1, -- Silkweed
-	[72237] = 1, -- Rain Poppy
-	[79010] = 1, -- Snow Lily
-	[79011] = 1, -- Fool's Cap
-	[89639] = 1, -- Desecrated Herb
-	[109124] = 1, -- Frostweed
-	[109125] = 1, -- Fireweed
-	[109126] = 1, -- Gorgrond Flytrap
-	[109127] = 1, -- Starflower
-	[109128] = 1, -- Nagrand Arrowbloom
-	[109129] = 1, -- Talador Orchid
-	[124101] = 1, -- Aethril
-	[124102] = 1, -- Dreamleaf
-	[124103] = 1, -- Foxflower
-	[124104] = 1, -- Fjarnskaggl
-	[124105] = 1, -- Starlight Rose
-	[124106] = 1, -- Felwort
-	[128304] = 1, -- Yseralline Seed
-	[151565] = 1, -- Astral Glory
-	[152511] = 1, -- Sea Stalk
-	[152509] = 1, -- Siren's Pollen
-	[152508] = 1, -- Winter's Kiss
-	[152507] = 1, -- Akunda's Bite
-	[152506] = 1, -- Star Moss
-	[152505] = 1, -- Riverbud
-	[152510] = 1, -- Anchor Weed
-	[168487] = 1, -- Zin'anthid
-	[168583] = 1, -- Widowbloom
-	[168586] = 1, -- Rising Glory
-	[168589] = 1, -- Marrowroot
-	[169701] = 1, -- Deathblossom
-	[170554] = 1, -- Vigil's Torch
-	[171315] = 1, -- Nightshade
-	[187699] = 1, -- First Flower
+	[52983] = {LE_EXPANSION_CATACLYSM, 1}, -- Cinderbloom
+	[52984] = {LE_EXPANSION_CATACLYSM, 1}, -- Stormvine
+	[52985] = {LE_EXPANSION_CATACLYSM, 1}, -- Azshara's Veil
+	[52986] = {LE_EXPANSION_CATACLYSM, 1}, -- Heartblossom
+	[52987] = {LE_EXPANSION_CATACLYSM, 1}, -- Twilight Jasmine
+	[52988] = {LE_EXPANSION_CATACLYSM, 1}, -- Whiptail
+	[72234] = {LE_EXPANSION_MISTS_OF_PANDARIA, 1}, -- Green Tea Leaf
+	[72235] = {LE_EXPANSION_MISTS_OF_PANDARIA, 1}, -- Silkweed
+	[72237] = {LE_EXPANSION_MISTS_OF_PANDARIA, 1}, -- Rain Poppy
+	[79010] = {LE_EXPANSION_MISTS_OF_PANDARIA, 1}, -- Snow Lily
+	[79011] = {LE_EXPANSION_MISTS_OF_PANDARIA, 1}, -- Fool's Cap
+	[89639] = {LE_EXPANSION_MISTS_OF_PANDARIA, 1}, -- Desecrated Herb
+	[109124] = {LE_EXPANSION_WARLORDS_OF_DRAENOR, 1}, -- Frostweed
+	[109125] = {LE_EXPANSION_WARLORDS_OF_DRAENOR, 1}, -- Fireweed
+	[109126] = {LE_EXPANSION_WARLORDS_OF_DRAENOR, 1}, -- Gorgrond Flytrap
+	[109127] = {LE_EXPANSION_WARLORDS_OF_DRAENOR, 1}, -- Starflower
+	[109128] = {LE_EXPANSION_WARLORDS_OF_DRAENOR, 1}, -- Nagrand Arrowbloom
+	[109129] = {LE_EXPANSION_WARLORDS_OF_DRAENOR, 1}, -- Talador Orchid
+	[124101] = {LE_EXPANSION_LEGION, 1}, -- Aethril
+	[124102] = {LE_EXPANSION_LEGION, 1}, -- Dreamleaf
+	[124103] = {LE_EXPANSION_LEGION, 1}, -- Foxflower
+	[124104] = {LE_EXPANSION_LEGION, 1}, -- Fjarnskaggl
+	[124105] = {LE_EXPANSION_LEGION, 1}, -- Starlight Rose
+	[124106] = {LE_EXPANSION_LEGION, 1}, -- Felwort
+	[128304] = {LE_EXPANSION_LEGION, 1}, -- Yseralline Seed
+	[151565] = {LE_EXPANSION_LEGION, 1}, -- Astral Glory
+	[152511] = {LE_EXPANSION_BATTLE_FOR_AZEROTH, 1}, -- Sea Stalk
+	[152509] = {LE_EXPANSION_BATTLE_FOR_AZEROTH, 1}, -- Siren's Pollen
+	[152508] = {LE_EXPANSION_BATTLE_FOR_AZEROTH, 1}, -- Winter's Kiss
+	[152507] = {LE_EXPANSION_BATTLE_FOR_AZEROTH, 1}, -- Akunda's Bite
+	[152506] = {LE_EXPANSION_BATTLE_FOR_AZEROTH, 1}, -- Star Moss
+	[152505] = {LE_EXPANSION_BATTLE_FOR_AZEROTH, 1}, -- Riverbud
+	[152510] = {LE_EXPANSION_BATTLE_FOR_AZEROTH, 1}, -- Anchor Weed
+	[168487] = {LE_EXPANSION_BATTLE_FOR_AZEROTH, 1}, -- Zin'anthid
+	[168583] = {LE_EXPANSION_SHADOWLANDS, 1}, -- Widowbloom
+	[168586] = {LE_EXPANSION_SHADOWLANDS, 1}, -- Rising Glory
+	[168589] = {LE_EXPANSION_SHADOWLANDS, 1}, -- Marrowroot
+	[169701] = {LE_EXPANSION_SHADOWLANDS, 1}, -- Deathblossom
+	[170554] = {LE_EXPANSION_SHADOWLANDS, 1}, -- Vigil's Torch
+	[171315] = {LE_EXPANSION_SHADOWLANDS, 1}, -- Nightshade
+	[187699] = {LE_EXPANSION_SHADOWLANDS, 1}, -- First Flower
 
 	-- UNTESTED DRAGONFLIGHT HERBS:
 	-- there's 3 of each herb because they have ranks/quality associated with them
-	[191460] = 1, -- Hochenblume
-	[191461] = 1, -- Hochenblume
-	[191462] = 1, -- Hochenblume
-	[191464] = 1, -- Saxifrage
-	[191465] = 1, -- Saxifrage
-	[191466] = 1, -- Saxifrage
-	[191467] = 1, -- Bubble Poppy
-	[191468] = 1, -- Bubble Poppy
-	[191469] = 1, -- Bubble Poppy
-	[191470] = 1, -- Writhebark
-	[191471] = 1, -- Writhebark
-	[191472] = 1, -- Writhebark
-	[198412] = 1, -- Serene Pigment
-	[198413] = 1, -- Serene Pigment
-	[198414] = 1, -- Serene Pigment
-	[198415] = 1, -- Flourishing Pigment
-	[198416] = 1, -- Flourishing Pigment
-	[198417] = 1, -- Flourishing Pigment
-	[198418] = 1, -- Blazing Pigment
-	[198419] = 1, -- Blazing Pigment
-	[198420] = 1, -- Blazing Pigment
-	[198421] = 1, -- Shimmering Pigment
-	[198422] = 1, -- Shimmering Pigment
-	[198423] = 1, -- Shimmering Pigment
+	[191460] = {LE_EXPANSION_DRAGONFLIGHT, 1}, -- Hochenblume
+	[191461] = {LE_EXPANSION_DRAGONFLIGHT, 1}, -- Hochenblume
+	[191462] = {LE_EXPANSION_DRAGONFLIGHT, 1}, -- Hochenblume
+	[191464] = {LE_EXPANSION_DRAGONFLIGHT, 1}, -- Saxifrage
+	[191465] = {LE_EXPANSION_DRAGONFLIGHT, 1}, -- Saxifrage
+	[191466] = {LE_EXPANSION_DRAGONFLIGHT, 1}, -- Saxifrage
+	[191467] = {LE_EXPANSION_DRAGONFLIGHT, 1}, -- Bubble Poppy
+	[191468] = {LE_EXPANSION_DRAGONFLIGHT, 1}, -- Bubble Poppy
+	[191469] = {LE_EXPANSION_DRAGONFLIGHT, 1}, -- Bubble Poppy
+	[191470] = {LE_EXPANSION_DRAGONFLIGHT, 1}, -- Writhebark
+	[191471] = {LE_EXPANSION_DRAGONFLIGHT, 1}, -- Writhebark
+	[191472] = {LE_EXPANSION_DRAGONFLIGHT, 1}, -- Writhebark
+	[198412] = {LE_EXPANSION_DRAGONFLIGHT, 1}, -- Serene Pigment
+	[198413] = {LE_EXPANSION_DRAGONFLIGHT, 1}, -- Serene Pigment
+	[198414] = {LE_EXPANSION_DRAGONFLIGHT, 1}, -- Serene Pigment
+	[198415] = {LE_EXPANSION_DRAGONFLIGHT, 1}, -- Flourishing Pigment
+	[198416] = {LE_EXPANSION_DRAGONFLIGHT, 1}, -- Flourishing Pigment
+	[198417] = {LE_EXPANSION_DRAGONFLIGHT, 1}, -- Flourishing Pigment
+	[198418] = {LE_EXPANSION_DRAGONFLIGHT, 1}, -- Blazing Pigment
+	[198419] = {LE_EXPANSION_DRAGONFLIGHT, 1}, -- Blazing Pigment
+	[198420] = {LE_EXPANSION_DRAGONFLIGHT, 1}, -- Blazing Pigment
+	[198421] = {LE_EXPANSION_DRAGONFLIGHT, 1}, -- Shimmering Pigment
+	[198422] = {LE_EXPANSION_DRAGONFLIGHT, 1}, -- Shimmering Pigment
+	[198423] = {LE_EXPANSION_DRAGONFLIGHT, 1}, -- Shimmering Pigment
 }
 
 data.containers = {
@@ -944,4 +950,33 @@ data.professionSkillLines = {
 		[LE_EXPANSION_SHADOWLANDS]            = 2759,
 		[LE_EXPANSION_DRAGONFLIGHT]           = 2831,
 	},
+}
+
+data.professionSkills = {
+	[LE_PROFESSION_JEWELCRAFTING] = {
+		-- https://www.wowhead.com/beta/spells/professions/jewelcrafting#q=prospecting
+		[LE_EXPANSION_CLASSIC] = 382995,
+		[LE_EXPANSION_BURNING_CRUSADE] = 382980,
+		[LE_EXPANSION_WRATH_OF_THE_LICH_KING] = 382979,
+		[LE_EXPANSION_CATACLYSM] = 382978,
+		[LE_EXPANSION_MISTS_OF_PANDARIA] = 382977,
+		-- [LE_EXPANSION_WARLORDS_OF_DRAENOR] =
+		[LE_EXPANSION_LEGION] = 382975,
+		[LE_EXPANSION_BATTLE_FOR_AZEROTH] = 382973,
+		[LE_EXPANSION_SHADOWLANDS] = 325248,
+		[LE_EXPANSION_DRAGONFLIGHT] = 374627,
+	},
+	[LE_PROFESSION_INSCRIPTION] = {
+		-- https://www.wowhead.com/beta/spells/professions/inscription#0-17+20;q=milling
+		[LE_EXPANSION_CLASSIC] = 382994,
+		[LE_EXPANSION_BURNING_CRUSADE] = 382991,
+		[LE_EXPANSION_WRATH_OF_THE_LICH_KING] = 382990,
+		[LE_EXPANSION_CATACLYSM] = 382989,
+		[LE_EXPANSION_MISTS_OF_PANDARIA] = 382988,
+		[LE_EXPANSION_WARLORDS_OF_DRAENOR] = 382987,
+		[LE_EXPANSION_LEGION] = 382986,
+		[LE_EXPANSION_BATTLE_FOR_AZEROTH] = 382984,
+		[LE_EXPANSION_SHADOWLANDS] = 382982,
+		[LE_EXPANSION_DRAGONFLIGHT] = 382981,
+	}
 }
