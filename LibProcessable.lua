@@ -438,27 +438,30 @@ Handler:SetScript('OnEvent', function()
 			end
 		end
 	else
-		-- this section will iterate through the player's professions and gather skill levels in each
-		-- profession's expansions. however, C_TradeSkillUI's getters will not return valid data
-		-- unless the tradeskill ui has been opened (with C_TradeSkillUI.OpenTradeSkill), which is a
-		-- hardware protected API, and as such LibProcessable will not do this. this means that the
-		-- other APIs exposed by LibProcessable will not be complete unless the tradeskill ui is open
-		-- or has been opened during the current play session (it's cached between reloads). in
-		-- particular this especially affects IsMillable, IsProspectable and IsOpenableProfession.
 		for _, professionIndex in next, {GetProfessions()} do
 			local _, _, _, _, _, _, professionID = GetProfessionInfo(professionIndex)
 			if data.professionSkillLines[professionID] then
 				professions[professionID] = {}
 
-				for expansion, skillLine in next, data.professionSkillLines[professionID] do
-					if DRAGONFLIGHT then
-						local professionInfo = C_TradeSkillUI.GetProfessionInfoBySkillLineID(skillLine)
-						if professionInfo then
-							professions[professionID][expansion] = professionInfo.skillLevel
+				-- iterate through the list of processing spells that the player can possibly have
+				if data.professionSkills[professionID] then
+					for expansionID, spellID in next, data.professionSkills[professionID] do
+						-- if IsPlayerSpell(spellID) returns true then the profession skill is at least 1,
+						-- but it could be higher, this is not a good enough indicator for that
+						if IsPlayerSpell(spellID) then
+							professions[professionID][expansionID] = 1
 						end
-					else
-						local _, currentRank = C_TradeSkillUI.GetTradeSkillLineInfoByID(skillLine)
-						professions[professionID][expansion] = currentRank
+					end
+				end
+
+				-- iterate through each professions "skill lines" (expansion-specific tradeskill ID)
+				-- and gather the current skill level for it. this only returns valid data if the
+				-- tradeskill ui has been opened atleast once during the current play session, which
+				-- requires a hardware event, so LibProcessable won't do that
+				for expansionID, skillLine in next, data.professionSkillLines[professionID] do
+					local professionInfo = C_TradeSkillUI.GetProfessionInfoBySkillLineID(skillLine)
+					if professionInfo and professionInfo.skillLevel and professionInfo.skillLevel > 0 then
+						professions[professionID][expansionID] = professionInfo.skillLevel
 					end
 				end
 			end
