@@ -61,6 +61,7 @@ read_globals = {
 	'GetSpellInfo',
 	'IsSpellKnown',
 	'UnitLevel',
+	'IsPlayerSpell',
 	'GetNumSkillLines', -- classic only
 	'GetSkillLineInfo', -- classic only
 	'ExpandSkillHeader', -- classic only

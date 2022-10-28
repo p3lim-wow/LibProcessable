@@ -10,7 +10,6 @@ local data = {} -- private table for storing data without exposing it
 local professions = {} -- private table for storing cached profession info
 
 local CLASSIC = select(4, GetBuildInfo()) < 90000
-local DRAGONFLIGHT = select(4, GetBuildInfo()) >= 100000
 
 -- upvalue constants with fallbacks
 local LE_ITEM_QUALITY_UNCOMMON = LE_ITEM_QUALITY_UNCOMMON or Enum.ItemQuality.Uncommon or 2
