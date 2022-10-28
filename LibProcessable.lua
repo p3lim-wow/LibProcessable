@@ -75,7 +75,7 @@ function lib:IsMillable(itemID, ignoreMortar)
 		else
 			local itemInfo = data.herbs[itemID]
 			if itemInfo then
-				local currentRank = professions[LE_PROFESSION_INSCRIPTION][itemInfo[1]]
+				local currentRank = professions[LE_PROFESSION_INSCRIPTION][itemInfo[1]] or 0
 				local requiredRank = itemInfo[2]
 				if requiredRank and currentRank >= requiredRank then
 					return true, data.professionSkills[LE_PROFESSION_INSCRIPTION][itemInfo[1]]
@@ -116,7 +116,7 @@ function lib:IsProspectable(itemID)
 		else
 			local itemInfo = data.ores[itemID]
 			if itemInfo then
-				local currentRank = professions[LE_PROFESSION_JEWELCRAFTING][itemInfo[1]]
+				local currentRank = professions[LE_PROFESSION_JEWELCRAFTING][itemInfo[1]] or 0
 				local requiredRank = itemInfo[2]
 				if requiredRank and currentRank >= requiredRank then
 					return true, data.professionSkills[LE_PROFESSION_JEWELCRAFTING][itemInfo[1]]
@@ -447,7 +447,7 @@ Handler:SetScript('OnEvent', function()
 				if data.professionSkills[professionID] then
 					for expansionID, spellID in next, data.professionSkills[professionID] do
 						-- if IsPlayerSpell(spellID) returns true then the profession skill is at least 1,
-						-- but it could be higher, this is not a good enough indicator for that
+						-- but it could be higher
 						if IsPlayerSpell(spellID) then
 							professions[professionID][expansionID] = 1
 						end
