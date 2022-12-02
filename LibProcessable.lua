@@ -690,6 +690,17 @@ data.enchantingItems = {
 	[182043] = true, -- Antique Necromancer's Staff
 	[182067] = true, -- Antique Duelist's Rapier
 	[181991] = true, -- Antique Stalker's Bow
+
+	-- Dragonflight profession items
+	-- https://www.wowhead.com/items?filter=104;0;amount+of+magical+power+can+be+sensed+from+within
+	[200939] = true, -- Chromatic Pocketwatch
+	[200940] = true, -- Everflowing Inkwell
+	[200941] = true, -- Seal of Order
+	[200942] = true, -- Vibrant Emulsion
+	[200943] = true, -- Whispering Band
+	[200945] = true, -- Valiant Hammer
+	[200946] = true, -- Thunderous Blade
+	[200947] = true, -- Carving of Awakening
 }
 
 -- /run ChatFrame1:Clear(); for _,i in next,{C_TradeSkillUI.GetCategories()} do print(i, C_TradeSkillUI.GetCategoryInfo(i).name) end
