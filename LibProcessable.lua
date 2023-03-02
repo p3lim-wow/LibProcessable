@@ -744,6 +744,8 @@ data.enchantingItems = {
 	[201357] = true, -- Glimmer of Frost
 	[201359] = true, -- Glimmer of Earth
 	[201356] = true, -- Glimmer of Fire
+	[200479] = true, -- Sophic Amalgamation
+}
 
 data.scrappableItems = {
 	[198651] = true, -- Piece of Scrap
