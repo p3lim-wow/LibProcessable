@@ -164,6 +164,35 @@ function lib:IsDisenchantable(item)
 	end
 end
 
+--[[ LibProcessable:IsScrappable(_item_)
+Returns whether the player can scrap the given item.
+
+**Arguments:**
+* `item`: item ID or link
+
+**Return values:**
+* `isScrappable`: Whether or not the player can scrap the given item _(boolean)_
+* `scrappingSpellID`: SpellID that needs to be used to scrap the given item _(number|nil)_
+
+**Notes**:
+* it's required to use the tradeskill API to scrap items, e.g:
+    `C_TradeSkillUI.CraftSalvage(scrappingSpellID, numCasts, ItemLocation)`
+--]]
+function lib:IsScrappable(item)
+	local itemID = item
+	if type(itemID) == 'string' then
+		assert(string.match(itemID, 'item:(%d+):') or tonumber(itemID), 'item must be an item ID or item Link')
+		itemID = (tonumber(itemID)) or (GetItemInfoFromHyperlink(itemID))
+	end
+
+	if self:HasProfession(LE_PROFESSION_ENGINEERING) then
+		if data.scrappableItems[itemID] then
+			-- special items that can be scrapped
+			return true, data.professionSkills[LE_PROFESSION_ENGINEERING][LE_EXPANSION_DRAGONFLIGHT]
+		end
+	end
+end
+
 -- https://wowhead.com/items?filter=107:99;0:2;lockpick:0
 local function GetBlacksmithingPick(pickLevel)
 	if CLASSIC then
@@ -715,6 +744,9 @@ data.enchantingItems = {
 	[201357] = true, -- Glimmer of Frost
 	[201359] = true, -- Glimmer of Earth
 	[201356] = true, -- Glimmer of Fire
+
+data.scrappableItems = {
+	[198651] = true, -- Piece of Scrap
 }
 
 -- /run ChatFrame1:Clear(); for _,i in next,{C_TradeSkillUI.GetCategories()} do print(i, C_TradeSkillUI.GetCategoryInfo(i).name) end
@@ -1015,5 +1047,8 @@ data.professionSkills = {
 		[LE_EXPANSION_BATTLE_FOR_AZEROTH] = 382984,
 		[LE_EXPANSION_SHADOWLANDS] = 382982,
 		[LE_EXPANSION_DRAGONFLIGHT] = 382981,
-	}
+	},
+	[LE_PROFESSION_ENGINEERING] = {
+		[LE_EXPANSION_DRAGONFLIGHT] = 382374, -- Rummage Through Scrap
+	},
 }
