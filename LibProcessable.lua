@@ -60,7 +60,7 @@ Returns whether the player can mill the given item.
 
 **Notes**:
 * since Dragonflight it's required to use the tradeskill API to mill, e.g:
-    `C_TradeSkillUI.CraftRecipe(prospectingSkillID, numCasts, {})`
+    `C_TradeSkillUI.CraftSalvage(millingSpellID, numCasts, ItemLocation)`
 --]]
 function lib:IsMillable(itemID, ignoreMortar)
 	if type(itemID) == 'string' then
@@ -100,7 +100,7 @@ Returns whether the player can prospect the given item.
 
 **Notes**:
 * since Dragonflight it's required to use the tradeskill API to prospect, e.g:
-    `C_TradeSkillUI.CraftRecipe(prospectingSkillID, numCasts, {})`
+    `C_TradeSkillUI.CraftSalvage(prospectingSpellID, numCasts, ItemLocation)`
 --]]
 function lib:IsProspectable(itemID)
 	if type(itemID) == 'string' then
